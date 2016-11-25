@@ -1,2 +1,5 @@
-ApkAutoTest/.idea
-ApkAutoTest/.svn
+ApkAutoTest/.idea/
+ApkAutoTest/.svn/
+ApkAutoTest/.gradle/
+ApkAutoTest/gradle/
+ApkAutoTest/build/
