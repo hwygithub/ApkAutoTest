@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="test_index">测试序号</string>
+    <string name="alert_low_power">电量低</string>
+    <string name="alert_low_power_confirm">确定</string>
+    <string name="alert_browser_update_ignore">暂不更新</string>
+    <string name="bookmark">书签</string>
+    <string name="ignore">拒绝</string>
+
+    <!-- alert dialog -->
+    <string-array name="dialog_alert">
+        <item>电量低</item>
+        <item>暂不更新</item>
+    </string-array>
+    <!-- case -->
+    <string-array name="case_string_1">
+        <item>蓝瘦香菇</item>
+        <item>蓝瘦香菇</item>
+    </string-array>
+    <string-array name="case_string_2">
+        <item>聊天设置</item>
+        <item>R7s</item>
+        <item>返回</item>
+    </string-array>
+    <string-array name="case_string_3">
+        <item></item>
+    </string-array>
+
+</resources>

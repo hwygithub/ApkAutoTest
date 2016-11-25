@@ -1,0 +1,11 @@
+﻿<?xmlversion=1.0encoding=utf-8?>
+<Test>
+    <case>
+        <name>厘米秀内存测试</name>
+        <className>CmShowMemoryTest</className>
+        <timeGene>1</timeGene>
+        <runState>once</runState>
+        <caseName>CSMT_1,CSMT_2,CSMT_3,CSMT_4</caseName>
+        <caseOrder>4-1</caseOrder>
+    </case>
+</Test>

@@ -1,0 +1,10 @@
+[
+    {
+        "merged": "E:\\workplace-web\\ApkAutoTest\\app\\build\\intermediates\\res\\merged\\debug\\xml\\config.xml",
+        "source": "E:\\workplace-web\\ApkAutoTest\\app\\src\\main\\res\\xml\\config.xml"
+    },
+    {
+        "merged": "E:\\workplace-web\\ApkAutoTest\\app\\build\\intermediates\\res\\merged\\debug\\xml\\method.xml",
+        "source": "E:\\workplace-web\\ApkAutoTest\\app\\src\\main\\res\\xml\\method.xml"
+    }
+]

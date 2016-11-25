@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    android:orientation="horizontal" >
+
+    <TextView
+        android:id="@+id/list_text"
+        android:layout_width="0.0dip"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginLeft="10dp"
+        android:layout_weight="1.0"
+        android:paddingLeft="2.0dip"
+        android:textColor="#ff000000"
+        android:textSize="15sp" />
+
+    <Button
+        android:id="@+id/btn_reduce"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="31dp"
+        android:layout_height="34dp"
+        android:text="@string/txt_add" />
+
+</LinearLayout>

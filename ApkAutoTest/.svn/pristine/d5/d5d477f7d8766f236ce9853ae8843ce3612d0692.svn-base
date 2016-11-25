@@ -1,0 +1,2 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merger version="3"><dataSet config="main"><source path="E:\workplace-web\ApkAutoTest\app\src\main\assets"><file name="FileLogSave.apk" path="E:\workplace-web\ApkAutoTest\app\src\main\assets\FileLogSave.apk"/><file name="TestCase.xml" path="E:\workplace-web\ApkAutoTest\app\src\main\assets\TestCase.xml"/></source><source path="E:\workplace-web\ApkAutoTest\app\build\generated\assets\shaders\debug"/></dataSet><dataSet config="debug"><source path="E:\workplace-web\ApkAutoTest\app\src\debug\assets"/></dataSet></merger>

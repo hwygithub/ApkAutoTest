@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">APK自动测试工具</string>
+    <string name="text_choose">选择用例:</string>
+
+    <string-array name="test_order">
+        <item>默认执行顺序</item>
+        <item>快速执行顺序</item>
+        <item>自定义</item>
+    </string-array>
+
+    <string name="text_default">默认执行顺序</string>
+    <string name="text_runlist">执行顺序:</string>
+    <string name="txt_startRun">开始执行</string>
+    <string name="txt_running">正在执行</string>
+    <string name="btn_back">返回</string>
+    <string name="txt_shut_down">关机</string>
+    <string name="txt_finish_case">用例执行完毕</string>
+    <string name="txt_finish_event">到达5%电量</string>
+    <string name="txt_add">+</string>
+    <string name="text_reduce">-</string>
+    <string name="text_del">x</string>
+    <string name="txt_runTime">运行次数：</string>
+    <string name="startLevel">初始电量</string>
+    <string name="startVoltage">初始电压</string>
+    <string name="endText">测试完成！</string>
+    <string name="finishText">测试完成！</string>
+    <string name="logLocation">log存放位置：根目录/MpBatteryAutoTest</string>
+    <string name="txt_test_end_send_number">测试结束后发送短信号码：</string>
+    <string name="edit_test_end_send_number">15602316587</string>
+
+    <!-- help -->
+    <string name="str_help_title">帮助</string>
+    <string name="choose_config_title">选择配置文件</string>
+    <string name="dialog_no_show_next_text">已完成以下操作，不再提示</string>
+    <string name="str_help_msg">
+        \n测试前手工预置环境须知：
+        \n1、设置-辅助服务-保持APK自动测试工具的服务开启
+        \n2、使用该工具可能会导致输入法无法正常使用，设置中选择默认输入法可恢复
+		\n选择下方的选择器可切换测试项
+     	\n\n
+     	build by veehou</string>
+    <!-- end help -->
+    
+    
+
+</resources>
