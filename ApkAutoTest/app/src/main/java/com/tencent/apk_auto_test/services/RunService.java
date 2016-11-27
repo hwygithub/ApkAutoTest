@@ -134,6 +134,8 @@ public class RunService extends Service {
         }
 
         StaticData.mBar.setMax(length);
+
+        mFunction.initInputMethod();
     }
 
     private void setReceivers() {
@@ -368,8 +370,7 @@ public class RunService extends Service {
                     //点击搜索栏
                     mNodeOperate.clickOnText("搜索", 3000);
                     //输入群，点击进入
-                    mFunction.inputText("546479585");
-                    mOperate.sleep(3000);
+                    mFunction.inputText("546479585", 2000);
                     //点击搜索栏
                     mNodeOperate.clickOnText("测试号集中营", 3000);
                     //点击AIO输入输入框上方的中间部分区域
@@ -385,7 +386,7 @@ public class RunService extends Service {
                             mNodeOperate.clickOnResouceIdOffset("inputBar", 2000, 1,
                                     -100);
                         }
-                        mFunction.inputText("群单人交叉发送:" + count);
+                        mFunction.inputText("群单人交叉发送:" + count, 2000);
                         mNodeOperate.clickOnResouceId("avatar_item_imageview", 2000, 1);
                         //每轮查询可用内存和进程内存情况,并保存到终端存储
                         mFunction.saveMem("com.tencent.mobileqq", fileName);
@@ -424,8 +425,7 @@ public class RunService extends Service {
                     //点击搜索栏
                     mNodeOperate.clickOnText("搜索", 3000);
                     //输入群，点击进入
-                    mFunction.inputText("546479585");
-                    mOperate.sleep(3000);
+                    mFunction.inputText("546479585", 2000);
                     //点击搜索栏
                     mNodeOperate.clickOnText("测试号集中营", 3000);
                     //点击AIO输入输入框上方的中间部分区域
@@ -444,7 +444,7 @@ public class RunService extends Service {
                                     -100);
                         }
                         mNodeOperate.clickOnTextContain("大群主", 1000);
-                        mFunction.inputText("群双人交叉发送:" + count);
+                        mFunction.inputText("群双人交叉发送:" + count, 2000);
                         mNodeOperate.clickOnResouceId("avatar_item_imageview", 1000, 1);
                         mNodeOperate.clickOnTextContain("大群主", 1000);
                         //每轮查询可用内存和进程内存情况,并保存到终端存储
@@ -484,8 +484,7 @@ public class RunService extends Service {
                     //点击搜索栏
                     mNodeOperate.clickOnText("搜索", 3000);
                     //输入群，点击进入
-                    mFunction.inputText("546479585");
-                    mOperate.sleep(3000);
+                    mFunction.inputText("546479585", 2000);
                     //点击搜索栏
                     mNodeOperate.clickOnText("测试号集中营", 3000);
                     //点击AIO输入输入框上方的中间部分区域
@@ -503,7 +502,7 @@ public class RunService extends Service {
                                     -100);
                         }
                         mNodeOperate.clickOnTextContain("大群主", 1000);
-                        mFunction.inputText("弹幕发送:" + count);
+                        mFunction.inputText("弹幕发送:" + count, 2000);
 
                         //每轮查询可用内存和进程内存情况,并保存到终端存储
                         mFunction.saveMem("com.tencent.mobileqq", fileName);
@@ -539,39 +538,45 @@ public class RunService extends Service {
                         continue;
                     }
                     mOperate.sleep(8000);
-                    //点击搜索栏
-                    mNodeOperate.clickOnText("搜索", 3000);
-
 
                     int count = 0;
                     while (count++ != 500) {
+                        //点击搜索栏
+                        mNodeOperate.clickOnText("搜索", 3000);
                         //输入群，点击进入
-                        mFunction.inputText("546479585");
-                        mOperate.sleep(3000);
+                        mFunction.inputText("546479585", 2000);
                         //点击搜索栏
                         mNodeOperate.clickOnText("测试号集中营", 3000);
                         //点击AIO输入输入框上方的中间部分区域
                         mNodeOperate.clickOnResouceIdOffset("inputBar", 2000, 1,
                                 -100);
-                        //循环交互点击
                         //如果没有点击成功判断面板是否隐藏了
                         //通过厘米秀面板的特别动作id点击
-                        mFunction.inputText("群和C2C切换发送:" + count);
+                        mFunction.inputText("群和C2C切换发送:" + count, 2000);
+                        if (!mNodeOperate.clickOnResouceId("avatar_item_imageview", 2000, 0)) {
+                            mNodeOperate.clickOnResouceIdOffset("inputBar", 2000, 1,
+                                    -100);
+                            mNodeOperate.clickOnResouceId("avatar_item_imageview", 2000, 0);
+                        }
+
+                        mNodeOperate.clickOnTextContain("返回", 1500);
+                        mNodeOperate.clickOnTextContain("消息", 1500);
+
+                        //输入群，点击进入
+                        mFunction.inputText("1252781078", 2000);
+                        //点击搜索栏
+                        mNodeOperate.clickOnTextContain("运动达人", 3000);
+
+                        //通过厘米秀面板的特别动作id点击
+                        mFunction.inputText("群和C2C切换发送:" + count, 2000);
                         if (!mNodeOperate.clickOnResouceId("avatar_item_imageview", 1000, 0)) {
                             mNodeOperate.clickOnResouceIdOffset("inputBar", 2000, 1,
                                     -100);
+                            mNodeOperate.clickOnResouceId("avatar_item_imageview", 1000, 0);
                         }
 
-                        mNodeOperate.clickOnTextContain("消息", 1500);
                         mNodeOperate.clickOnTextContain("返回", 1500);
-
-                        //点击搜索栏
-                        mNodeOperate.clickOnText("搜索", 3000);
-                        //输入群，点击进入
-                        mFunction.inputText("1252781078");
-                        mOperate.sleep(3000);
-                        //点击搜索栏
-                        mNodeOperate.clickOnTextContain("运动达人", 3000);
+                        mNodeOperate.clickOnTextContain("消息", 1500);
 
                         //每轮查询可用内存和进程内存情况,并保存到终端存储
                         mFunction.saveMem("com.tencent.mobileqq", fileName);
@@ -653,7 +658,7 @@ public class RunService extends Service {
             // cancel the alarm unlock
             cancelAlarmRepeat(mContext);
             mEventHandler.sendEmptyMessageDelayed(PRINT_LOG, 5000);
-            // ungister
+            // unregister
             unregisterReceiver(mReceiver);
             unregisterReceiver(mActionReceiver);
         }

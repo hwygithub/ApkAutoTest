@@ -3,6 +3,7 @@ package com.tencent.apk_auto_test.input;
 import java.util.concurrent.TimeUnit;
 
 import com.tencent.apk_auto_test.input.IInputMethodService;
+import com.test.function.Operate;
 
 import android.content.Context;
 import android.os.RemoteException;
@@ -16,14 +17,14 @@ public class InputMethod extends IInputMethodService.Stub {
     private static String userInput;
     private static final String TAG = "InputMethod";
     private Context context;
+    private Operate mOperate;
 
     public InputMethod(Context context) {
         this.context = context;
-
     }
 
     @Override
-    public boolean setText(String text) throws RemoteException {
+    public boolean setText(String text, int delayTime) throws RemoteException {
         if (setUpInputMethodIfNeed()) {
             waitMoment(500);
         }

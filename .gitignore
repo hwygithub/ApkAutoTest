@@ -1,8 +1,9 @@
-/ApkAutoTest/.idea/
-/ApkAutoTest/.svn/
-/ApkAutoTest/.gradle/
-/ApkAutoTest/gradle/
-/ApkAutoTest/build/
-/ApkAutoTest/app/build/
-/ApkAutoTest/app/app.iml
-/ApkAutoTest/local.properties
+ApkAutoTest/.idea/
+ApkAutoTest/.svn/
+ApkAutoTest/.gradle/
+ApkAutoTest/gradle/
+ApkAutoTest/build/
+ApkAutoTest/app/build/
+ApkAutoTest/app/app.iml
+ApkAutoTest/local.properties
+ApkAutoTest/build.gradle

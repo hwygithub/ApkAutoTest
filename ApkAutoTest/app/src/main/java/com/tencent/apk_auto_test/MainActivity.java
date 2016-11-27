@@ -206,6 +206,12 @@ public class MainActivity extends Activity implements OnClickListener {
                     Toast.makeText(mContext, "设备占未root，无法开始测试！！", Toast.LENGTH_LONG).show();
                     return;
                 }
+                //检测手Q是否是debug版本
+                if(!mFunction.isAppDebug("com.tencent.mobileqq")){
+                    //提示
+                    Toast.makeText(mContext, "被测试app手Q版本需要使用debug版本！", Toast.LENGTH_LONG).show();
+                    return;
+                }
                 //检查accessibilityservice是否开启
                 if (!Function.isAccessibilitySettingsOn(this)) {
                     //如果没有获取到系统的设置信息，跳转手动开启界面
@@ -226,7 +232,7 @@ public class MainActivity extends Activity implements OnClickListener {
                 //检查输入法是否默认为测试工具
                 if (!Function.isInputMethodSettingsDefault(this)) {
                     //监听如果是从输入法切换后回到工具界面时弹出输入法选择框
-                    ((InputMethodManager) getSystemService("input_method")).showInputMethodPicker();
+                    ((InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE)).showInputMethodPicker();
                     //提示
                     Toast.makeText(mContext, "测试输入法尚未开启，选中输入法为APK自动测试工具，可能对实际输入有影响！！！", Toast.LENGTH_LONG).show();
                     return;

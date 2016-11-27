@@ -7,7 +7,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import com.tencent.apk_auto_test.data.RunPara;
 import com.tencent.apk_auto_test.data.StaticData;
@@ -29,12 +31,15 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Debug;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.PowerManager;
+import android.os.RemoteException;
 import android.provider.Settings;
 import android.telephony.SmsManager;
 import android.telephony.TelephonyManager;
@@ -144,16 +149,30 @@ public class Function {
     }
 
     /**
+     * 初始化输入法服务
+     */
+    public void initInputMethod() {
+        Log.e(TAG, "inputMethod service start");
+        Intent service = new Intent();
+        service.setClass(mContext, InputService.class);
+        mContext.startService(service);
+    }
+
+    /**
      * 输入字符
      */
-    public void inputText(String args) {
-        Log.e(TAG, "inputMethod service start");
-        Intent startRecordService = new Intent();
-        startRecordService.setClass(mContext, InputService.class);
-        startRecordService.putExtra(InputService.KEY_MSG, args);
-        // TODO: 2016/11/10 如果启动失败，自动开启测试工具的输入法
-        mContext.startService(startRecordService);
-        mOperate.sleep(500);
+    public boolean inputText(String args, int delayTime) {
+        boolean b1 = false;
+        boolean b2 = false;
+        try {
+            b1 = InputService.inputMethod.clearText();
+            b2 = InputService.inputMethod.setText(args, delayTime);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+
+        mOperate.sleep(delayTime);
+        return b1 && b2;
     }
 
     private KeyguardLock keyguardLock;
@@ -647,6 +666,24 @@ public class Function {
 
             TxtUtil.saveMsg("/sdcard/tencent-test/", strbuf.toString(), fileName);
             return true;
+        }
+        return false;
+    }
+
+    public boolean isAppDebug(String name) {
+        Set<String> debuggableApps = new HashSet<String>();
+        List<ApplicationInfo> allApps = mContext.getPackageManager()
+                .getInstalledApplications(PackageManager.GET_UNINSTALLED_PACKAGES);
+        for (ApplicationInfo app : allApps) {
+            String appName = app.packageName;
+            if ((app.flags & ApplicationInfo.FLAG_DEBUGGABLE) == ApplicationInfo.FLAG_DEBUGGABLE) {
+                //debuggableApps.add(appName);
+                if (appName.contains(name)) {
+                    Log.v(TAG, "mqq is debuggable");
+                    return true;
+                }
+
+            }
         }
         return false;
     }

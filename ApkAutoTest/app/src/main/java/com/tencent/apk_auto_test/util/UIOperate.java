@@ -259,7 +259,8 @@ public class UIOperate {
         }
     }
 
-    public boolean sendKey(int keyCode, int metaState) {
+    public boolean sendKey(int keyCode,int waitTime) {
+        int metaState = 0;
         if (DEBUG) {
             Log.d(LOG_TAG, "sendKey (" + keyCode + ", " + metaState + ")");
         }
@@ -276,6 +277,7 @@ public class UIOperate {
             dataOut.flush();
             dataOut.close();
             process.waitFor();
+            mOperate.sleep(waitTime);
             while ((line = err.readLine()) != null) {
                 Log.i(LOG_TAG, line);
                 return false;
@@ -508,7 +510,6 @@ public class UIOperate {
                 flags | KeyEvent.FLAG_FROM_SYSTEM, source);
         //InputManager.getInstance().injectInputEvent(newEvent, InputManager.INJECT_INPUT_EVENT_MODE_WAIT_FOR_FINISH);
     }
-
 
 
     public String getCurrentPackage() {

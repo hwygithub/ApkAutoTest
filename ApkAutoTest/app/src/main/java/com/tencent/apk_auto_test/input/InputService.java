@@ -19,12 +19,13 @@ import android.view.inputmethod.InputMethodManager;
 public class InputService extends Service {
     public static final String KEY_MSG = "key_msg";
     public static final String KEY_MODE = "key_mode";
+    public static IInputMethodService inputMethod;
 
-    public static final int MSG_RECONNECT = 11;
     private static final String TAG = "InputService";
+    private static final int MSG_RECONNECT = 11;
+    private static final int MSG_INPUT = 12;
     private String mText;
 
-    public static IInputMethodService inputMethod;
     private ServiceConnection serviceConnection = new ServiceConnection() {
 
         @Override
@@ -42,27 +43,19 @@ public class InputService extends Service {
         context.bindService(new Intent().setComponent(new ComponentName(
                         "com.tencent.apk_auto_test", "com.tencent.apk_auto_test.input.IService")),
                 serviceConnection, Context.BIND_AUTO_CREATE);
+
     }
 
     @Override
     public void onCreate() {
-        initAidlServer(this.getApplicationContext());
+
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        mText = intent.getStringExtra(KEY_MSG);
-        if (inputMethod == null) {
-            Log.e(TAG, "inputMethod null");
-            mHandler.sendEmptyMessage(MSG_RECONNECT);
-            return Service.START_NOT_STICKY;
-        }
-        inputString(mText);
-        try {
-            inputMethod.setUpInputMethodIfNeed();
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
+
+        mHandler.sendEmptyMessage(MSG_INPUT);
+
         return Service.START_NOT_STICKY;
     }
 
@@ -77,15 +70,34 @@ public class InputService extends Service {
     }
 
     Handler mHandler = new Handler() {
+        int reCount = 0;
+
         public void handleMessage(android.os.Message msg) {
             switch (msg.what) {
-                case MSG_RECONNECT:
+                case MSG_INPUT:
                     if (inputMethod == null) {
+                        Log.e(TAG, "inputMethod null");
+                        mHandler.sendEmptyMessage(MSG_RECONNECT);
+                    }
+                    //inputString(mText);
+
+                    break;
+                case MSG_RECONNECT:
+                    if (null == inputMethod) {
+                        reCount++;
+                        try {
+                            inputMethod.setUpInputMethodIfNeed();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                         initAidlServer(getApplicationContext());
-                        Log.e(TAG, "reconncet!");
+                        Log.e(TAG, "reconnect time " + reCount);
+                        if (reCount == 5)
+                            break;
                         this.sendEmptyMessageDelayed(MSG_RECONNECT, 2000);
                     } else {
-                        inputString(mText);
+                        //inputString(mText);
+                        Log.e(TAG, "reconnect success ");
                     }
                     break;
 
@@ -97,11 +109,11 @@ public class InputService extends Service {
         ;
     };
 
-    private void inputString(final String msg) {
+    public void inputString(final String msg) {
         Thread mThread1 = new Thread(new Runnable() {
             public void run() {
                 try {
-                    Log.e("hwy", "input!:");
+                    Log.e(TAG, "input " + msg);
                     setTextMethod(msg);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -119,7 +131,7 @@ public class InputService extends Service {
     private boolean setTextMethod(String str) throws Exception {
         StaticData.isRunningInputService = true;
         boolean b1 = inputMethod.clearText();
-        boolean b2 = inputMethod.setText(str);
+        boolean b2 = inputMethod.setText(str, 0);
         return b1 && b2;
     }
 
