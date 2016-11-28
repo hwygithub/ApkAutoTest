@@ -533,15 +533,6 @@ public class Function {
         editor.commit();
     }
 
-    public void goBackHome() {
-        Intent intent = new Intent();
-        intent.setComponent(new ComponentName("com.miui.home",
-                "com.miui.home.launcher.Launcher"));
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        mContext.startActivity(intent);
-
-    }
-
     // 杀死其他应用
     public void killAppByPackageName(String packageName) {
         // /To change body of implemented methods use File | Settings | File
@@ -688,4 +679,28 @@ public class Function {
         return false;
     }
 
+    /**
+     * 递归删除文件夹和其中的文件
+     *
+     * @param file
+     */
+    public void delFolder(File file) {
+        if (file.isFile()) {
+            file.delete();
+            return;
+        }
+
+        if (file.isDirectory()) {
+            File[] childFiles = file.listFiles();
+            if (childFiles == null || childFiles.length == 0) {
+                file.delete();
+                return;
+            }
+
+            for (int i = 0; i < childFiles.length; i++) {
+                delFolder(childFiles[i]);
+            }
+            file.delete();
+        }
+    }
 }

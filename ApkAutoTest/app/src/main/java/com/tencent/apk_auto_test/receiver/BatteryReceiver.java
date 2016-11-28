@@ -5,7 +5,6 @@ import java.io.InputStreamReader;
 
 import com.tencent.apk_auto_test.R;
 import com.tencent.apk_auto_test.data.StaticData;
-import com.tencent.apk_auto_test.filelogsave.FileDealer;
 import com.tencent.apk_auto_test.util.Time;
 import com.tencent.apk_auto_test.util.TxtUtil;
 import com.tencent.apk_auto_test.services.RunService;
@@ -34,7 +33,6 @@ public class BatteryReceiver extends BroadcastReceiver {
 	private static Context mContext;
 	private int mLastLevel = 0;
 	private long mLastTime = 0;
-	public FileDealer mDealer;
 	private boolean mFirstFlag = true;
 	public long mStartTime = 0;
 	public String name;
