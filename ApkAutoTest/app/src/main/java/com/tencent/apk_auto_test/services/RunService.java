@@ -340,6 +340,9 @@ public class RunService extends Service {
             case 4:
                 CSMT_4(caseTime);
                 break;
+            case 5:
+                CSMT_5(caseTime);
+                break;
             default:
                 return;
         }
@@ -366,7 +369,7 @@ public class RunService extends Service {
                         Log.e(TAG, "start test app activity error!");
                         continue;
                     }
-                    mOperate.sleep(8000);
+                    mOperate.sleep(5000);
                     //点击搜索栏
                     mNodeOperate.clickOnText("搜索", 3000);
                     //输入群，点击进入
@@ -421,7 +424,7 @@ public class RunService extends Service {
                         Log.e(TAG, "start test app activity error!");
                         continue;
                     }
-                    mOperate.sleep(8000);
+                    mOperate.sleep(5000);
                     //点击搜索栏
                     mNodeOperate.clickOnText("搜索", 3000);
                     //输入群，点击进入
@@ -468,7 +471,7 @@ public class RunService extends Service {
             public void run() {
                 for (int i = 0; i < caseTime; i++) {
                     //初始化参数
-                    String fileName = "CSMT-2-" + Time.getCurrentTimeSecond();
+                    String fileName = "CSMT-3-" + Time.getCurrentTimeSecond();
                     //杀手Q进程还原状态
                     mFunction.killAppByPackageName("com.tencent.mobileqq");
                     mOperate.sleep(3000);
@@ -480,7 +483,7 @@ public class RunService extends Service {
                         Log.e(TAG, "start test app activity error!");
                         continue;
                     }
-                    mOperate.sleep(8000);
+                    mOperate.sleep(5000);
                     //点击搜索栏
                     mNodeOperate.clickOnText("搜索", 3000);
                     //输入群，点击进入
@@ -525,7 +528,7 @@ public class RunService extends Service {
             public void run() {
                 for (int i = 0; i < caseTime; i++) {
                     //初始化参数
-                    String fileName = "CSMT-2-" + Time.getCurrentTimeSecond();
+                    String fileName = "CSMT-4-" + Time.getCurrentTimeSecond();
                     //杀手Q进程还原状态
                     mFunction.killAppByPackageName("com.tencent.mobileqq");
                     mOperate.sleep(3000);
@@ -537,7 +540,7 @@ public class RunService extends Service {
                         Log.e(TAG, "start test app activity error!");
                         continue;
                     }
-                    mOperate.sleep(8000);
+                    mOperate.sleep(5000);
 
                     int count = 0;
                     while (count++ != 500) {
@@ -564,9 +567,11 @@ public class RunService extends Service {
 
                         //输入群，点击进入
                         mFunction.inputText("1252781078", 2000);
-                        //点击搜索栏
+                        //进入C2C
                         mNodeOperate.clickOnTextContain("运动达人", 3000);
-
+                        //点击AIO输入输入框上方的中间部分区域
+                        mNodeOperate.clickOnResouceIdOffset("inputBar", 2000, 1,
+                                -100);
                         //通过厘米秀面板的特别动作id点击
                         mFunction.inputText("群和C2C切换发送:" + count, 2000);
                         if (!mNodeOperate.clickOnResouceId("avatar_item_imageview", 1000, 0)) {
@@ -577,6 +582,66 @@ public class RunService extends Service {
 
                         mNodeOperate.clickOnTextContain("返回", 1500);
                         mNodeOperate.clickOnTextContain("消息", 1500);
+
+                        //每轮查询可用内存和进程内存情况,并保存到终端存储
+                        mFunction.saveMem("com.tencent.mobileqq", fileName);
+                    }
+                    mFunction.goBackHome();
+                    mOperate.sleep(2000);
+                }
+                // 测试用例结束，打印日志
+                mEventHandler.sendEmptyMessage(PRINT_LOG);
+            }
+        });
+        currentThread.start();
+    }
+
+    // 循环播放动作
+    private void CSMT_5(final int caseTime) {
+        Thread currentThread = new Thread(new Runnable() {
+
+            @Override
+            public void run() {
+                for (int i = 0; i < caseTime; i++) {
+                    //初始化参数
+                    String fileName = "CSMT-5-" + Time.getCurrentTimeSecond();
+                    //杀手Q进程还原状态
+                    mFunction.killAppByPackageName("com.tencent.mobileqq");
+                    mOperate.sleep(3000);
+                    //热启动手Q
+                    try {
+                        mOperate.startActivity("com.tencent.mobileqq",
+                                "com.tencent.mobileqq.activity.SplashActivity");
+                    } catch (Exception e) {
+                        Log.e(TAG, "start test app activity error!");
+                        continue;
+                    }
+                    mOperate.sleep(5000);
+
+                    //点击搜索栏
+                    mNodeOperate.clickOnText("搜索", 3000);
+                    //输入群，点击进入
+                    mFunction.inputText("546479585", 2000);
+                    //点击搜索栏
+                    mNodeOperate.clickOnText("测试号集中营", 3000);
+                    //点击AIO输入输入框上方的中间部分区域
+                    mNodeOperate.clickOnResouceIdOffset("inputBar", 2000, 1, -100);
+                    mNodeOperate.clickOnResouceId("tabView", 2000, 1);
+                    //循环交互点击
+                    //如果没有点击成功判断面板是否隐藏了
+                    //通过厘米秀面板的特别动作id点击
+                    if (!mNodeOperate.clickOnResouceId("avatar_item_imageview", 1000, 0)) {
+                        mNodeOperate.clickOnResouceIdOffset("inputBar", 2000, 1,
+                                -100);
+                    }
+                    mNodeOperate.clickOnTextContain("大群主", 1000);
+
+                    //点击AIO输入输入框上方的中间部分区域
+                    mNodeOperate.clickOnResouceIdOffset("inputBar", 2000, 1, -100);
+
+                    int count = 0;
+                    while (count++ != 500) {
+                        mNodeOperate.clickOnTextContain("大群主", 3000);
 
                         //每轮查询可用内存和进程内存情况,并保存到终端存储
                         mFunction.saveMem("com.tencent.mobileqq", fileName);

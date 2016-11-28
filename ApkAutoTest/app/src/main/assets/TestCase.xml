@@ -5,7 +5,7 @@
         <className>CmShowMemoryTest</className>
         <timeGene>1</timeGene>
         <runState>once</runState>
-        <caseName>CSMT_1,CSMT_2,CSMT_3,CSMT_4</caseName>
-        <caseOrder>4-1</caseOrder>
+        <caseName>CSMT_1,CSMT_2,CSMT_3,CSMT_4,CSMT_5</caseName>
+        <caseOrder>5-1</caseOrder>
     </case>
 </Test>
