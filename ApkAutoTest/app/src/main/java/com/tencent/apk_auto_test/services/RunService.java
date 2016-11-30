@@ -389,7 +389,7 @@ public class RunService extends Service {
                 }
                 mOperate.sleep(2000);
 
-                mUIOperate.sendKey(KeyEvent.KEYCODE_BACK, 2000);
+                mUIOperate.sendKey(KeyEvent.KEYCODE_HOME, 2000);
 
                 // 测试用例结束，打印日志
                 mEventHandler.sendEmptyMessage(PRINT_LOG);
@@ -449,7 +449,7 @@ public class RunService extends Service {
                     mFunction.saveMem("com.tencent.mobileqq", fileName);
                 }
                 mOperate.sleep(2000);
-                mUIOperate.sendKey(KeyEvent.KEYCODE_BACK, 2000);
+                mUIOperate.sendKey(KeyEvent.KEYCODE_HOME, 2000);
                 // 测试用例结束，打印日志
                 mEventHandler.sendEmptyMessage(PRINT_LOG);
             }
@@ -506,7 +506,7 @@ public class RunService extends Service {
                     mFunction.saveMem("com.tencent.mobileqq", fileName);
                 }
                 mOperate.sleep(2000);
-                mUIOperate.sendKey(KeyEvent.KEYCODE_BACK, 2000);
+                mUIOperate.sendKey(KeyEvent.KEYCODE_HOME, 2000);
 
                 // 测试用例结束，打印日志
                 mEventHandler.sendEmptyMessage(PRINT_LOG);
@@ -584,7 +584,7 @@ public class RunService extends Service {
                     mFunction.saveMem("com.tencent.mobileqq", fileName);
                 }
                 mOperate.sleep(2000);
-                mUIOperate.sendKey(KeyEvent.KEYCODE_BACK, 2000);
+                mUIOperate.sendKey(KeyEvent.KEYCODE_HOME, 2000);
                 // 测试用例结束，打印日志
                 mEventHandler.sendEmptyMessage(PRINT_LOG);
             }
@@ -643,7 +643,7 @@ public class RunService extends Service {
                     mFunction.saveMem("com.tencent.mobileqq", fileName);
                 }
                 mOperate.sleep(2000);
-                mUIOperate.sendKey(KeyEvent.KEYCODE_BACK, 2000);
+                mUIOperate.sendKey(KeyEvent.KEYCODE_HOME, 2000);
                 // 测试用例结束，打印日志
                 mEventHandler.sendEmptyMessage(PRINT_LOG);
             }
