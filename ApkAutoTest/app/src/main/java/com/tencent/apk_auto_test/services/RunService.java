@@ -335,6 +335,9 @@ public class RunService extends Service {
             case 5:
                 CSMT_5(caseTime);
                 break;
+            case 6:
+                CSMT_6(caseTime);
+                break;
             default:
                 return;
         }
@@ -638,6 +641,60 @@ public class RunService extends Service {
 
                 for (int i = 0; i < caseTime; i++) {
                     mNodeOperate.clickOnTextContain("大群主", 3000);
+
+                    //每轮查询可用内存和进程内存情况,并保存到终端存储
+                    mFunction.saveMem("com.tencent.mobileqq", fileName);
+                }
+                mOperate.sleep(2000);
+                mUIOperate.sendKey(KeyEvent.KEYCODE_HOME, 2000);
+                // 测试用例结束，打印日志
+                mEventHandler.sendEmptyMessage(PRINT_LOG);
+            }
+        });
+        currentThread.start();
+    }
+
+    // 面板进入商城切换互动页
+    private void CSMT_6(final int caseTime) {
+        mShow.updateState("case: " + (testNumber + 1) + "\n" + "面板进入商城切换互动页");
+        Thread currentThread = new Thread(new Runnable() {
+
+            @Override
+            public void run() {
+
+                //初始化参数
+                String fileName = "CSMT-6-" + Time.getCurrentTimeSecond();
+                //杀手Q进程还原状态
+                mFunction.killAppByPackageName("com.tencent.mobileqq");
+                mOperate.sleep(3000);
+                //热启动手Q
+                try {
+                    mOperate.startActivity("com.tencent.mobileqq",
+                            "com.tencent.mobileqq.activity.SplashActivity");
+                } catch (Exception e) {
+                    Log.e(TAG, "start test app activity error!");
+                    return;
+                }
+                mOperate.sleep(5000);
+
+                //点击搜索栏
+                mNodeOperate.clickOnText("搜索", 3000);
+                //输入群，点击进入
+                mFunction.inputText("546479585", 2000);
+                //点击搜索栏
+                mNodeOperate.clickOnText("测试号集中营", 3000);
+                //点击AIO输入输入框上方的中间部分区域
+                mNodeOperate.clickOnResouceIdOffset("inputBar", 2000, 1, -100);
+
+                for (int i = 0; i < caseTime; i++) {
+                    //点击商城入口按钮
+                    mNodeOperate.clickOnResouceId("btn_more_apollo", 5000, 0);
+                    //切换到互动页
+                    mNodeOperate.clickOnResouceIdOffset("rlCommenTitle", 3000, 0, 100);
+                    //切换到商城页
+                    mNodeOperate.clickOnResouceIdOffset("rlCommenTitle", 3000, 0, -100);
+
+                    mUIOperate.sendKey(KeyEvent.KEYCODE_BACK, 3000);
 
                     //每轮查询可用内存和进程内存情况,并保存到终端存储
                     mFunction.saveMem("com.tencent.mobileqq", fileName);
