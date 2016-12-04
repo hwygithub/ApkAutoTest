@@ -533,18 +533,6 @@ public class Function {
         editor.commit();
     }
 
-    // 杀死其他应用
-    public void killAppByPackageName(String packageName) {
-        // /To change body of implemented methods use File | Settings | File
-        // Templates.
-        /*
-        ActivityManager am = (ActivityManager) mContext
-                .getSystemService(Context.ACTIVITY_SERVICE);
-        am.killBackgroundProcesses(packageName);
-        */
-        //adb shell force-stop
-        ExecUtil.kill(packageName);
-    }
 
     // 获取可用内存大小(MB)
     public long getAvailMemory(Context context) {
@@ -702,5 +690,15 @@ public class Function {
             }
             file.delete();
         }
+    }
+
+    public void clearAppByPackageName(String packageName) {
+        ExecUtil.clear(packageName);
+    }
+
+    // 杀死其他应用
+    public void killAppByPackageName(String packageName) {
+        //adb shell force-stop
+        ExecUtil.kill(packageName);
     }
 }

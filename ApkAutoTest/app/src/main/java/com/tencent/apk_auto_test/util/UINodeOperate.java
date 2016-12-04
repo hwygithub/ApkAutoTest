@@ -17,6 +17,8 @@ import android.os.SystemClock;
 import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Display;
+import android.view.WindowManager;
 import android.view.accessibility.AccessibilityNodeInfo;
 
 @SuppressLint("NewApi")
@@ -36,12 +38,18 @@ public class UINodeOperate {
     private UIOperate mUIOperate;
     // the wait time after click
     private int mWaitTime = 3000;
+    private double mX = 1.0;
+    private double mY = 1.0;
 
     public UINodeOperate(Context context) {
         this.mContext = context;
         mAssert = new Assert(context);
         mOperate = new Operate(mContext);
         mUIOperate = new UIOperate(mContext);
+        //以1080P为标准根据分辨率拉伸需要的坐标值
+        mY = Global.SCREEN_HEIGHT / 1920;
+        mX = Global.SCREEN_WIDTH / 1080;
+
     }
 
     /**
@@ -169,11 +177,11 @@ public class UINodeOperate {
         switch (offsetType) {
             case 0:
                 mUIOperate
-                        .click(rect.centerX() + offset, rect.centerY(), mWaitTime);
+                        .click((float) (rect.centerX() + offset * mX), rect.centerY(), mWaitTime);
                 break;
             case 1:
                 mUIOperate
-                        .click(rect.centerX(), rect.centerY() + offset, mWaitTime);
+                        .click(rect.centerX(), (float) (rect.centerY() + offset * mY), mWaitTime);
                 break;
             default:
                 mUIOperate.click(rect.centerX(), rect.centerY(), mWaitTime);
@@ -300,8 +308,8 @@ public class UINodeOperate {
     /**
      * 根据id点击控件
      *
-     * @param id    resouceid
-     * @param waitTime  waittime
+     * @param id       resouceid
+     * @param waitTime waittime
      * @return
      */
     public boolean clickOnResouceId(String id, int waitTime, int index) {
@@ -335,6 +343,8 @@ public class UINodeOperate {
      */
     public boolean clickOnResouceIdOffset(String id, int waitTime,
                                           int offsetType, int offset) {
+
+
         mWaitTime = waitTime;
         getNodes();
         if (infos == null || infos.size() == 0) {

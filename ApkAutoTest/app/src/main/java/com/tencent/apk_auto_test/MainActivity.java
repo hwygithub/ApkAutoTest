@@ -207,7 +207,7 @@ public class MainActivity extends Activity implements OnClickListener {
                     return;
                 }
                 //检测手Q是否是debug版本
-                if(!mFunction.isAppDebug("com.tencent.mobileqq")){
+                if (!mFunction.isAppDebug("com.tencent.mobileqq")) {
                     //提示
                     Toast.makeText(mContext, "被测试app手Q版本需要使用debug版本！", Toast.LENGTH_LONG).show();
                     return;

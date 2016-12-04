@@ -17,7 +17,30 @@ public class ExecUtil {
      */
     public static void kill(String packageName) {
         initProcess();
-        killProcess(packageName);
+        OutputStream out = process.getOutputStream();
+        String cmd = "am force-stop " + packageName + " \n";
+        try {
+            out.write(cmd.getBytes());
+            out.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        close();
+    }
+
+    /**
+     * 清除数据,执行操作调用即可
+     */
+    public static void clear(String packageName) {
+        initProcess();
+        OutputStream out = process.getOutputStream();
+        String cmd = "pm clear " + packageName + " \n";
+        try {
+            out.write(cmd.getBytes());
+            out.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         close();
     }
 
@@ -52,20 +75,6 @@ public class ExecUtil {
     }
 
     /**
-     * 结束进程
-     */
-    private static void killProcess(String packageName) {
-        OutputStream out = process.getOutputStream();
-        String cmd = "am force-stop " + packageName + " \n";
-        try {
-            out.write(cmd.getBytes());
-            out.flush();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
      * 关闭输出流
      */
     private static void close() {
@@ -77,4 +86,5 @@ public class ExecUtil {
                 e.printStackTrace();
             }
     }
+
 }
