@@ -34,11 +34,9 @@ import android.os.PowerManager;
 import android.os.SystemClock;
 import android.telephony.TelephonyManager;
 import android.util.Log;
-import android.view.Display;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.WindowManager;
 
 public class RunService extends Service {
     // static
@@ -94,18 +92,6 @@ public class RunService extends Service {
 
     }
 
-    private void setClass() {
-        mHandler = new TestHandler();
-        mContext = getApplicationContext();
-        mOperate = new Operate(mContext);
-        mShow = new Show(mContext);
-        mAssert = new Assert(mContext);
-        mFunction = new Function(mContext, mHandler);
-        mEventHandler = new EventHandler();
-        mNodeOperate = new UINodeOperate(mContext);
-        mUIOperate = new UIOperate(mContext);
-    }
-
     @Override
     public void onStart(Intent intent, int arg1) {
         super.onStart(intent, arg1);
@@ -125,6 +111,19 @@ public class RunService extends Service {
         stopForeground(true);
         super.onDestroy();
     }
+
+    private void setClass() {
+        mHandler = new TestHandler();
+        mContext = getApplicationContext();
+        mOperate = new Operate(mContext);
+        mShow = new Show(mContext);
+        mAssert = new Assert(mContext);
+        mFunction = new Function(mContext, mHandler);
+        mEventHandler = new EventHandler();
+        mNodeOperate = new UINodeOperate(mContext);
+        mUIOperate = new UIOperate(mContext);
+    }
+
 
     private void setData() {
         int length = 0;
@@ -348,6 +347,9 @@ public class RunService extends Service {
             case 7:
                 CSMT_7(caseTime);
                 break;
+            case 8:
+                CSMT_8(caseTime);
+                break;
             default:
                 return;
         }
@@ -375,16 +377,16 @@ public class RunService extends Service {
                         return;
                     }
                     //点击登录
-                    while (!mNodeOperate.clickOnResouceId("btn_login", 3000, 0))
+                    while (!mNodeOperate.clickOnResourceId("btn_login", 3000, 0))
                         mOperate.sleep(5000);
                     //点击输入QQ号
                     mNodeOperate.clickOnTextContain("QQ号", 1000);
                     mFunction.inputText("1002000164", 1000);
                     //点击输入密码
-                    mNodeOperate.clickOnResouceId("password", 1000, 0);
+                    mNodeOperate.clickOnResourceId("password", 1000, 0);
                     mFunction.inputText("tencent", 1000);
 
-                    mNodeOperate.clickOnResouceId("login", 10000, 0);
+                    mNodeOperate.clickOnResourceId("login", 10000, 0);
                     mNodeOperate.clickOnTextContain("关闭", 2000);
                 }
                 mUIOperate.sendKey(KeyEvent.KEYCODE_HOME, 2000);
@@ -424,7 +426,7 @@ public class RunService extends Service {
                 //点击搜索栏
                 mNodeOperate.clickOnText("测试号集中营", 3000);
                 //点击AIO输入输入框上方的中间部分区域
-                mNodeOperate.clickOnResouceIdOffset("inputBar", 2000, 1,
+                mNodeOperate.clickOnResourceIdOffset("inputBar", 2000, 1,
                         -100);
                 //点击发送并播放厘米秀动作，交叉互相打断播放
                 int count = 0;
@@ -432,12 +434,12 @@ public class RunService extends Service {
                     //循环交互点击
                     //如果没有点击成功判断面板是否隐藏了
                     //通过厘米秀面板的特别动作id点击
-                    if (!mNodeOperate.clickOnResouceId("avatar_item_imageview", 1000, 0)) {
-                        mNodeOperate.clickOnResouceIdOffset("inputBar", 2000, 1,
+                    if (!mNodeOperate.clickOnResourceId("avatar_item_imageview", 1000, 0)) {
+                        mNodeOperate.clickOnResourceIdOffset("inputBar", 2000, 1,
                                 -100);
                     }
                     mFunction.inputText("群单人交叉发送:" + count, 1000);
-                    mNodeOperate.clickOnResouceId("avatar_item_imageview", 2000, 1);
+                    mNodeOperate.clickOnResourceId("avatar_item_imageview", 2000, 1);
                     //每轮查询可用内存和进程内存情况,并保存到终端存储
                     mFunction.saveMem("com.tencent.mobileqq", fileName);
                 }
@@ -481,23 +483,23 @@ public class RunService extends Service {
                 //点击搜索栏
                 mNodeOperate.clickOnText("测试号集中营", 3000);
                 //点击AIO输入输入框上方的中间部分区域
-                mNodeOperate.clickOnResouceIdOffset("inputBar", 2000, 1,
+                mNodeOperate.clickOnResourceIdOffset("inputBar", 2000, 1,
                         -100);
                 //点击tab切换到双人动作
-                mNodeOperate.clickOnResouceId("tabView", 2000, 1);
+                mNodeOperate.clickOnResourceId("tabView", 2000, 1);
                 //点击发送并播放厘米秀动作，交叉互相打断播放
                 int count = 0;
                 for (int i = 0; i < caseTime; i++) {
                     //循环交互点击
                     //如果没有点击成功判断面板是否隐藏了
                     //通过厘米秀面板的特别动作id点击
-                    if (!mNodeOperate.clickOnResouceId("avatar_item_imageview", 1000, 0)) {
-                        mNodeOperate.clickOnResouceIdOffset("inputBar", 2000, 1,
+                    if (!mNodeOperate.clickOnResourceId("avatar_item_imageview", 1000, 0)) {
+                        mNodeOperate.clickOnResourceIdOffset("inputBar", 2000, 1,
                                 -100);
                     }
                     mNodeOperate.clickOnTextContain("大群主", 1000);
                     mFunction.inputText("群双人交叉发送:" + count, 1000);
-                    mNodeOperate.clickOnResouceId("avatar_item_imageview", 2000, 1);
+                    mNodeOperate.clickOnResourceId("avatar_item_imageview", 2000, 1);
                     mNodeOperate.clickOnTextContain("大群主", 1000);
                     //每轮查询可用内存和进程内存情况,并保存到终端存储
                     mFunction.saveMem("com.tencent.mobileqq", fileName);
@@ -540,17 +542,17 @@ public class RunService extends Service {
                 //点击搜索栏
                 mNodeOperate.clickOnText("测试号集中营", 3000);
                 //点击AIO输入输入框上方的中间部分区域
-                mNodeOperate.clickOnResouceIdOffset("inputBar", 2000, 1,
+                mNodeOperate.clickOnResourceIdOffset("inputBar", 2000, 1,
                         -100);
                 //点击tab切换到弹幕动作
-                mNodeOperate.clickOnResouceId("tabView", 2000, 2);
+                mNodeOperate.clickOnResourceId("tabView", 2000, 2);
                 int count = 0;
                 for (int i = 0; i < caseTime; i++) {
                     //循环交互点击
                     //如果没有点击成功判断面板是否隐藏了
                     //通过厘米秀面板的特别动作id点击
-                    if (!mNodeOperate.clickOnResouceId("avatar_item_imageview", 1000, 0)) {
-                        mNodeOperate.clickOnResouceIdOffset("inputBar", 2000, 1,
+                    if (!mNodeOperate.clickOnResourceId("avatar_item_imageview", 1000, 0)) {
+                        mNodeOperate.clickOnResourceIdOffset("inputBar", 2000, 1,
                                 -100);
                     }
                     mNodeOperate.clickOnTextContain("大群主", 1000);
@@ -602,15 +604,15 @@ public class RunService extends Service {
                     //点击搜索栏
                     mNodeOperate.clickOnText("测试号集中营", 1000);
                     //点击AIO输入输入框上方的中间部分区域
-                    mNodeOperate.clickOnResouceIdOffset("inputBar", 2000, 1,
+                    mNodeOperate.clickOnResourceIdOffset("inputBar", 2000, 1,
                             -100);
                     //如果没有点击成功判断面板是否隐藏了
                     //通过厘米秀面板的特别动作id点击
                     mFunction.inputText("群和C2C切换发送:" + count, 1000);
-                    if (!mNodeOperate.clickOnResouceId("avatar_item_imageview", 2000, 0)) {
-                        mNodeOperate.clickOnResouceIdOffset("inputBar", 2000, 1,
+                    if (!mNodeOperate.clickOnResourceId("avatar_item_imageview", 2000, 0)) {
+                        mNodeOperate.clickOnResourceIdOffset("inputBar", 2000, 1,
                                 -100);
-                        mNodeOperate.clickOnResouceId("avatar_item_imageview", 2000, 0);
+                        mNodeOperate.clickOnResourceId("avatar_item_imageview", 2000, 0);
                     }
 
                     mNodeOperate.clickOnTextContain("返回", 1000);
@@ -621,14 +623,14 @@ public class RunService extends Service {
                     //进入C2C
                     mNodeOperate.clickOnTextContain("厘米", 1000);
                     //点击AIO输入输入框上方的中间部分区域
-                    mNodeOperate.clickOnResouceIdOffset("inputBar", 2000, 1,
+                    mNodeOperate.clickOnResourceIdOffset("inputBar", 2000, 1,
                             -100);
                     //通过厘米秀面板的特别动作id点击
                     mFunction.inputText("群和C2C切换发送:" + count, 2000);
-                    if (!mNodeOperate.clickOnResouceId("avatar_item_imageview", 1000, 0)) {
-                        mNodeOperate.clickOnResouceIdOffset("inputBar", 2000, 1,
+                    if (!mNodeOperate.clickOnResourceId("avatar_item_imageview", 1000, 0)) {
+                        mNodeOperate.clickOnResourceIdOffset("inputBar", 2000, 1,
                                 -100);
-                        mNodeOperate.clickOnResouceId("avatar_item_imageview", 1000, 0);
+                        mNodeOperate.clickOnResourceId("avatar_item_imageview", 1000, 0);
                     }
 
                     mNodeOperate.clickOnTextContain("返回", 1000);
@@ -676,19 +678,19 @@ public class RunService extends Service {
                 //点击搜索栏
                 mNodeOperate.clickOnText("测试号集中营", 3000);
                 //点击AIO输入输入框上方的中间部分区域
-                mNodeOperate.clickOnResouceIdOffset("inputBar", 2000, 1, -100);
-                mNodeOperate.clickOnResouceId("tabView", 2000, 1);
+                mNodeOperate.clickOnResourceIdOffset("inputBar", 2000, 1, -100);
+                mNodeOperate.clickOnResourceId("tabView", 2000, 1);
                 //循环交互点击
                 //如果没有点击成功判断面板是否隐藏了
                 //通过厘米秀面板的特别动作id点击
-                if (!mNodeOperate.clickOnResouceId("avatar_item_imageview", 1000, 0)) {
-                    mNodeOperate.clickOnResouceIdOffset("inputBar", 2000, 1,
+                if (!mNodeOperate.clickOnResourceId("avatar_item_imageview", 1000, 0)) {
+                    mNodeOperate.clickOnResourceIdOffset("inputBar", 2000, 1,
                             -100);
                 }
                 mNodeOperate.clickOnTextContain("大群主", 1000);
 
                 //点击AIO输入输入框上方的中间部分区域
-                mNodeOperate.clickOnResouceIdOffset("inputBar", 2000, 1, -100);
+                mNodeOperate.clickOnResourceIdOffset("inputBar", 2000, 1, -100);
 
                 for (int i = 0; i < caseTime; i++) {
                     mNodeOperate.clickOnTextContain("大群主", 3000);
@@ -735,15 +737,15 @@ public class RunService extends Service {
                 //点击搜索栏
                 mNodeOperate.clickOnText("测试号集中营", 3000);
                 //点击AIO输入输入框上方的中间部分区域
-                mNodeOperate.clickOnResouceIdOffset("inputBar", 2000, 1, -100);
+                mNodeOperate.clickOnResourceIdOffset("inputBar", 2000, 1, -100);
 
                 for (int i = 0; i < caseTime; i++) {
                     //点击商城入口按钮
-                    mNodeOperate.clickOnResouceId("btn_more_apollo", 5000, 0);
+                    mNodeOperate.clickOnResourceId("btn_more_apollo", 5000, 0);
                     //切换到互动页
-                    mNodeOperate.clickOnResouceIdOffset("rlCommenTitle", 3000, 0, 100);
+                    mNodeOperate.clickOnResourceIdOffset("rlCommenTitle", 3000, 0, 100);
                     //切换到商城页
-                    mNodeOperate.clickOnResouceIdOffset("rlCommenTitle", 3000, 0, -100);
+                    mNodeOperate.clickOnResourceIdOffset("rlCommenTitle", 3000, 0, -100);
 
                     mUIOperate.sendKey(KeyEvent.KEYCODE_BACK, 3000);
 
@@ -784,16 +786,16 @@ public class RunService extends Service {
 
                 for (int i = 0; i < caseTime; i++) {
                     //切换到抽屉页
-                    mNodeOperate.clickOnResouceId("conversation_head", 3000, 0);
+                    mNodeOperate.clickOnResourceId("conversation_head", 3000, 0);
                     //点击厘米秀小人
-                    mNodeOperate.clickOnResouceIdOffset("nightmode", 3000, 0, 200);
+                    mNodeOperate.clickOnResourceIdOffset("nightmode", 3000, 0, 200);
                     //切换到商城页
-                    mNodeOperate.clickOnResouceIdOffset("rlCommenTitle", 3000, 0, -100);
+                    mNodeOperate.clickOnResourceIdOffset("rlCommenTitle", 3000, 0, -100);
                     //切换到互动页
-                    mNodeOperate.clickOnResouceIdOffset("rlCommenTitle", 3000, 0, 100);
+                    mNodeOperate.clickOnResourceIdOffset("rlCommenTitle", 3000, 0, 100);
                     mUIOperate.sendKey(KeyEvent.KEYCODE_BACK, 3000);
                     //切换到消息列表
-                    mNodeOperate.clickOnResouceId("conversation_head", 3000, 0);
+                    mNodeOperate.clickOnResourceId("conversation_head", 3000, 0);
                     //每轮查询可用内存和进程内存情况,并保存到终端存储
                     mFunction.saveMem("com.tencent.mobileqq", fileName);
                 }
@@ -806,8 +808,53 @@ public class RunService extends Service {
         currentThread.start();
     }
 
+    // 当前消息列表AIO切换
+    private void CSMT_8(final int caseTime) {
+        mShow.updateState("case: " + (testNumber + 1) + "\n" + "当前消息列表AIO切换");
+        Thread currentThread = new Thread(new Runnable() {
+
+            @Override
+            public void run() {
+
+                //初始化参数
+                String fileName = "CSMT-8-" + Time.getCurrentTimeSecond();
+                //杀手Q进程还原状态
+                mFunction.killAppByPackageName("com.tencent.mobileqq");
+                mOperate.sleep(3000);
+                //热启动手Q
+                try {
+                    mOperate.startActivity("com.tencent.mobileqq",
+                            "com.tencent.mobileqq.activity.SplashActivity");
+                } catch (Exception e) {
+                    Log.e(TAG, "start test app activity error!");
+                    return;
+                }
+                mOperate.sleep(5000);
+
+                for (int i = 0; i < caseTime; i++) {
+                    for (int j = 0; j < 6; j++) {
+                        //切换到抽屉页
+                        mNodeOperate.clickOnListViewByResourceId("recent_chat_list", j, 2000);
+                        mNodeOperate.clickOnTextContain("返回", 1000);
+                        mNodeOperate.clickOnTextContain("消息", 1000);
+                    }
+                    //每轮查询可用内存和进程内存情况,并保存到终端存储
+                    mFunction.saveMem("com.tencent.mobileqq", fileName);
+                }
+                mOperate.sleep(2000);
+                mUIOperate.sendKey(KeyEvent.KEYCODE_HOME, 2000);
+                // 测试用例结束，打印日志
+                mEventHandler.sendEmptyMessage(PRINT_LOG);
+            }
+        }
+
+        );
+        currentThread.start();
+    }
+
     // private function
     // start shut screen
+
     private void shutScreen(long minutes) {
         powerOffDelay(mContext, minutes * (int) (60 * StaticData.timeGene));
         mUIOperate.sendKey(KeyEvent.KEYCODE_POWER, 0);

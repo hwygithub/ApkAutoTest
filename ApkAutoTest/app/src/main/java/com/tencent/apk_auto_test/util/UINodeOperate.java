@@ -17,8 +17,6 @@ import android.os.SystemClock;
 import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.Display;
-import android.view.WindowManager;
 import android.view.accessibility.AccessibilityNodeInfo;
 
 @SuppressLint("NewApi")
@@ -50,6 +48,26 @@ public class UINodeOperate {
         mY = Global.SCREEN_HEIGHT / 1920;
         mX = Global.SCREEN_WIDTH / 1080;
 
+    }
+
+    public Set<ComponentName> getEnabledServicesFromSettings(Context context) {
+        String enabledServicesSetting = Settings.Secure.getString(context.getContentResolver(),
+                Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES);
+        Log.v(TAG, "enabledServicesSetting ：" + enabledServicesSetting);
+        if (enabledServicesSetting == null) {
+            enabledServicesSetting = "";
+        }
+        Set<ComponentName> enabledServices = new HashSet<ComponentName>();
+        TextUtils.SimpleStringSplitter colonSplitter = sStringColonSplitter;
+        colonSplitter.setString(enabledServicesSetting);
+        while (colonSplitter.hasNext()) {
+            String componentNameString = colonSplitter.next();
+            ComponentName enabledService = ComponentName.unflattenFromString(componentNameString);
+            if (enabledService != null) {
+                enabledServices.add(enabledService);
+            }
+        }
+        return enabledServices;
     }
 
     /**
@@ -128,27 +146,6 @@ public class UINodeOperate {
             enabledServicesBuilder
                     .deleteCharAt(enabledServicesBuilderLength - 1);
         }
-    }
-
-
-    public Set<ComponentName> getEnabledServicesFromSettings(Context context) {
-        String enabledServicesSetting = Settings.Secure.getString(context.getContentResolver(),
-                Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES);
-        Log.v(TAG, "enabledServicesSetting ：" + enabledServicesSetting);
-        if (enabledServicesSetting == null) {
-            enabledServicesSetting = "";
-        }
-        Set<ComponentName> enabledServices = new HashSet<ComponentName>();
-        TextUtils.SimpleStringSplitter colonSplitter = sStringColonSplitter;
-        colonSplitter.setString(enabledServicesSetting);
-        while (colonSplitter.hasNext()) {
-            String componentNameString = colonSplitter.next();
-            ComponentName enabledService = ComponentName.unflattenFromString(componentNameString);
-            if (enabledService != null) {
-                enabledServices.add(enabledService);
-            }
-        }
-        return enabledServices;
     }
 
 
@@ -312,7 +309,7 @@ public class UINodeOperate {
      * @param waitTime waittime
      * @return
      */
-    public boolean clickOnResouceId(String id, int waitTime, int index) {
+    public boolean clickOnResourceId(String id, int waitTime, int index) {
         mWaitTime = waitTime;
         int j = 0;
         getNodes();
@@ -328,7 +325,7 @@ public class UINodeOperate {
             }
         }
 
-        Log.e(TAG, "clickOnResouceId " + id + " false!");
+        Log.e(TAG, "clickOnResourceId " + id + " false!");
         return false;
     }
 
@@ -341,8 +338,8 @@ public class UINodeOperate {
      * @param offset     与该控件中心的偏移量，包含正负数
      * @return
      */
-    public boolean clickOnResouceIdOffset(String id, int waitTime,
-                                          int offsetType, int offset) {
+    public boolean clickOnResourceIdOffset(String id, int waitTime,
+                                           int offsetType, int offset) {
 
 
         mWaitTime = waitTime;
@@ -357,7 +354,7 @@ public class UINodeOperate {
             }
         }
 
-        Log.e(TAG, "clickOnResouceId " + id + " false!");
+        Log.e(TAG, "clickOnResourceId " + id + " false!");
         return false;
     }
 
@@ -407,19 +404,25 @@ public class UINodeOperate {
     }
 
     /**
-     * ListView child start from 0
+     * 通过id找到父控件点击其中子控件
      *
-     * @param index
-     * @return
+     * @param id       id名字
+     * @param index    序号
+     * @param waitTime 点击等待时间
+     * @return 是否成功点击
      */
-    public boolean clickOnListView(int index, int waitTime) {
+    public boolean clickOnListViewByResourceId(String id, int index, int waitTime) {
         mWaitTime = waitTime;
         getNodes();
-        int parentIndex = getNodeByClass("ListView", 1);
-        if (!isChildExits(parentIndex, index)) {
+        if (null == getNodeByResourceId(id, 0)) {
+            Log.e(TAG, "getNodeByResourceId null");
             return false;
         }
-        return click(infos.get(parentIndex).getChild(index));
+        AccessibilityNodeInfo list = getNodeByResourceId(id, 0);
+        if (list.getChildCount() == 0) {
+            return false;
+        }
+        return click(list.getChild(index));
     }
 
     public boolean clickOnListViewText(String text) {
@@ -513,15 +516,6 @@ public class UINodeOperate {
         return click(infos.get(parentIndex).getChild(index - 1));
     }
 
-    public boolean isChildExits(int parentIndex, int childIndex) {
-        if (parentIndex <= 0) {
-            return false;
-        }
-        if (infos.get(parentIndex).getChildCount() < childIndex) {
-            return false;
-        }
-        return true;
-    }
 
     /**
      * click the rightArea in the View
@@ -707,6 +701,23 @@ public class UINodeOperate {
         return -1;
     }
 
+    public AccessibilityNodeInfo getNodeByResourceId(String id, int index) {
+        if (id == null || id.equals("")) {
+            return null;
+        }
+        int currentIndex = 0;
+        for (int i = 0; i < infos.size(); i++) {
+            String name = infos.get(i).getViewIdResourceName() + "";
+            if (name.contains(id)) {
+                currentIndex++;
+                if (index == currentIndex) {
+                    return infos.get(i);
+                }
+            }
+        }
+        return null;
+    }
+
     public AccessibilityNodeInfo getNodeInfoByClass(String className, int index) {
         if (className == null || className.equals("")) {
             return null;
@@ -827,19 +838,6 @@ public class UINodeOperate {
         return r;
     }
 
-    /**
-     * print the info of nodes in log
-     */
-    public void printViewInfos() {
-        if (infos == null || infos.size() == 0) {
-            return;
-        }
-        for (int i = 0; i < infos.size(); i++) {
-            Log.e(TAG, i + ":" + infos.get(i).getText() + "");
-            Log.e(TAG, i + ":" + infos.get(i).getClassName().toString());
-
-        }
-    }
 
     public AccessibilityNodeInfo getLastImageOfNode(AccessibilityNodeInfo root) {
         if (root == null) {
@@ -895,6 +893,20 @@ public class UINodeOperate {
         return firstNode;
     }
 
+    /**
+     * print the info of nodes in log
+     */
+    public void printViewInfos() {
+        if (infos == null || infos.size() == 0) {
+            return;
+        }
+        for (int i = 0; i < infos.size(); i++) {
+            Log.e(TAG, i + ":" + infos.get(i).getText() + "");
+            Log.e(TAG, i + ":" + infos.get(i).getClassName().toString());
+
+        }
+    }
+
     public void printButtonInfos() {
         if (infos == null || infos.size() == 0) {
             return;
@@ -928,6 +940,16 @@ public class UINodeOperate {
             Log.e(TAG, index + ":" + node.getText() + " " + node.getClassName());
             printViewInfos(node);
         }
+    }
+
+    public boolean isChildExits(int parentIndex, int childIndex) {
+        if (parentIndex <= 0) {
+            return false;
+        }
+        if (infos.get(parentIndex).getChildCount() < childIndex) {
+            return false;
+        }
+        return true;
     }
 
     public boolean isTextExits(String text) {
