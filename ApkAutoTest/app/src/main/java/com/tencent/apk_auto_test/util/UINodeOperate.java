@@ -419,6 +419,8 @@ public class UINodeOperate {
             return false;
         }
         AccessibilityNodeInfo list = getNodeByResourceId(id, 0);
+        if (index > list.getChildCount())
+            return false;
         if (list.getChildCount() == 0) {
             return false;
         }
@@ -709,10 +711,10 @@ public class UINodeOperate {
         for (int i = 0; i < infos.size(); i++) {
             String name = infos.get(i).getViewIdResourceName() + "";
             if (name.contains(id)) {
-                currentIndex++;
                 if (index == currentIndex) {
                     return infos.get(i);
                 }
+                currentIndex++;
             }
         }
         return null;

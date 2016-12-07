@@ -8,9 +8,9 @@ import java.util.List;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlSerializer;
 
-import com.tencent.apk_auto_test.data.TestCase;
-
 import android.util.Xml;
+
+import com.tencent.apk_auto_test.data.TestCase;
 
 public class PullParser {
 

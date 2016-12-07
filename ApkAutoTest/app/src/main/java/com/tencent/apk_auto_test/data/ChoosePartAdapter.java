@@ -13,66 +13,65 @@ import android.widget.Toast;
 
 
 public class ChoosePartAdapter extends BaseAdapter {
-	private LayoutInflater mInflater;
-	private Context mContext;
+    private LayoutInflater mInflater;
+    private Context mContext;
 
-	private String[] chooseListText;
+    private String[] chooseListText;
 
-	public ChoosePartAdapter(Context context, String[] listText) {
-		mContext = context;
-		chooseListText = listText;
-		this.mInflater = LayoutInflater.from(context);
-	}
+    public ChoosePartAdapter(Context context, String[] listText) {
+        mContext = context;
+        chooseListText = listText;
+        this.mInflater = LayoutInflater.from(context);
+    }
 
-	@Override
-	public int getCount() {
-		return chooseListText.length;
-	}
+    @Override
+    public int getCount() {
+        return chooseListText.length;
+    }
 
-	@Override
-	public Object getItem(int position) {
-		return null;
-	}
+    @Override
+    public Object getItem(int position) {
+        return null;
+    }
 
-	@Override
-	public long getItemId(int position) {
-		return 0;
-	}
+    @Override
+    public long getItemId(int position) {
+        return 0;
+    }
 
-	@Override
-	public View getView(final int position, View convertView, ViewGroup parent) {
-		ChooseViewHolder holder = null;
-		if (convertView == null) {
-			
-			holder = new ChooseViewHolder();
+    @Override
+    public View getView(final int position, View convertView, ViewGroup parent) {
+        ChooseViewHolder holder = null;
+        if (convertView == null) {
 
-			convertView = mInflater.inflate(R.layout.choose_list_item, null);
-			holder.text = (TextView) convertView.findViewById(R.id.list_text);
-			holder.button = (Button) convertView.findViewById(R.id.btn_reduce);
-			convertView.setTag(holder);
+            holder = new ChooseViewHolder();
 
-		} else {
+            convertView = mInflater.inflate(R.layout.choose_list_item, null);
+            holder.text = (TextView) convertView.findViewById(R.id.list_text);
+            holder.button = (Button) convertView.findViewById(R.id.btn_reduce);
+            convertView.setTag(holder);
 
-			holder = (ChooseViewHolder) convertView.getTag();
-		}
+        } else {
 
-		holder.text.setText(chooseListText[position]);
-		holder.button.setOnClickListener(new View.OnClickListener() {
+            holder = (ChooseViewHolder) convertView.getTag();
+        }
 
-			@Override
-			public void onClick(View v) {
-				RunPara mPara = new RunPara();
-				mPara.runNumber = 1;
-				mPara.runCase = chooseListText[position];
+        holder.text.setText(chooseListText[position]);
+        holder.button.setOnClickListener(new View.OnClickListener() {
 
-				String number = mPara.runCase.split("_")[1];
-				mPara.runCaseNumber = Integer.parseInt(number);
+            @Override
+            public void onClick(View v) {
+                RunPara mPara = new RunPara();
+                mPara.runNumber = 1;
+                mPara.runCase = chooseListText[position];
 
-				StaticData.runList.add(mPara);
-				StaticData.runAdapter.notifyDataSetChanged();
-			}
-		});
+                mPara.runCaseNumber = position;
 
-		return convertView;
-	}
+                StaticData.runList.add(mPara);
+                StaticData.runAdapter.notifyDataSetChanged();
+            }
+        });
+
+        return convertView;
+    }
 }

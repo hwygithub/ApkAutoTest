@@ -25,7 +25,6 @@ import android.app.KeyguardManager.KeyguardLock;
 import android.app.ActivityManager;
 import android.app.DownloadManager;
 import android.app.Service;
-import android.content.ComponentName;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
@@ -98,13 +97,7 @@ public class Function {
     }
 
     public String getCaseName(String caseNumber) {
-        for (String s : StaticData.chooseListText) {
-            String number = (String) s.split("_")[1];
-            if (caseNumber.equals(number)) {
-                return s;
-            }
-        }
-        return null;
+        return StaticData.chooseListText[Integer.parseInt(caseNumber)];
     }
 
     /**

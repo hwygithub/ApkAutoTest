@@ -93,6 +93,15 @@ public class RunService extends Service {
     }
 
     @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        if (null == mHandler) {
+            return START_STICKY_COMPATIBILITY;
+        }
+        mHandler.sendEmptyMessageDelayed(START_SCHEME, 2000);
+        return super.onStartCommand(intent, flags, startId);
+    }
+
+    @Override
     public void onStart(Intent intent, int arg1) {
         super.onStart(intent, arg1);
         // StartForeground
@@ -160,14 +169,6 @@ public class RunService extends Service {
         }
     }
 
-    @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
-        if (null == mHandler) {
-            return START_STICKY_COMPATIBILITY;
-        }
-        mHandler.sendEmptyMessageDelayed(START_SCHEME, 2000);
-        return super.onStartCommand(intent, flags, startId);
-    }
 
     class TestHandler extends Handler {
 
@@ -350,6 +351,9 @@ public class RunService extends Service {
             case 8:
                 CSMT_8(caseTime);
                 break;
+            case 9:
+                CSMT_9(caseTime);
+                break;
             default:
                 return;
         }
@@ -454,9 +458,9 @@ public class RunService extends Service {
         currentThread.start();
     }
 
-    // 群双人动作交叉发送
+    // 单双人动作交叉发送
     private void CSMT_2(final int caseTime) {
-        mShow.updateState("case: " + (testNumber + 1) + "\n" + "群双人动作交叉发送");
+        mShow.updateState("case: " + (testNumber + 1) + "\n" + "单双人动作交叉发送");
         Thread currentThread = new Thread(new Runnable() {
 
             @Override
@@ -464,6 +468,62 @@ public class RunService extends Service {
 
                 //初始化参数
                 String fileName = "CSMT-2-" + Time.getCurrentTimeSecond();
+                //杀手Q进程还原状态
+                mFunction.killAppByPackageName("com.tencent.mobileqq");
+                mOperate.sleep(3000);
+                //热启动手Q
+                try {
+                    mOperate.startActivity("com.tencent.mobileqq",
+                            "com.tencent.mobileqq.activity.SplashActivity");
+                } catch (Exception e) {
+                    Log.e(TAG, "start test app activity error!");
+                    return;
+                }
+                mOperate.sleep(5000);
+                //点击搜索栏
+                mNodeOperate.clickOnText("搜索", 3000);
+                //输入群，点击进入
+                mFunction.inputText("546479585", 2000);
+                //点击搜索栏
+                mNodeOperate.clickOnText("测试号集中营", 3000);
+                //点击AIO输入输入框上方的中间部分区域
+                mNodeOperate.clickOnResourceIdOffset("inputBar", 2000, 1,
+                        -100);
+                //点击发送并播放厘米秀动作，交叉互相打断播放
+                int count = 0;
+                for (int i = 0; i < caseTime; i++) {
+                    //循环交互点击
+                    //点击单人tab的动作
+                    mNodeOperate.clickOnResourceId("avatar_item_imageview", 1000, 0);
+                    //点击双人tab的动作
+                    mFunction.inputText("单双人动作交叉发送:" + count, 1000);
+                    //点击tab切换到双人动作
+                    mNodeOperate.clickOnResourceId("tabView", 2000, 1);
+                    mNodeOperate.clickOnResourceId("avatar_item_imageview", 2000, 0);
+                    //每轮查询可用内存和进程内存情况,并保存到终端存储
+                    mFunction.saveMem("com.tencent.mobileqq", fileName);
+                }
+                mOperate.sleep(2000);
+
+                mUIOperate.sendKey(KeyEvent.KEYCODE_HOME, 2000);
+
+                // 测试用例结束，打印日志
+                mEventHandler.sendEmptyMessage(PRINT_LOG);
+            }
+        });
+        currentThread.start();
+    }
+
+    // 群双人动作交叉发送
+    private void CSMT_3(final int caseTime) {
+        mShow.updateState("case: " + (testNumber + 1) + "\n" + "群双人动作交叉发送");
+        Thread currentThread = new Thread(new Runnable() {
+
+            @Override
+            public void run() {
+
+                //初始化参数
+                String fileName = "CSMT-3-" + Time.getCurrentTimeSecond();
                 //杀手Q进程还原状态
                 mFunction.killAppByPackageName("com.tencent.mobileqq");
                 mOperate.sleep(3000);
@@ -514,7 +574,7 @@ public class RunService extends Service {
     }
 
     // 弹幕动作发送
-    private void CSMT_3(final int caseTime) {
+    private void CSMT_4(final int caseTime) {
         mShow.updateState("case: " + (testNumber + 1) + "\n" + "弹幕动作发送");
         Thread currentThread = new Thread(new Runnable() {
 
@@ -522,7 +582,7 @@ public class RunService extends Service {
             public void run() {
 
                 //初始化参数
-                String fileName = "CSMT-3-" + Time.getCurrentTimeSecond();
+                String fileName = "CSMT-4-" + Time.getCurrentTimeSecond();
                 //杀手Q进程还原状态
                 mFunction.killAppByPackageName("com.tencent.mobileqq");
                 mOperate.sleep(3000);
@@ -573,7 +633,7 @@ public class RunService extends Service {
     }
 
     // 群和C2C切换发送
-    private void CSMT_4(final int caseTime) {
+    private void CSMT_5(final int caseTime) {
         mShow.updateState("case: " + (testNumber + 1) + "\n" + "群和C2C切换发送");
         Thread currentThread = new Thread(new Runnable() {
 
@@ -581,7 +641,7 @@ public class RunService extends Service {
             public void run() {
 
                 //初始化参数
-                String fileName = "CSMT-4-" + Time.getCurrentTimeSecond();
+                String fileName = "CSMT-5-" + Time.getCurrentTimeSecond();
                 //杀手Q进程还原状态
                 mFunction.killAppByPackageName("com.tencent.mobileqq");
                 mOperate.sleep(3000);
@@ -649,7 +709,7 @@ public class RunService extends Service {
     }
 
     // 循环播放动作
-    private void CSMT_5(final int caseTime) {
+    private void CSMT_6(final int caseTime) {
         mShow.updateState("case: " + (testNumber + 1) + "\n" + "循环播放动作");
         Thread currentThread = new Thread(new Runnable() {
 
@@ -657,7 +717,7 @@ public class RunService extends Service {
             public void run() {
 
                 //初始化参数
-                String fileName = "CSMT-5-" + Time.getCurrentTimeSecond();
+                String fileName = "CSMT-6-" + Time.getCurrentTimeSecond();
                 //杀手Q进程还原状态
                 mFunction.killAppByPackageName("com.tencent.mobileqq");
                 mOperate.sleep(3000);
@@ -708,7 +768,7 @@ public class RunService extends Service {
     }
 
     // 面板进入商城切换互动页
-    private void CSMT_6(final int caseTime) {
+    private void CSMT_7(final int caseTime) {
         mShow.updateState("case: " + (testNumber + 1) + "\n" + "面板进入商城切换互动页");
         Thread currentThread = new Thread(new Runnable() {
 
@@ -716,7 +776,7 @@ public class RunService extends Service {
             public void run() {
 
                 //初始化参数
-                String fileName = "CSMT-6-" + Time.getCurrentTimeSecond();
+                String fileName = "CSMT-7-" + Time.getCurrentTimeSecond();
                 //杀手Q进程还原状态
                 mFunction.killAppByPackageName("com.tencent.mobileqq");
                 mOperate.sleep(3000);
@@ -762,7 +822,7 @@ public class RunService extends Service {
     }
 
     // 抽屉页进入互动页切换商城页
-    private void CSMT_7(final int caseTime) {
+    private void CSMT_8(final int caseTime) {
         mShow.updateState("case: " + (testNumber + 1) + "\n" + "抽屉页进入互动页切换商城页");
         Thread currentThread = new Thread(new Runnable() {
 
@@ -770,7 +830,7 @@ public class RunService extends Service {
             public void run() {
 
                 //初始化参数
-                String fileName = "CSMT-7-" + Time.getCurrentTimeSecond();
+                String fileName = "CSMT-8-" + Time.getCurrentTimeSecond();
                 //杀手Q进程还原状态
                 mFunction.killAppByPackageName("com.tencent.mobileqq");
                 mOperate.sleep(3000);
@@ -809,7 +869,7 @@ public class RunService extends Service {
     }
 
     // 当前消息列表AIO切换
-    private void CSMT_8(final int caseTime) {
+    private void CSMT_9(final int caseTime) {
         mShow.updateState("case: " + (testNumber + 1) + "\n" + "当前消息列表AIO切换");
         Thread currentThread = new Thread(new Runnable() {
 
@@ -817,7 +877,7 @@ public class RunService extends Service {
             public void run() {
 
                 //初始化参数
-                String fileName = "CSMT-8-" + Time.getCurrentTimeSecond();
+                String fileName = "CSMT-9-" + Time.getCurrentTimeSecond();
                 //杀手Q进程还原状态
                 mFunction.killAppByPackageName("com.tencent.mobileqq");
                 mOperate.sleep(3000);
@@ -832,7 +892,7 @@ public class RunService extends Service {
                 mOperate.sleep(5000);
 
                 for (int i = 0; i < caseTime; i++) {
-                    for (int j = 0; j < 6; j++) {
+                    for (int j = 1; j < 6; j++) {
                         //切换到抽屉页
                         mNodeOperate.clickOnListViewByResourceId("recent_chat_list", j, 2000);
                         mNodeOperate.clickOnTextContain("返回", 1000);

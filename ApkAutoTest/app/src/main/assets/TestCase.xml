@@ -5,8 +5,18 @@
         <className>CmShowMemoryTest</className>
         <timeGene>1</timeGene>
         <runState>once</runState>
-        <caseName>登录测试账号_0,群单人动作交叉发送_1,群双人动作交叉发送_2,弹幕动作发送_3,群和C2C切换发送_4,
-            循环播放动作_5,面板进入商城切换互动页_6,抽屉页进入互动页切换商城页_7,当前消息列表AIO切换_8</caseName>
-        <caseOrder>0-1,1-5,2-5,3-5,4-5,5-5,6-5,7-5,8-5</caseOrder>
+        <caseName>
+            1.登录测试账号,
+            2.群单人动作交叉发送,
+            3.单双人动作交叉发送,
+            4.群双人动作交叉发送,
+            5.弹幕动作发送,
+            6.群和C2C切换发送,
+            7.循环播放动作,
+            8.面板进入商城切换互动页,
+            9.抽屉页进入互动页切换商城页,
+            10.当前消息列表AIO切换
+        </caseName>
+        <caseOrder>0-1,1-5,2-5,3-5,4-5,5-5,6-5,7-5,8-5,9-5</caseOrder>
     </case>
 </Test>

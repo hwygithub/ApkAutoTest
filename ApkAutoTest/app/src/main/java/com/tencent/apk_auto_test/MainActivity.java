@@ -1,6 +1,5 @@
 package com.tencent.apk_auto_test;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,8 +12,6 @@ import com.tencent.apk_auto_test.util.ExecUtil;
 import com.tencent.apk_auto_test.util.Function;
 import com.tencent.apk_auto_test.util.Global;
 import com.tencent.apk_auto_test.services.RunService;
-import com.tencent.apk_auto_test.util.Time;
-import com.tencent.apk_auto_test.util.TxtUtil;
 import com.test.function.Assert;
 import com.test.function.Operate;
 
@@ -176,6 +173,7 @@ public class MainActivity extends Activity implements OnClickListener {
         getWindowManager().getDefaultDisplay().getMetrics(mDisplayMetrics);
         Global.SCREEN_WIDTH = mDisplayMetrics.widthPixels;
         Global.SCREEN_HEIGHT = mDisplayMetrics.heightPixels;
+        /*
         // Install filelogsave apk if it is not installed
         if (!mAssert.isApkInstall("com.apptest.filelogsave")) {
             try {
@@ -184,6 +182,7 @@ public class MainActivity extends Activity implements OnClickListener {
                 e.printStackTrace();
             }
         }
+        */
     }
 
     private void setEnvironment() {

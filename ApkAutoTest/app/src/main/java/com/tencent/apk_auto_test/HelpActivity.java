@@ -16,8 +16,6 @@ public class HelpActivity extends Activity {
 
 	@Override
 	protected void onDestroy() {
-		Function function = new Function(this);
-		function.stopPackage(this.getPackageName());
 		super.onDestroy();
 	}
 
