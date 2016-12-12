@@ -16,7 +16,8 @@
     <TextView
         android:id="@+id/run_text_time"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:textColor="@android:color/darker_gray"/>
 
     <Button
         android:id="@+id/btn_add"
