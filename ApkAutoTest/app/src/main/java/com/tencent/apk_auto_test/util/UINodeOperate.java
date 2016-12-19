@@ -22,7 +22,7 @@ import android.view.accessibility.AccessibilityNodeInfo;
 @SuppressLint("NewApi")
 public class UINodeOperate {
 
-    private static final boolean DEBUG = false;
+    private static final boolean DEBUG = true;
     private static final String NAME = "com.tencent.apk_auto_test/com.tencent.apk_auto_test.services.AccessibilityEventService";
     private static final char ENABLED_ACCESSIBILITY_SERVICES_SEPARATOR = ':';
     private final static TextUtils.SimpleStringSplitter sStringColonSplitter = new TextUtils.SimpleStringSplitter(

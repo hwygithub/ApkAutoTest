@@ -2,7 +2,7 @@
 <Test>
     <case>
         <name>厘米秀内存测试</name>
-        <className>CmShowMemoryTest</className>
+        <className>CmShowMemRunner</className>
         <timeGene>1</timeGene>
         <runState>once</runState>
         <caseName>
@@ -18,5 +18,15 @@
             10.当前消息列表AIO切换
         </caseName>
         <caseOrder>0-1,1-100,2-100,3-100,4-100,5-100,6-100,7-100,8-100,9-100</caseOrder>
+    </case>
+    <case>
+        <name>厘米秀数据构造测试</name>
+        <className>CmShowDataTest</className>
+        <timeGene>1</timeGene>
+        <runState>once</runState>
+        <caseName>
+            1.构造初始状态用户
+        </caseName>
+        <caseOrder>0-1</caseOrder>
     </case>
 </Test>

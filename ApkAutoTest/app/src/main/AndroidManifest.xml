@@ -41,8 +41,12 @@
         <activity android:name="com.tencent.apk_auto_test.HelpActivity">
         </activity>
 
-        <service android:name="com.tencent.apk_auto_test.services.RunService">
+        <service android:name="com.tencent.apk_auto_test.runner.CmShowMemRunner">
         </service>
+        <service android:name="com.tencent.apk_auto_test.runner.CmShowDataRunner">
+        </service>
+
+
         <service android:name="com.tencent.apk_auto_test.services.unLockService">
         </service>
         <!--AccessibilityService-->

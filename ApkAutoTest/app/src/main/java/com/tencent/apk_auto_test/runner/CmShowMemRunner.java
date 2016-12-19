@@ -1,4 +1,4 @@
-package com.tencent.apk_auto_test.services;
+package com.tencent.apk_auto_test.runner;
 
 import java.io.File;
 import java.util.Date;
@@ -7,6 +7,7 @@ import com.tencent.apk_auto_test.HelpActivity;
 import com.tencent.apk_auto_test.MainActivity;
 import com.tencent.apk_auto_test.R;
 import com.tencent.apk_auto_test.data.StaticData;
+import com.tencent.apk_auto_test.services.unLockService;
 import com.tencent.apk_auto_test.util.Function;
 import com.tencent.apk_auto_test.util.Time;
 import com.tencent.apk_auto_test.util.UINodeOperate;
@@ -38,7 +39,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 
-public class RunService extends Service {
+public class CmShowMemRunner extends Service {
     // static
     protected static final int END_TEST = 0;
     protected static final int START_TEST = 1;
@@ -50,7 +51,7 @@ public class RunService extends Service {
 
     protected static final String EXCEL_DIRECTORY = "MpBatteryAutoTest";
 
-    private String TAG = "RunService";
+    private String TAG = "CmShowMemRunner";
 
     // class
     private Operate mOperate;
@@ -433,7 +434,7 @@ public class RunService extends Service {
                 mNodeOperate.clickOnResourceIdOffset("inputBar", 2000, 1,
                         -100);
                 //点击tab切换到单人动作
-                mNodeOperate.clickOnResourceId("tabView", 2000, 1);
+                mNodeOperate.clickOnResourceId("tabView", 2000, 0);
                 //点击发送并播放厘米秀动作，交叉互相打断播放
                 int count = 0;
                 for (int i = 0; i < caseTime; i++) {
@@ -495,14 +496,14 @@ public class RunService extends Service {
                 int count = 0;
                 for (int i = 0; i < caseTime; i++) {
                     //点击tab切换到单人动作
-                    mNodeOperate.clickOnResourceId("tabView", 2000, 1);
+                    mNodeOperate.clickOnResourceId("tabView", 2000, 0);
                     //循环交互点击
                     //点击单人tab的动作
                     mNodeOperate.clickOnResourceId("avatar_item_imageview", 1000, 0);
                     //点击双人tab的动作
                     mFunction.inputText("单双人动作交叉发送:" + i, 1000);
                     //点击tab切换到双人动作
-                    mNodeOperate.clickOnResourceId("tabView", 2000, 2);
+                    mNodeOperate.clickOnResourceId("tabView", 2000, 1);
                     mNodeOperate.clickOnResourceId("avatar_item_imageview", 2000, 0);
                     mNodeOperate.clickOnTextContain("大群主", 1000);
                     //每轮查询可用内存和进程内存情况,并保存到终端存储
@@ -551,7 +552,7 @@ public class RunService extends Service {
                 mNodeOperate.clickOnResourceIdOffset("inputBar", 2000, 1,
                         -100);
                 //点击tab切换到双人动作
-                mNodeOperate.clickOnResourceId("tabView", 2000, 2);
+                mNodeOperate.clickOnResourceId("tabView", 2000, 1);
                 //点击发送并播放厘米秀动作，交叉互相打断播放
                 int count = 0;
                 for (int i = 0; i < caseTime; i++) {
@@ -610,7 +611,7 @@ public class RunService extends Service {
                 mNodeOperate.clickOnResourceIdOffset("inputBar", 2000, 1,
                         -100);
                 //点击tab切换到弹幕动作
-                mNodeOperate.clickOnResourceId("tabView", 2000, 3);
+                mNodeOperate.clickOnResourceId("tabView", 2000, 2);
                 int count = 0;
                 for (int i = 0; i < caseTime; i++) {
                     //循环交互点击
@@ -672,7 +673,7 @@ public class RunService extends Service {
                     mNodeOperate.clickOnResourceIdOffset("inputBar", 2000, 1,
                             -100);
                     //点击tab切换到单人动作
-                    mNodeOperate.clickOnResourceId("tabView", 2000, 1);
+                    mNodeOperate.clickOnResourceId("tabView", 2000, 0);
                     //如果没有点击成功判断面板是否隐藏了
                     //通过厘米秀面板的特别动作id点击
                     mFunction.inputText("群和C2C切换发送:" + i, 1000);
@@ -693,7 +694,7 @@ public class RunService extends Service {
                     mNodeOperate.clickOnResourceIdOffset("inputBar", 2000, 1,
                             -100);
                     //点击tab切换到单人动作
-                    mNodeOperate.clickOnResourceId("tabView", 2000, 1);
+                    mNodeOperate.clickOnResourceId("tabView", 2000, 0);
                     //通过厘米秀面板的特别动作id点击
                     mFunction.inputText("群和C2C切换发送:" + i, 2000);
                     if (!mNodeOperate.clickOnResourceId("avatar_item_imageview", 1000, 0)) {
@@ -748,7 +749,7 @@ public class RunService extends Service {
                 mNodeOperate.clickOnText("测试号集中营", 3000);
                 //点击AIO输入输入框上方的中间部分区域
                 mNodeOperate.clickOnResourceIdOffset("inputBar", 2000, 1, -100);
-                mNodeOperate.clickOnResourceId("tabView", 2000, 2);
+                mNodeOperate.clickOnResourceId("tabView", 2000, 1);
                 //循环交互点击
                 //如果没有点击成功判断面板是否隐藏了
                 //通过厘米秀面板的特别动作id点击

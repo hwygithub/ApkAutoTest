@@ -16,17 +16,14 @@ public class ChoosePartAdapter extends BaseAdapter {
     private LayoutInflater mInflater;
     private Context mContext;
 
-    private String[] chooseListText;
-
-    public ChoosePartAdapter(Context context, String[] listText) {
+    public ChoosePartAdapter(Context context) {
         mContext = context;
-        chooseListText = listText;
         this.mInflater = LayoutInflater.from(context);
     }
 
     @Override
     public int getCount() {
-        return chooseListText.length;
+        return StaticData.chooseListText.length;
     }
 
     @Override
@@ -56,14 +53,14 @@ public class ChoosePartAdapter extends BaseAdapter {
             holder = (ChooseViewHolder) convertView.getTag();
         }
 
-        holder.text.setText(chooseListText[position]);
+        holder.text.setText(StaticData.chooseListText[position]);
         holder.button.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
                 RunPara mPara = new RunPara();
                 mPara.runNumber = 1;
-                mPara.runCase = chooseListText[position];
+                mPara.runCase = StaticData.chooseListText[position];
 
                 mPara.runCaseNumber = position;
 

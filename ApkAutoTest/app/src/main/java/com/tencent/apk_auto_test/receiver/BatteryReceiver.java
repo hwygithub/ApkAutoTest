@@ -5,9 +5,9 @@ import java.io.InputStreamReader;
 
 import com.tencent.apk_auto_test.R;
 import com.tencent.apk_auto_test.data.StaticData;
+import com.tencent.apk_auto_test.runner.CmShowMemRunner;
 import com.tencent.apk_auto_test.util.Time;
 import com.tencent.apk_auto_test.util.TxtUtil;
-import com.tencent.apk_auto_test.services.RunService;
 import com.tencent.apk_auto_test.services.unLockService;
 import com.test.function.Operate;
 
@@ -85,7 +85,7 @@ public class BatteryReceiver extends BroadcastReceiver {
 		unLockService.mKeepScreenFlag = false;
 		context.startService(intentToFire);
 		// write the last case log
-		TxtUtil.saveMsg(OutFilePath, "testIndex:" + RunService.testNumber, mFileName, mContext, index, 0);
+		TxtUtil.saveMsg(OutFilePath, "testIndex:" + CmShowMemRunner.testNumber, mFileName, mContext, index, 0);
 		TxtUtil.saveMsg(OutFilePath, Time.getCurrentTimeSecond(), mFileName, mContext, index, 1);
 		TxtUtil.saveMsg(OutFilePath, Time.getPassTime(StaticData.caseStartTime, Time.getCurrentTime()), mFileName,
 				mContext, index, 2);

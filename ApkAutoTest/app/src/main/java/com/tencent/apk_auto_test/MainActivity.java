@@ -8,10 +8,11 @@ import com.tencent.apk_auto_test.data.RunPara;
 import com.tencent.apk_auto_test.data.RunPartAdapter;
 import com.tencent.apk_auto_test.data.StaticData;
 import com.tencent.apk_auto_test.data.TestCase;
+import com.tencent.apk_auto_test.runner.CmShowDataRunner;
+import com.tencent.apk_auto_test.runner.CmShowMemRunner;
 import com.tencent.apk_auto_test.util.ExecUtil;
 import com.tencent.apk_auto_test.util.Function;
 import com.tencent.apk_auto_test.util.Global;
-import com.tencent.apk_auto_test.services.RunService;
 import com.test.function.Assert;
 import com.test.function.Operate;
 
@@ -62,6 +63,7 @@ public class MainActivity extends Activity implements OnClickListener {
     // data
     private boolean isHelpDialogLocked;
     private List<TestCase> mList;
+    private int runnerIndex = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -154,21 +156,21 @@ public class MainActivity extends Activity implements OnClickListener {
     }
 
     private void setData() {
-
-        StaticData.chooseListText = mList.get(0).getCaseName();
-
+        StaticData.chooseListText = mList.get(runnerIndex).getCaseName();
         // Set case adapter
-        adapter = new ChoosePartAdapter(mContext, StaticData.chooseListText);
+        adapter = new ChoosePartAdapter(mContext);
         mChooseList.setAdapter(adapter);
 
         StaticData.runList = new ArrayList<RunPara>();
         StaticData.runAdapter = new RunPartAdapter(mContext);
         mRunList.setAdapter(StaticData.runAdapter);
+
         StaticData.chooseArray = new boolean[19];
         for (int i = 0; i < 18; i++) {
             StaticData.chooseArray[i] = false;
         }
 
+        //分辨率
         DisplayMetrics mDisplayMetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(mDisplayMetrics);
         Global.SCREEN_WIDTH = mDisplayMetrics.widthPixels;
@@ -243,8 +245,15 @@ public class MainActivity extends Activity implements OnClickListener {
                     StaticData.chooseArray[caseNumber] = true;
                 }
                 mBtnStart.setEnabled(false);
-                // start service
-                startService(new Intent(MainActivity.this, RunService.class));
+                switch (runnerIndex) {
+                    case 0:
+                        startService(new Intent(MainActivity.this, CmShowMemRunner.class));
+                        break;
+                    case 1:
+                        startService(new Intent(MainActivity.this, CmShowDataRunner.class));
+                        break;
+                }
+
                 Toast.makeText(mContext, "开始测试", Toast.LENGTH_LONG).show();
                 break;
 
@@ -256,9 +265,15 @@ public class MainActivity extends Activity implements OnClickListener {
         @Override
         public void onItemSelected(AdapterView<?> arg0, View v, int index,
                                    long arg3) {
+            //重新拉取数据,更新choose adapter
+            StaticData.chooseListText = mList.get(index).getCaseName();
+            adapter.notifyDataSetChanged();
+
             StaticData.timeGene = mList.get(index).getTimeGene();
             StaticData.runState = mList.get(index).getRunState();
             String[] testCase = mList.get(index).getCaseOrder();
+            runnerIndex = index;
+            //重新从xml拉取用例的顺序，并更新 run adapter
             mFunction.changeSerial2Array(testCase);
         }
 
