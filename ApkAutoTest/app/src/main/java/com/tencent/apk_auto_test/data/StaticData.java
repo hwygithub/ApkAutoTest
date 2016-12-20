@@ -8,6 +8,8 @@ import android.widget.CheckBox;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.tencent.apk_auto_test.services.AccessibilityEventService;
+
 public class StaticData {
     // Resouce uri
     public static final String BROWSE_URL = "http://www.baidu.com";
@@ -27,6 +29,7 @@ public class StaticData {
 
     // // class
     //public static FileDealer mDealer;/* The service with AIDL to write excel */
+    public static AccessibilityEventService accessibilityEventService;
     // // array
     public static RunPartAdapter runAdapter;
     public static ArrayList<RunPara> runList;

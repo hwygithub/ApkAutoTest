@@ -184,8 +184,6 @@ public class CmShowDataRunner extends Service {
                     mOperate.setAutoRotation(0);
                     // set the screen off time:30 minutes
                     mOperate.setScreenOffTime(StaticData.testScreenOffTime);
-                    // Set pure background
-                    mFunction.setPureBackgroundEnable(false);
                     // Set PermissionIntercept
                     // mFunction.setPermissionInterceptEnable(false);
                     // Set the float window
@@ -261,12 +259,6 @@ public class CmShowDataRunner extends Service {
                     BatteryReceiver.writeLog(Time.getCurrentTimeSecond(), 4, 1);
                     BatteryReceiver.writeLog(testTime, 5, 1);
                     BatteryReceiver.writeLog(StaticData.testFinishEvent, 6, 1);
-                    // After test,send sms
-                    StringBuffer buffer = new StringBuffer();
-                    buffer.append("AutoRun Test is Finished!");
-                    buffer.append("\nimei:" + teleMgr.getDeviceId());
-                    mFunction.sendSmsAPI(StaticData.testEndSendNumber,
-                            buffer.toString());
                     // end the test
                     sendNotification();
                     stopSelf();
@@ -349,10 +341,10 @@ public class CmShowDataRunner extends Service {
                 for (int i = 0; i < caseTime; i++) {
                     //清除应用数据
                     mFunction.clearAppByPackageName("com.tencent.mobileqq");
-                    mOperate.sleep(3000);
+                    mOperate.sleep(1000);
                     //删除厘米秀资源文件夹
                     mFunction.delFolder(new File("sdcard/tencent/MobileQQ/.apollo"));
-                    mOperate.sleep(3000);
+                    mOperate.sleep(1000);
                     //热启动手Q
                     try {
                         mOperate.startActivity("com.tencent.mobileqq",

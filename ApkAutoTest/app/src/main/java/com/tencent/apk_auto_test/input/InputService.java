@@ -86,7 +86,7 @@ public class InputService extends Service {
                     if (null == inputMethod) {
                         reCount++;
                         try {
-                            inputMethod.setUpInputMethodIfNeed();
+                            //inputMethod.setUpInputMethodIfNeed();
                         } catch (Exception e) {
                             e.printStackTrace();
                         }

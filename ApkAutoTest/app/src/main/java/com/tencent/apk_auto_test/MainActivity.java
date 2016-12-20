@@ -244,6 +244,7 @@ public class MainActivity extends Activity implements OnClickListener {
                     int caseNumber = StaticData.runList.get(i).runCaseNumber;
                     StaticData.chooseArray[caseNumber] = true;
                 }
+                //还原一些变量
                 mBtnStart.setEnabled(false);
                 switch (runnerIndex) {
                     case 0:

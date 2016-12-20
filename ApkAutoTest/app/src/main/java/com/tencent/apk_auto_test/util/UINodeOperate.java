@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.tencent.apk_auto_test.data.StaticData;
 import com.tencent.apk_auto_test.services.AccessibilityEventService;
 import com.test.function.Assert;
 import com.test.function.Operate;
@@ -12,7 +13,10 @@ import android.annotation.SuppressLint;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.graphics.Rect;
+import android.nfc.Tag;
+import android.os.IBinder;
 import android.os.SystemClock;
 import android.provider.Settings;
 import android.text.TextUtils;
@@ -29,6 +33,7 @@ public class UINodeOperate {
             ENABLED_ACCESSIBILITY_SERVICES_SEPARATOR);
 
     private ArrayList<AccessibilityNodeInfo> infos;
+    private AccessibilityEventService eventService;
     private static String TAG = "UINodeOperate";
     private Context mContext;
     private Operate mOperate;
@@ -50,26 +55,6 @@ public class UINodeOperate {
 
     }
 
-    public Set<ComponentName> getEnabledServicesFromSettings(Context context) {
-        String enabledServicesSetting = Settings.Secure.getString(context.getContentResolver(),
-                Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES);
-        Log.v(TAG, "enabledServicesSetting ：" + enabledServicesSetting);
-        if (enabledServicesSetting == null) {
-            enabledServicesSetting = "";
-        }
-        Set<ComponentName> enabledServices = new HashSet<ComponentName>();
-        TextUtils.SimpleStringSplitter colonSplitter = sStringColonSplitter;
-        colonSplitter.setString(enabledServicesSetting);
-        while (colonSplitter.hasNext()) {
-            String componentNameString = colonSplitter.next();
-            ComponentName enabledService = ComponentName.unflattenFromString(componentNameString);
-            if (enabledService != null) {
-                enabledServices.add(enabledService);
-            }
-        }
-        return enabledServices;
-    }
-
     /**
      * Get root node.
      *
@@ -79,10 +64,11 @@ public class UINodeOperate {
         AccessibilityNodeInfo rootNode = null;
         int i = 0;
         while (i < 10) {
-            AccessibilityEventService eventService = AccessibilityEventService
-                    .getService();
+            eventService = StaticData.accessibilityEventService;
             if (eventService != null) {
                 rootNode = eventService.getRootInActiveWindow();
+            } else {
+                Log.v(TAG, "eventService is null");
             }
             if (rootNode == null) {
                 if (DEBUG)
@@ -98,56 +84,17 @@ public class UINodeOperate {
     }
 
     private void openAccessibilityServiceIfNotStart() {
-        openService(NAME);
         Intent intent = new Intent();
         intent.setClass(mContext, AccessibilityEventService.class);
-        // If not start ,to start
         if (!mAssert.isMyServiceRunning(AccessibilityEventService.class
                 .getName())) {
+            Log.v(TAG, "AccessibilityEventService is not running,start service");
+            mContext.startService(intent);
+        } else {
+            Log.v(TAG, "AccessibilityEventService is running,start service ");
             mContext.startService(intent);
         }
     }
-
-    /**
-     * open AccessibilityEventService that this app create.
-     *
-     * @param preferenceKey NAME
-     */
-    private void openService(String preferenceKey) {
-
-        // Parse the enabled services.
-        Set<ComponentName> enabledServices = getEnabledServicesFromSettings(mContext);
-
-        // Determine enabled services and accessibility state.
-        ComponentName toggledService = ComponentName
-                .unflattenFromString(preferenceKey);
-        final boolean accessibilityEnabled;
-        if (true) {
-            // Enabling at least one service enables accessibility.
-            accessibilityEnabled = true;
-            enabledServices.add(toggledService);
-        }
-
-        // Update the enabled services setting.
-        StringBuilder enabledServicesBuilder = new StringBuilder();
-        // Keep the enabled services even if they are not installed since we
-        // have no way to know whether the application restore process has
-        // completed. In general the system should be responsible for the
-        // clean up not settings.
-        for (ComponentName enabledService : enabledServices) {
-            // Log.e(TAG, "enabledService:"+enabledService.toString());
-            enabledServicesBuilder.append(enabledService.flattenToString());
-            enabledServicesBuilder
-                    .append(ENABLED_ACCESSIBILITY_SERVICES_SEPARATOR);
-        }
-        final int enabledServicesBuilderLength = enabledServicesBuilder
-                .length();
-        if (enabledServicesBuilderLength > 0) {
-            enabledServicesBuilder
-                    .deleteCharAt(enabledServicesBuilderLength - 1);
-        }
-    }
-
 
     private boolean click(int index) {
         if (index < 0) {
