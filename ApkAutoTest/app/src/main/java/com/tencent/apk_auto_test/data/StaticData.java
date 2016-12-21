@@ -55,7 +55,8 @@ public class StaticData {
     public static long testStartTime;
     public static String testFinishEvent;
     public static String runState;/* Test time:Circle or once */
-    public static String testEndSendNumber;
+    public static String testUin;
+    public static String testPwd;
     // Test parameter
     public static int testScreenOffTime = 1800;/* TestScreenofftime:30min */
     // //state

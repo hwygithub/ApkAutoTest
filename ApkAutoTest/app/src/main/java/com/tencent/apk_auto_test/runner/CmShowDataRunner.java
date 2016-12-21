@@ -358,10 +358,10 @@ public class CmShowDataRunner extends Service {
                         mOperate.sleep(5000);
                     //点击输入QQ号
                     mNodeOperate.clickOnTextContain("QQ号", 1000);
-                    mFunction.inputText("1002000164", 1000);
+                    mFunction.inputText(StaticData.testUin, 1000);
                     //点击输入密码
                     mNodeOperate.clickOnResourceId("password", 1000, 0);
-                    mFunction.inputText("tencent", 1000);
+                    mFunction.inputText(StaticData.testPwd, 1000);
 
                     mNodeOperate.clickOnResourceId("login", 10000, 0);
                     mNodeOperate.clickOnTextContain("关闭", 2000);

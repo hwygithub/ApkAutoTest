@@ -27,8 +27,9 @@
     <string name="endText">测试完成！</string>
     <string name="finishText">测试完成！</string>
     <string name="logLocation">log存放位置：根目录/MpBatteryAutoTest</string>
-    <string name="txt_test_end_send_number">测试结束后发送短信号码：</string>
-    <string name="edit_test_end_send_number">15602316587</string>
+    <string name="txt_test_uin">测试账号和密码：</string>
+    <string name="edit_test_uin">1002000164</string>
+    <string name="edit_test_pwd">tencent</string>
 
     <!-- help -->
     <string name="str_help_title">帮助</string>
@@ -40,7 +41,7 @@
         \n2、使用该工具可能会导致输入法无法正常使用，设置中选择默认输入法可恢复
         \n3、关闭手机应用的权限管理开关（安全中心、手机管家）
 		\n选择下方的选择器可切换测试项
-     	\n\n
+     	\n\n\n
      	build by veehou</string>
     <!-- end help -->
     

@@ -190,9 +190,9 @@ public class MainActivity extends Activity implements OnClickListener {
     private void setEnvironment() {
         SharedPreferences shareData = getSharedPreferences("State", 0);
         isHelpDialogLocked = shareData.getBoolean("isLocked", false);
-        // Test end send number
-        StaticData.testEndSendNumber = shareData.getString("sendNumber",
-                "15016788612");
+        // Test uin and password
+        StaticData.testUin = shareData.getString("testUin", "1002000164");
+        StaticData.testPwd = shareData.getString("testPwd", "tencent");
         if (!isHelpDialogLocked) {
             showHelpDialog();
         }
@@ -288,30 +288,30 @@ public class MainActivity extends Activity implements OnClickListener {
     private void showHelpDialog() {
         LayoutInflater factory = LayoutInflater.from(this);
         final View DialogView = factory.inflate(R.layout.dialog_help, null);
-        final CheckBox ck = (CheckBox) DialogView
-                .findViewById(R.id.dialog_no_show);
+        final CheckBox ck = (CheckBox) DialogView.findViewById(R.id.dialog_no_show);
         ck.setChecked(isHelpDialogLocked);
-        final EditText editSendNumber = (EditText) DialogView
-                .findViewById(R.id.edit_test_end_send_number);
-        editSendNumber.setText(StaticData.testEndSendNumber);
+        final EditText editUin = (EditText) DialogView.findViewById(R.id.edit_test_uin);
+        editUin.setText(StaticData.testUin);
+        final EditText editPassword = (EditText) DialogView.findViewById(R.id.edit_test_psd);
+        editPassword.setText(StaticData.testPwd);
 
         AlertDialog dlg = new AlertDialog.Builder(this)
                 .setTitle(R.string.str_help_title)
                 .setView(DialogView)
                 .setPositiveButton(android.R.string.ok,
                         new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog,
-                                                int whichButton) {
+                            public void onClick(DialogInterface dialog, int whichButton) {
+                                String testUin = editUin.getText().toString();
+                                StaticData.testUin = testUin;
+                                String testPwd = editPassword.getText().toString();
+                                StaticData.testPwd = testPwd;
 
-                                Editor sharedata = getSharedPreferences(
-                                        "State", 0).edit();
-                                sharedata.putBoolean("isLocked", ck.isChecked());
-                                sharedata.putString("sendNumber",
-                                        editSendNumber.getEditableText()
-                                                .toString());
-                                StaticData.testEndSendNumber = editSendNumber
-                                        .getText().toString();
-                                sharedata.commit();
+                                Editor shared = getSharedPreferences("State", 0).edit();
+                                shared.putBoolean("isLocked", ck.isChecked());
+                                shared.putString("testUin", testUin);
+                                shared.putString("testPwd", testPwd);
+
+                                shared.commit();
 
                             }
                         }).create();

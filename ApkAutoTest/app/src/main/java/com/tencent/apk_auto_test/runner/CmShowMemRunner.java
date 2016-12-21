@@ -260,12 +260,7 @@ public class CmShowMemRunner extends Service {
                     BatteryReceiver.writeLog(Time.getCurrentTimeSecond(), 4, 1);
                     BatteryReceiver.writeLog(testTime, 5, 1);
                     BatteryReceiver.writeLog(StaticData.testFinishEvent, 6, 1);
-                    // After test,send sms
-                    StringBuffer buffer = new StringBuffer();
-                    buffer.append("AutoRun Test is Finished!");
-                    buffer.append("\nimei:" + teleMgr.getDeviceId());
-                    mFunction.sendSmsAPI(StaticData.testEndSendNumber,
-                            buffer.toString());
+                    // After test,send sms  ---remove in 2016/12/21
                     // end the test
                     sendNotification();
                     stopSelf();
@@ -384,10 +379,10 @@ public class CmShowMemRunner extends Service {
                         mOperate.sleep(5000);
                     //点击输入QQ号
                     mNodeOperate.clickOnTextContain("QQ号", 1000);
-                    mFunction.inputText("1002000164", 1000);
+                    mFunction.inputText(StaticData.testUin, 1000);
                     //点击输入密码
                     mNodeOperate.clickOnResourceId("password", 1000, 0);
-                    mFunction.inputText("tencent", 1000);
+                    mFunction.inputText(StaticData.testPwd, 1000);
 
                     mNodeOperate.clickOnResourceId("login", 10000, 0);
                     mNodeOperate.clickOnTextContain("关闭", 2000);
