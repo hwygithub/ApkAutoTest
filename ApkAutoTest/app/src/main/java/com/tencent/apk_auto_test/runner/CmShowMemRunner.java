@@ -348,6 +348,9 @@ public class CmShowMemRunner extends Service {
             case 9:
                 CSMT_9(caseTime);
                 break;
+            case 10:
+                CSMT_10(caseTime);
+                break;
             default:
                 return;
         }
@@ -895,12 +898,62 @@ public class CmShowMemRunner extends Service {
                 mOperate.sleep(5000);
 
                 for (int i = 0; i < caseTime; i++) {
-                    for (int j = 1; j < 6; j++) {
+                    for (int j = 1; j <= 5; j++) {
                         //切换到抽屉页
-                        mNodeOperate.clickOnListViewByResourceId("recent_chat_list", j, 2000);
-                        mNodeOperate.clickOnTextContain("返回", 1000);
-                        mNodeOperate.clickOnTextContain("消息", 1000);
+                        mNodeOperate.clickOnListViewByResourceId("recent_chat_list", j, 500);
+                        mNodeOperate.clickOnTextContain("返回", 500);
+                        mNodeOperate.clickOnTextContain("消息", 500);
                     }
+                    //每轮查询可用内存和进程内存情况,并保存到终端存储
+                    mFunction.saveMem("com.tencent.mobileqq", fileName);
+                }
+                mOperate.sleep(2000);
+                mUIOperate.sendKey(KeyEvent.KEYCODE_HOME, 2000);
+                // 测试用例结束，打印日志
+                mEventHandler.sendEmptyMessage(PRINT_LOG);
+            }
+        }
+
+        );
+        currentThread.start();
+    }
+
+    // 创建游戏后退出
+    private void CSMT_10(final int caseTime) {
+        mShow.updateState("case: " + (testNumber + 1) + "\n" + "创建游戏后退出");
+        Thread currentThread = new Thread(new Runnable() {
+
+            @Override
+            public void run() {
+
+                //初始化参数
+                String fileName = "CSMT-10-" + Time.getCurrentTimeSecond();
+                //杀手Q进程还原状态
+                mFunction.killAppByPackageName("com.tencent.mobileqq");
+                mOperate.sleep(3000);
+                //热启动手Q
+                try {
+                    mOperate.startActivity("com.tencent.mobileqq",
+                            "com.tencent.mobileqq.activity.SplashActivity");
+                } catch (Exception e) {
+                    Log.e(TAG, "start test app activity error!");
+                    return;
+                }
+                mOperate.sleep(5000);
+                //点击搜索栏
+                mNodeOperate.clickOnText("搜索", 1000);
+                //输入群，点击进入
+                mFunction.inputText("546479585", 2000);
+                //点击搜索栏
+                mNodeOperate.clickOnText("测试号集中营", 3000);
+
+                for (int i = 0; i < caseTime; i++) {
+                    //点击AIO输入输入框上方的中间部分区域
+                    mNodeOperate.clickOnResourceIdOffset("inputBar", 2000, 1, -100);
+                    //点击开始游戏
+                    mNodeOperate.clickOnText("开始游戏", 5000);
+                    mNodeOperate.clickOnResourceIdOffset("ivTitleBtnLeft", 3000, 1, 100);
+
                     //每轮查询可用内存和进程内存情况,并保存到终端存储
                     mFunction.saveMem("com.tencent.mobileqq", fileName);
                 }
