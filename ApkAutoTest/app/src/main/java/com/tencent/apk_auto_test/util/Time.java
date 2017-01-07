@@ -21,7 +21,7 @@ public class Time {
 	}
 
 	public static String getTime() {
-		SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yy/MM/dd HH:mm:ss");
 		long CurrentTime = System.currentTimeMillis();
 		String Time = dateFormat.format(CurrentTime);
 		return Time;

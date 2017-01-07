@@ -444,7 +444,7 @@ public class CmShowMemRunner extends Service {
                     mFunction.inputText("群单人交叉发送:" + i, 1000);
                     mNodeOperate.clickOnResourceId("avatar_item_imageview", 2000, 1);
                     //每轮查询可用内存和进程内存情况,并保存到终端存储
-                    mFunction.saveMem("com.tencent.mobileqq", fileName);
+                    mFunction.saveMem("com.tencent.mobileqq", fileName, i);
                 }
                 mOperate.sleep(2000);
 
@@ -503,7 +503,7 @@ public class CmShowMemRunner extends Service {
                     mNodeOperate.clickOnResourceId("avatar_item_imageview", 2000, 0);
                     mNodeOperate.clickOnTextContain("大群主", 1000);
                     //每轮查询可用内存和进程内存情况,并保存到终端存储
-                    mFunction.saveMem("com.tencent.mobileqq", fileName);
+                    mFunction.saveMem("com.tencent.mobileqq", fileName, i);
                 }
                 mOperate.sleep(2000);
 
@@ -564,7 +564,7 @@ public class CmShowMemRunner extends Service {
                     mNodeOperate.clickOnResourceId("avatar_item_imageview", 2000, 1);
                     mNodeOperate.clickOnTextContain("大群主", 1000);
                     //每轮查询可用内存和进程内存情况,并保存到终端存储
-                    mFunction.saveMem("com.tencent.mobileqq", fileName);
+                    mFunction.saveMem("com.tencent.mobileqq", fileName, i);
                 }
                 mOperate.sleep(2000);
                 mUIOperate.sendKey(KeyEvent.KEYCODE_HOME, 2000);
@@ -621,7 +621,7 @@ public class CmShowMemRunner extends Service {
                     mFunction.inputText("弹幕发送:" + i, 2000);
 
                     //每轮查询可用内存和进程内存情况,并保存到终端存储
-                    mFunction.saveMem("com.tencent.mobileqq", fileName);
+                    mFunction.saveMem("com.tencent.mobileqq", fileName, i);
                 }
                 mOperate.sleep(2000);
                 mUIOperate.sendKey(KeyEvent.KEYCODE_HOME, 2000);
@@ -703,7 +703,7 @@ public class CmShowMemRunner extends Service {
                     mNodeOperate.clickOnTextContain("消息", 1000);
 
                     //每轮查询可用内存和进程内存情况,并保存到终端存储
-                    mFunction.saveMem("com.tencent.mobileqq", fileName);
+                    mFunction.saveMem("com.tencent.mobileqq", fileName, i);
                 }
                 mOperate.sleep(2000);
                 mUIOperate.sendKey(KeyEvent.KEYCODE_HOME, 2000);
@@ -762,7 +762,7 @@ public class CmShowMemRunner extends Service {
                     mNodeOperate.clickOnTextContain("大群主", 3000);
 
                     //每轮查询可用内存和进程内存情况,并保存到终端存储
-                    mFunction.saveMem("com.tencent.mobileqq", fileName);
+                    mFunction.saveMem("com.tencent.mobileqq", fileName, i);
                 }
                 mOperate.sleep(2000);
                 mUIOperate.sendKey(KeyEvent.KEYCODE_HOME, 2000);
@@ -816,7 +816,7 @@ public class CmShowMemRunner extends Service {
                     mUIOperate.sendKey(KeyEvent.KEYCODE_BACK, 3000);
 
                     //每轮查询可用内存和进程内存情况,并保存到终端存储
-                    mFunction.saveMem("com.tencent.mobileqq", fileName);
+                    mFunction.saveMem("com.tencent.mobileqq", fileName, i);
                 }
                 mOperate.sleep(2000);
                 mUIOperate.sendKey(KeyEvent.KEYCODE_HOME, 2000);
@@ -863,7 +863,7 @@ public class CmShowMemRunner extends Service {
                     //切换到消息列表
                     mNodeOperate.clickOnResourceId("conversation_head", 3000, 0);
                     //每轮查询可用内存和进程内存情况,并保存到终端存储
-                    mFunction.saveMem("com.tencent.mobileqq", fileName);
+                    mFunction.saveMem("com.tencent.mobileqq", fileName, i);
                 }
                 mOperate.sleep(2000);
                 mUIOperate.sendKey(KeyEvent.KEYCODE_HOME, 2000);
@@ -905,7 +905,7 @@ public class CmShowMemRunner extends Service {
                         mNodeOperate.clickOnTextContain("消息", 500);
                     }
                     //每轮查询可用内存和进程内存情况,并保存到终端存储
-                    mFunction.saveMem("com.tencent.mobileqq", fileName);
+                    mFunction.saveMem("com.tencent.mobileqq", fileName, i);
                 }
                 mOperate.sleep(2000);
                 mUIOperate.sendKey(KeyEvent.KEYCODE_HOME, 2000);
@@ -951,11 +951,12 @@ public class CmShowMemRunner extends Service {
                     //点击AIO输入输入框上方的中间部分区域
                     mNodeOperate.clickOnResourceIdOffset("inputBar", 2000, 1, -100);
                     //点击开始游戏
-                    mNodeOperate.clickOnText("开始游戏", 5000);
-                    mNodeOperate.clickOnResourceIdOffset("ivTitleBtnLeft", 3000, 1, 100);
+                    mNodeOperate.clickOnText("开始游戏", 3500);
+                    //通过y偏移点击退出按钮
+                    mNodeOperate.clickOnResourceIdOffset("ivTitleBtnLeft", 2000, 1, 100);
 
                     //每轮查询可用内存和进程内存情况,并保存到终端存储
-                    mFunction.saveMem("com.tencent.mobileqq", fileName);
+                    mFunction.saveMem("com.tencent.mobileqq", fileName, i);
                 }
                 mOperate.sleep(2000);
                 mUIOperate.sendKey(KeyEvent.KEYCODE_HOME, 2000);

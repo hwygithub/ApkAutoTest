@@ -399,7 +399,8 @@ public class Function {
         // values.put("uri", uri.toString());
         // // values.put("useragent",
         // //
-        // "Mozilla/5.0 (linux; U; Android 1.5; en-us; SDK Build/CUPCAKE) AppleWebKit/528.5+ (KHTML, like Gecko) Version/3.1.2 Mobile Safari/525.20.1");
+        // "Mozilla/5.0 (linux; U; Android 1.5; en-us; SDK Build/CUPCAKE) AppleWebKit/528.5+ (KHTML, like Gecko) Version/3.1.2 Mobile Safari/525.20
+        // .1");
         // values.put("notificationpackage", "com.tencent.apk_auto_test");
         // values.put("notificationclass", "MainActivity");
         // values.put("visibility", Downloads.Impl.VISIBILITY_VISIBLE);
@@ -603,12 +604,14 @@ public class Function {
         return false;
     }
 
-    public boolean saveMem(String packageName, String fileName) {
+    public boolean saveMem(String packageName, String fileName, int i) {
         StringBuffer strbuf = new StringBuffer();
 
         long availMemory = getAvailMemory(mContext);
         Log.v(TAG, "getAvailMemory : " + availMemory);
-        strbuf.append(getAvailMemory(mContext));
+        strbuf.append("index:" + i);
+        strbuf.append("\t").append(Time.getTime());
+        strbuf.append("\t").append(getAvailMemory(mContext));
         ActivityManager am = (ActivityManager) mContext.getSystemService(Context.ACTIVITY_SERVICE);
 
         List<ActivityManager.RunningAppProcessInfo> procInfo = am.getRunningAppProcesses();
