@@ -9,6 +9,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 
 import com.tencent.apk_auto_test.data.RunPara;
@@ -609,7 +610,8 @@ public class Function {
 
         long availMemory = getAvailMemory(mContext);
         Log.v(TAG, "getAvailMemory : " + availMemory);
-        strbuf.append("index:" + i);
+        String index = String.format("%03d",i);
+        strbuf.append("index:" + index);
         strbuf.append("\t").append(Time.getTime());
         strbuf.append("\t").append(getAvailMemory(mContext));
         ActivityManager am = (ActivityManager) mContext.getSystemService(Context.ACTIVITY_SERVICE);
@@ -623,11 +625,11 @@ public class Function {
 
                 strbuf.append("\t").append(runningAppProcessInfo.processName)
                         .append("\t").append(runningAppProcessInfo.pid)
-                        /*.append("\n dalvikPrivateDirty:").append(self_mi[0].dalvikPrivateDirty)
-                        .append("\n dalvikPss:").append(self_mi[0].dalvikPss)
-                        .append("\n dalvikSharedDirty:").append(self_mi[0].dalvikSharedDirty)
+                        /*.append("\n dalvikPrivateDirty:").append(self_mi[0].dalvikPrivateDirty)*/
+                        .append("\t dalvikPss:").append(self_mi[0].dalvikPss)
+                        /*.append("\n dalvikSharedDirty:").append(self_mi[0].dalvikSharedDirty)
                         .append("\n nativePrivateDirty:").append(self_mi[0].nativePrivateDirty)
-                        .append("\n nativePss:").append(self_mi[0].nativePss)
+                        .append("\t nativePss:").append(self_mi[0].nativePss)
                         .append("\n nativeSharedDirty:").append(self_mi[0].nativeSharedDirty)
                         .append("\n otherPrivateDirty:").append(self_mi[0].otherPrivateDirty)
                         .append("\n otherPss:").append(self_mi[0].otherPss)
