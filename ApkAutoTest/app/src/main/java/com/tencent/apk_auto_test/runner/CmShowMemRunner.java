@@ -145,7 +145,7 @@ public class CmShowMemRunner extends Service {
         StaticData.mBar.setMax(length);
 
         mFunction.initInputMethod();
-        mFunction.delFolder(new File("/sdcard/tencent-test"));
+
 
     }
 
@@ -195,6 +195,8 @@ public class CmShowMemRunner extends Service {
                     mFunction.setSwitchToGprsStateConfirmMode(0);
                     // Set the traffic alert
                     mFunction.setTrafficAlert(false, false);
+                    // delete log folder
+                    mFunction.delFolder(new File("/sdcard/tencent-test"));
                     // 设置系统对手Q的隐私权限为全部允许
                     // Set the update window
                     mShow.addView(new StopClickListener());

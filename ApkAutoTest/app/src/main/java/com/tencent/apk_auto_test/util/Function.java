@@ -610,7 +610,7 @@ public class Function {
 
         long availMemory = getAvailMemory(mContext);
         Log.v(TAG, "getAvailMemory : " + availMemory);
-        String index = String.format("%03d",i);
+        String index = String.format("%03d", i);
         strbuf.append("index:" + index);
         strbuf.append("\t").append(Time.getTime());
         strbuf.append("\t").append(getAvailMemory(mContext));
@@ -672,21 +672,27 @@ public class Function {
      */
     public void delFolder(File file) {
         if (file.isFile()) {
-            file.delete();
+            boolean isDeleted = file.delete();
+            if (isDeleted == false)
+                Log.e(TAG, "delete " + file.getName() + " failed");
             return;
         }
 
         if (file.isDirectory()) {
             File[] childFiles = file.listFiles();
             if (childFiles == null || childFiles.length == 0) {
-                file.delete();
+                boolean isDeleted = file.delete();
+                if (isDeleted == false)
+                    Log.e(TAG, "delete " + file.getName() + " failed");
                 return;
             }
 
             for (int i = 0; i < childFiles.length; i++) {
                 delFolder(childFiles[i]);
             }
-            file.delete();
+            boolean isDeleted = file.delete();
+            if (isDeleted == false)
+                Log.e(TAG, "delete " + file.getName() + " failed");
         }
     }
 

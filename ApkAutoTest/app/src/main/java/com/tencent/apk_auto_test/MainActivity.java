@@ -13,8 +13,6 @@ import com.tencent.apk_auto_test.runner.CmShowMemRunner;
 import com.tencent.apk_auto_test.util.ExecUtil;
 import com.tencent.apk_auto_test.util.Function;
 import com.tencent.apk_auto_test.util.Global;
-import com.test.function.Assert;
-import com.test.function.Operate;
 
 import android.os.Bundle;
 import android.app.Activity;
@@ -46,15 +44,10 @@ import android.widget.Toast;
 
 public class MainActivity extends Activity implements OnClickListener {
     // state
-    public static final int FILE_SELECT_CODE = 0;
-    private static final String TAG = "MainActivity";
     // class
     private Context mContext;
     private Function mFunction;
     private ChoosePartAdapter adapter;
-    private Assert mAssert;
-    private Operate mOperate;
-    private InputMethodManager methodManager;
     // widget
     private ListView mChooseList;
     private ListView mRunList;
@@ -106,8 +99,6 @@ public class MainActivity extends Activity implements OnClickListener {
     private void setClass() {
         mContext = getApplicationContext();
         mFunction = new Function(mContext);
-        mAssert = new Assert(mContext);
-        mOperate = new Operate(mContext);
     }
 
     private void setListener() {
@@ -175,16 +166,7 @@ public class MainActivity extends Activity implements OnClickListener {
         getWindowManager().getDefaultDisplay().getMetrics(mDisplayMetrics);
         Global.SCREEN_WIDTH = mDisplayMetrics.widthPixels;
         Global.SCREEN_HEIGHT = mDisplayMetrics.heightPixels;
-        /*
-        // Install filelogsave apk if it is not installed
-        if (!mAssert.isApkInstall("com.apptest.filelogsave")) {
-            try {
-                mOperate.installAsserts("FileLogSave.apk");
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        */
+
     }
 
     private void setEnvironment() {
@@ -213,7 +195,7 @@ public class MainActivity extends Activity implements OnClickListener {
                     Toast.makeText(mContext, "被测试app手Q版本需要使用debug版本！", Toast.LENGTH_LONG).show();
                     return;
                 }
-                //检查accessibilityservice是否开启
+                //检查accessibility service是否开启
                 if (!Function.isAccessibilitySettingsOn(this)) {
                     //如果没有获取到系统的设置信息，跳转手动开启界面
                     startActivity(new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS));
@@ -311,7 +293,7 @@ public class MainActivity extends Activity implements OnClickListener {
                                 shared.putString("testUin", testUin);
                                 shared.putString("testPwd", testPwd);
 
-                                shared.commit();
+                                shared.apply();
 
                             }
                         }).create();
