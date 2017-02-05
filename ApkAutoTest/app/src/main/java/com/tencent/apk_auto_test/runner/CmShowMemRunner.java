@@ -389,7 +389,7 @@ public class CmShowMemRunner extends Service {
                     mNodeOperate.clickOnResourceId("password", 1000, 0);
                     mFunction.inputText(StaticData.testPwd, 1000);
 
-                    mNodeOperate.clickOnResourceId("login", 10000, 0);
+                    mNodeOperate.clickOnDesc("登录", 10000);
                     mNodeOperate.clickOnTextContain("关闭", 2000);
                 }
                 mUIOperate.sendKey(KeyEvent.KEYCODE_HOME, 2000);
@@ -954,6 +954,11 @@ public class CmShowMemRunner extends Service {
                     mNodeOperate.clickOnResourceIdOffset("inputBar", 2000, 1, -100);
                     //点击开始游戏
                     mNodeOperate.clickOnText("开始游戏", 3500);
+                    //如果进入新手引导则返回
+                    if (mNodeOperate.isTextExits("新手引导")) {
+                        mNodeOperate.clickOnText("返回", 2000);
+                        continue;
+                    }
                     //通过y偏移点击退出按钮
                     mNodeOperate.clickOnResourceIdOffset("ivTitleBtnLeft", 2000, 1, 100);
 

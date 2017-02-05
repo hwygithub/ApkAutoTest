@@ -112,9 +112,9 @@ public class MainActivity extends Activity implements OnClickListener {
             // mBtnStart.setEnabled(false);
             Toast.makeText(mContext, "sim card miss!", Toast.LENGTH_SHORT)
                     .show();
-            // If the resouce dismiss,diable the start button
+            // If the resource dismiss,disable the start button
         } else if (!mFunction.isResouceExist()) {
-            Toast.makeText(mContext, "Resouce miss!", Toast.LENGTH_SHORT)
+            Toast.makeText(mContext, "resource miss!", Toast.LENGTH_SHORT)
                     .show();
         } else {
             mBtnStart.setEnabled(true);

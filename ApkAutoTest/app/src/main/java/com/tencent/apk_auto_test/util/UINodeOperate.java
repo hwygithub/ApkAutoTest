@@ -319,7 +319,8 @@ public class UINodeOperate {
         }
         for (int i = 0; i < infos.size(); i++) {
             String title = infos.get(i).getContentDescription() + "";
-            if (title.contains(text)) {
+            //Log.d(TAG, title);
+            if (title.equals(text)) {
                 return click(i);
             }
         }
