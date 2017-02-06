@@ -1,6 +1,8 @@
 package com.tencent.apk_auto_test.runner;
 
 import java.io.File;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.Date;
 
 import com.tencent.apk_auto_test.HelpActivity;
@@ -319,44 +321,34 @@ public class CmShowMemRunner extends Service {
      * @param caseTime   test case time
      */
     private void startRunCase(int caseNumber, int caseTime) {
-        switch (caseNumber) {
-            case 0:
-                CSMT_0(caseTime);
-                break;
-            case 1:
-                CSMT_1(caseTime);
-                break;
-            case 2:
-                CSMT_2(caseTime);
-                break;
-            case 3:
-                CSMT_3(caseTime);
-                break;
-            case 4:
-                CSMT_4(caseTime);
-                break;
-            case 5:
-                CSMT_5(caseTime);
-                break;
-            case 6:
-                CSMT_6(caseTime);
-                break;
-            case 7:
-                CSMT_7(caseTime);
-                break;
-            case 8:
-                CSMT_8(caseTime);
-                break;
-            case 9:
-                CSMT_9(caseTime);
-                break;
-            case 10:
-                CSMT_10(caseTime);
-                break;
-            default:
-                return;
+        //优化代码结构：去除switch方式判断执行用例，采用反射方式动态获取类名后执行
+        Method[] methods = getClass().getDeclaredMethods();
+        //1、获取用例的数量
+        int caseSum = 0;
+        for (Method m : methods) {
+            if (m.getName().contains("CSMT"))
+                caseSum++;
         }
-        testNumber++;
+        //处理异常输入
+        if (caseNumber >= caseSum) {
+            Log.e(TAG, "case number over length");
+            return;
+        }
+        //2、根据用例number执行拼接后指定的用例
+        String caseMethod = "CSMT_" + caseNumber;
+        try {
+            //getDeclaredMethod 能获取所有方法,getMethod 只能获取public 方法
+            Method method = getClass().getDeclaredMethod(caseMethod, int.class);
+            method.invoke(this, caseTime);
+            testNumber++;
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+
     }
 
     //登陆测试账号
@@ -976,6 +968,61 @@ public class CmShowMemRunner extends Service {
         currentThread.start();
     }
 
+    // C2C挑战好友记录后退出
+    private void CSMT_11(final int caseTime) {
+        mShow.updateState("case: " + (testNumber + 1) + "\n" + "C2C挑战好友记录后退出");
+        Thread currentThread = new Thread(new Runnable() {
+
+            @Override
+            public void run() {
+
+                //初始化参数
+                String fileName = "CSMT-10-" + Time.getCurrentTimeSecond();
+                //杀手Q进程还原状态
+                mFunction.killAppByPackageName("com.tencent.mobileqq");
+                mOperate.sleep(3000);
+                //热启动手Q
+                try {
+                    mOperate.startActivity("com.tencent.mobileqq",
+                            "com.tencent.mobileqq.activity.SplashActivity");
+                } catch (Exception e) {
+                    Log.e(TAG, "start test app activity error!");
+                    return;
+                }
+                mOperate.sleep(5000);
+                //点击搜索栏
+                mNodeOperate.clickOnText("搜索", 1000);
+                //输入群，点击进入
+                mFunction.inputText("503855711", 2000);
+                //点击搜索栏
+                mNodeOperate.clickOnTextContain("我的好友", 3000);
+
+                for (int i = 0; i < caseTime; i++) {
+                    //点击AIO输入输入框上方的中间部分区域
+                    mNodeOperate.clickOnResourceIdOffset("inputBar", 2000, 1, -100);
+                    //点击开始游戏
+                    mNodeOperate.clickOnText("挑战纪录", 5000);
+                    //如果进入新手引导则返回
+                    if (mNodeOperate.isTextExits("新手引导")) {
+                        mNodeOperate.clickOnText("返回", 2000);
+                        continue;
+                    }
+                    //通过y偏移点击退出按钮
+                    mNodeOperate.clickOnResourceIdOffset("ivTitleBtnLeft", 2000, 1, 100);
+
+                    //每轮查询可用内存和进程内存情况,并保存到终端存储
+                    mFunction.saveMem("com.tencent.mobileqq", fileName, i);
+                }
+                mOperate.sleep(2000);
+                mUIOperate.sendKey(KeyEvent.KEYCODE_HOME, 2000);
+                // 测试用例结束，打印日志
+                mEventHandler.sendEmptyMessage(PRINT_LOG);
+            }
+        }
+
+        );
+        currentThread.start();
+    }
     // private function
     // start shut screen
 
