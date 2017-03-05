@@ -26,6 +26,7 @@ import android.app.KeyguardManager.KeyguardLock;
 import android.app.ActivityManager;
 import android.app.DownloadManager;
 import android.app.Service;
+import android.content.ComponentName;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
@@ -704,5 +705,25 @@ public class Function {
     public void killAppByPackageName(String packageName) {
         //adb shell force-stop
         ExecUtil.kill(packageName);
+    }
+
+    public boolean isRunningForeground() {
+        String packageName = "com.tencent.mobileqq";
+        String topActivityClassName = null;
+        ActivityManager activityManager =
+                (ActivityManager) (mContext.getSystemService(android.content.Context.ACTIVITY_SERVICE));
+        List<ActivityManager.RunningTaskInfo> runningTaskInfos = activityManager.getRunningTasks(1);
+        if (runningTaskInfos != null) {
+            ComponentName f = runningTaskInfos.get(0).topActivity;
+            topActivityClassName = f.getClassName();
+        }
+        Log.i(TAG, "packageName=" + packageName + ",topActivityClassName=" + topActivityClassName);
+        if (packageName != null && topActivityClassName != null && topActivityClassName.startsWith(packageName)) {
+            Log.i(TAG, "---> isRunningForeGround");
+            return true;
+        } else {
+            Log.i(TAG, "---> isRunningBackGround");
+            return false;
+        }
     }
 }

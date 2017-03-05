@@ -1,6 +1,21 @@
 ﻿<?xmlversion=1.0 encoding=utf-8?>
 <Test>
     <case>
+        <name>厘米秀功能回归测试</name>
+        <className>CmShowAutoRunner</className>
+        <timeGene>1</timeGene>
+        <runState>once</runState>
+        <caseName>
+            0.登录测试账号,
+            1.非开通厘米秀用户进入AIO,
+            2.通过C2C功能面板开通厘米秀,
+            3.进入抽屉页自动播放sayhi动作,
+            4.通过抽屉页入口进入web页,
+            5.互动页切换到换装页
+        </caseName>
+        <caseOrder>0-1,1-1,2-1,3-1,4-1,5-1</caseOrder>
+    </case>
+    <case>
         <name>厘米秀内存测试</name>
         <className>CmShowMemRunner</className>
         <timeGene>1</timeGene>
@@ -31,4 +46,5 @@
         </caseName>
         <caseOrder>0-1</caseOrder>
     </case>
+
 </Test>

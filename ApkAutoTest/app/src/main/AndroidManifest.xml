@@ -19,6 +19,8 @@
     <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.WAKE_LOCK."/>
     <uses-permission android:name="android.permission.KILL_BACKGROUND_PROCESSES"/>
+    <uses-permission android:name="android.permission.GET_TASKS"/>
+
 
     <uses-sdk
         android:minSdkVersion="17"
@@ -41,14 +43,15 @@
         <activity android:name="com.tencent.apk_auto_test.HelpActivity">
         </activity>
 
+        <!--case runner-->
+        <service android:name="com.tencent.apk_auto_test.runner.CmShowAutoRunner">
+        </service>
         <service android:name="com.tencent.apk_auto_test.runner.CmShowMemRunner">
         </service>
         <service android:name="com.tencent.apk_auto_test.runner.CmShowDataRunner">
         </service>
 
 
-        <service android:name="com.tencent.apk_auto_test.services.unLockService">
-        </service>
         <!--AccessibilityService-->
         <service
             android:name="com.tencent.apk_auto_test.services.AccessibilityEventService"
@@ -62,6 +65,7 @@
                 android:name="android.accessibilityservice"
                 android:resource="@xml/config"/>
         </service>
+
         <!-- input service -->
         <service
             android:name="com.tencent.apk_auto_test.input.TestInputMethodService"
@@ -84,6 +88,9 @@
         <service android:name="com.tencent.apk_auto_test.input.InputService">
         </service>
         <!-- end input service -->
+
+        <service android:name="com.tencent.apk_auto_test.services.unLockService">
+        </service>
     </application>
 
 </manifest>

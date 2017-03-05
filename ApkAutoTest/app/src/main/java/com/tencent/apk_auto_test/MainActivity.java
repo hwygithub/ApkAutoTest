@@ -8,6 +8,7 @@ import com.tencent.apk_auto_test.data.RunPara;
 import com.tencent.apk_auto_test.data.RunPartAdapter;
 import com.tencent.apk_auto_test.data.StaticData;
 import com.tencent.apk_auto_test.data.TestCase;
+import com.tencent.apk_auto_test.runner.CmShowAutoRunner;
 import com.tencent.apk_auto_test.runner.CmShowDataRunner;
 import com.tencent.apk_auto_test.runner.CmShowMemRunner;
 import com.tencent.apk_auto_test.util.ExecUtil;
@@ -228,15 +229,19 @@ public class MainActivity extends Activity implements OnClickListener {
                 }
                 //还原一些变量
                 mBtnStart.setEnabled(false);
+
                 switch (runnerIndex) {
                     case 0:
-                        startService(new Intent(MainActivity.this, CmShowMemRunner.class));
+                        startService(new Intent(MainActivity.this, CmShowAutoRunner.class));
                         break;
                     case 1:
                         startService(new Intent(MainActivity.this, CmShowDataRunner.class));
                         break;
-                }
+                    case 2:
+                        startService(new Intent(MainActivity.this, CmShowMemRunner.class));
+                        break;
 
+                }
                 Toast.makeText(mContext, "开始测试", Toast.LENGTH_LONG).show();
                 break;
 
