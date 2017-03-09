@@ -1,6 +1,8 @@
 package com.tencent.apk_auto_test.util;
 
 
+import android.util.Log;
+
 import java.io.IOException;
 import java.io.OutputStream;
 
@@ -11,6 +13,9 @@ import java.io.OutputStream;
 public class ExecUtil {
     private static final String TAG = "ExecUtil";
     private static Process process;
+    private static byte[] tempBuffer;
+    private static StringBuilder buffer;
+
 
     /**
      * 结束进程,执行操作调用即可
@@ -44,6 +49,11 @@ public class ExecUtil {
         close();
     }
 
+    /**
+     * 查看是否root
+     *
+     * @return
+     */
     public static boolean isRoot() {
         try {
             process = Runtime.getRuntime().exec("su");
@@ -62,6 +72,27 @@ public class ExecUtil {
 
     }
 
+    /**
+     * 调用系统截图工具获取屏幕截图字节数组，格式为png，注意这是一个耗时操作，约为1-5秒。
+     * 如果屏幕分辨率过高，防止内存溢出，可以考虑直接保存到文件的命令u -c /system/bin/screencap -p /sdcard/screenshot.png
+     *
+     * @return png格式图片的字节数组
+     */
+    public static void getScreenCap(String capPath) {
+        Log.i(TAG, "start capture screen..." + capPath);
+        try {
+            process = Runtime.getRuntime().exec("su -c /system/bin/screencap -p " + capPath);
+            process.getOutputStream().write("exit\n".getBytes());
+            process.getOutputStream().flush();
+            process.waitFor();
+            Log.i(TAG, "end capture screen");
+            close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /*************私有方法**************/
     /**
      * 初始化进程
      */

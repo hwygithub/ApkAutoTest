@@ -1,26 +1,5 @@
 package com.tencent.apk_auto_test.runner;
 
-import java.io.File;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.Date;
-
-import com.tencent.apk_auto_test.HelpActivity;
-import com.tencent.apk_auto_test.MainActivity;
-import com.tencent.apk_auto_test.R;
-import com.tencent.apk_auto_test.data.StaticData;
-import com.tencent.apk_auto_test.services.unLockService;
-import com.tencent.apk_auto_test.util.Function;
-import com.tencent.apk_auto_test.util.Time;
-import com.tencent.apk_auto_test.util.UINodeOperate;
-import com.tencent.apk_auto_test.util.UIOperate;
-import com.tencent.apk_auto_test.receiver.BatteryReceiver;
-import com.tencent.apk_auto_test.receiver.ScreenActionReceiver;
-import com.tencent.apk_auto_test.receiver.ShutDownReceiver;
-import com.test.function.Assert;
-import com.test.function.Operate;
-import com.test.function.Show;
-
 import android.app.AlarmManager;
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -41,6 +20,27 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 
+import com.tencent.apk_auto_test.HelpActivity;
+import com.tencent.apk_auto_test.MainActivity;
+import com.tencent.apk_auto_test.R;
+import com.tencent.apk_auto_test.data.StaticData;
+import com.tencent.apk_auto_test.receiver.BatteryReceiver;
+import com.tencent.apk_auto_test.receiver.ScreenActionReceiver;
+import com.tencent.apk_auto_test.receiver.ShutDownReceiver;
+import com.tencent.apk_auto_test.services.unLockService;
+import com.tencent.apk_auto_test.util.Function;
+import com.tencent.apk_auto_test.util.TestMonitor;
+import com.tencent.apk_auto_test.util.TimeUtil;
+import com.tencent.apk_auto_test.util.UINodeOperate;
+import com.tencent.apk_auto_test.util.UIOperate;
+import com.test.function.Assert;
+import com.test.function.Operate;
+
+import java.io.File;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.Date;
+
 public class CmShowMemRunner extends Service {
     // static
     protected static final int END_TEST = 0;
@@ -59,7 +59,7 @@ public class CmShowMemRunner extends Service {
     private Operate mOperate;
     private Assert mAssert;
     private Context mContext;
-    private Show mShow;
+    private TestMonitor mTestMonitor;
     private Function mFunction;
     private BatteryReceiver batteryReceiver;
     private ShutDownReceiver mShutDownReceiver;
@@ -130,7 +130,7 @@ public class CmShowMemRunner extends Service {
         mHandler = new TestHandler();
         mContext = getApplicationContext();
         mOperate = new Operate(mContext);
-        mShow = new Show(mContext);
+        mTestMonitor = new TestMonitor(mContext);
         mAssert = new Assert(mContext);
         mFunction = new Function(mContext, mHandler);
         mEventHandler = new EventHandler();
@@ -169,7 +169,7 @@ public class CmShowMemRunner extends Service {
 
         @Override
         public void onClick(View arg0) {
-            mShow.removeView();
+            mTestMonitor.removeView();
             stopSelf();
             mFunction.stopPackage(mContext.getPackageName());
         }
@@ -204,7 +204,7 @@ public class CmShowMemRunner extends Service {
                     mFunction.delFolder(new File("/sdcard/tencent-test"));
                     // 设置系统对手Q的隐私权限为全部允许
                     // Set the update window
-                    mShow.addView(new StopClickListener());
+                    mTestMonitor.addView(new StopClickListener());
 
                     mHandler.sendEmptyMessage(RUN_SCHEME);
                     break;
@@ -234,7 +234,7 @@ public class CmShowMemRunner extends Service {
                             .getSystemService(Context.TELEPHONY_SERVICE);
                     batteryReceiver.printStartLevel();
                     // start time
-                    StaticData.testStartTime = Time.getCurrentTime();
+                    StaticData.testStartTime = TimeUtil.getCurrentTime();
                     // start run
                     mHandler.sendEmptyMessage(RUN_TEST);
                     break;
@@ -256,15 +256,15 @@ public class CmShowMemRunner extends Service {
                         StaticData.caseNumber = StaticData.runList.get(testNumber).runCaseNumber;
                         int caseTime = StaticData.runList.get(testNumber).runNumber;
                         // start
-                        StaticData.caseStartTime = Time.getCurrentTime();
+                        StaticData.caseStartTime = TimeUtil.getCurrentTime();
                         startRunCase(StaticData.caseNumber, caseTime);
                     }
                     break;
                 case END_TEST:
-                    String testTime = Time.getPassTimeString(
-                            StaticData.testStartTime, Time.getCurrentTime());
+                    String testTime = TimeUtil.getPassTimeString(
+                            StaticData.testStartTime, TimeUtil.getCurrentTime());
                     // write log
-                    BatteryReceiver.writeLog(Time.getCurrentTimeSecond(), 4, 1);
+                    BatteryReceiver.writeLog(TimeUtil.getCurrentTimeSecond(), 4, 1);
                     BatteryReceiver.writeLog(testTime, 5, 1);
                     BatteryReceiver.writeLog(StaticData.testFinishEvent, 6, 1);
                     // After test,send sms  ---remove in 2016/12/21
@@ -354,9 +354,9 @@ public class CmShowMemRunner extends Service {
             @Override
             public void run() {
                 //悬浮窗显示状态
-                mShow.updateState("case: " + (testNumber++ + 1) + "\n" + StaticData.chooseListText[caseNumber]);
+                mTestMonitor.updateState("case:" + (testNumber++ + 1) + " \t" + StaticData.chooseListText[caseNumber]);
                 //初始化参数
-                mRunFileName = "CSMT-" + caseNumber + "-" + Time.getCurrentTimeSecond();
+                mRunFileName = "CSMT-" + caseNumber + "-" + TimeUtil.getCurrentTimeSecond();
                 //杀手Q进程还原状态、启动手Q
                 if (caseNumber != 0)
                     _InitQQ();
@@ -665,7 +665,7 @@ public class CmShowMemRunner extends Service {
             //点击AIO输入输入框上方的中间部分区域
             mNodeOperate.clickOnResourceIdOffset("inputBar", 2000, 1, -100);
             //点击开始游戏
-            mNodeOperate.clickOnText("开始游戏", 3500);
+            mNodeOperate.clickOnResourceId("apollo_aio_game_item_first", 3500, 0);
             //如果进入新手引导则返回
             if (mNodeOperate.isTextExits("新手引导")) {
                 mNodeOperate.clickOnText("返回", 2000);
@@ -685,7 +685,7 @@ public class CmShowMemRunner extends Service {
         //点击搜索栏
         mNodeOperate.clickOnText("搜索", 1000);
         //输入测试号码
-        mFunction.inputText("503855711", 2000);
+        mFunction.inputText("1220232584", 2000);
         //点击进入
         mNodeOperate.clickOnTextContain("我的好友", 3000);
 
@@ -693,7 +693,7 @@ public class CmShowMemRunner extends Service {
             //点击AIO输入输入框上方的中间部分区域
             mNodeOperate.clickOnResourceIdOffset("inputBar", 2000, 1, -100);
             //点击挑战纪录
-            mNodeOperate.clickOnText("挑战纪录", 5000);
+            mNodeOperate.clickOnResourceId("apollo_aio_game_item_second", 4000, 0);
             //如果进入新手引导则返回
             if (mNodeOperate.isTextExits("新手引导")) {
                 mNodeOperate.clickOnText("返回", 2000);
@@ -706,9 +706,9 @@ public class CmShowMemRunner extends Service {
             mFunction.saveMem("com.tencent.mobileqq", mRunFileName, i);
         }
     }
-// private function
-// start shut screen
 
+    // private function
+    // start shut screen
     private void shutScreen(long minutes) {
         powerOffDelay(mContext, minutes * (int) (60 * StaticData.timeGene));
         mUIOperate.sendKey(KeyEvent.KEYCODE_POWER, 0);

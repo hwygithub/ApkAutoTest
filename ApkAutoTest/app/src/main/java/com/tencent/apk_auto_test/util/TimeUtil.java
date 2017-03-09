@@ -6,7 +6,7 @@ import java.util.TimeZone;
 
 import com.tencent.apk_auto_test.data.StaticData;
 
-public class Time {
+public class TimeUtil {
 
 	public static long getCurrentTime() {
 		return System.currentTimeMillis();

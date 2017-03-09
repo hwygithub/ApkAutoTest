@@ -13,7 +13,7 @@ import com.tencent.apk_auto_test.runner.CmShowDataRunner;
 import com.tencent.apk_auto_test.runner.CmShowMemRunner;
 import com.tencent.apk_auto_test.util.ExecUtil;
 import com.tencent.apk_auto_test.util.Function;
-import com.tencent.apk_auto_test.util.Global;
+import com.tencent.apk_auto_test.data.Global;
 
 import android.os.Bundle;
 import android.app.Activity;
@@ -235,10 +235,10 @@ public class MainActivity extends Activity implements OnClickListener {
                         startService(new Intent(MainActivity.this, CmShowAutoRunner.class));
                         break;
                     case 1:
-                        startService(new Intent(MainActivity.this, CmShowDataRunner.class));
+                        startService(new Intent(MainActivity.this, CmShowMemRunner.class));
                         break;
                     case 2:
-                        startService(new Intent(MainActivity.this, CmShowMemRunner.class));
+                        startService(new Intent(MainActivity.this, CmShowDataRunner.class));
                         break;
 
                 }

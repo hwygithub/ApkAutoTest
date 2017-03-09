@@ -1,32 +1,11 @@
 package com.tencent.apk_auto_test.util;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.Set;
-
-import com.tencent.apk_auto_test.data.RunPara;
-import com.tencent.apk_auto_test.data.StaticData;
-import com.tencent.apk_auto_test.data.TestCase;
-import com.tencent.apk_auto_test.input.InputService;
-import com.tencent.apk_auto_test.util.Telephony.Sms;
-import com.test.function.Assert;
-import com.test.function.Operate;
-
 import android.annotation.SuppressLint;
-import android.app.ActivityManager.MemoryInfo;
-import android.app.KeyguardManager.KeyguardLock;
 import android.app.ActivityManager;
+import android.app.ActivityManager.MemoryInfo;
 import android.app.DownloadManager;
+import android.app.KeyguardManager.KeyguardLock;
 import android.app.Service;
-import android.content.ComponentName;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
@@ -49,6 +28,26 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.widget.Toast;
 
+import com.tencent.apk_auto_test.data.Global;
+import com.tencent.apk_auto_test.data.RunPara;
+import com.tencent.apk_auto_test.data.StaticData;
+import com.tencent.apk_auto_test.data.TestCase;
+import com.tencent.apk_auto_test.input.InputService;
+import com.tencent.apk_auto_test.util.Telephony.Sms;
+import com.test.function.Assert;
+import com.test.function.Operate;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 public class Function {
     private static final String TAG = "Function";
     protected static final int RUN_SCHEME = 5;
@@ -61,7 +60,6 @@ public class Function {
     private Handler mHandler;
     private Operate mOperate;
     private Assert mAssert;
-    private FillSms_MmsInfo info;
     private UIOperate mUIOperate;
 
     public Function(Context mContext) {
@@ -76,7 +74,6 @@ public class Function {
         this.mHandler = mHandler;
         mOperate = new Operate(mContext);
         mAssert = new Assert(mContext);
-        info = new FillSms_MmsInfo(mContext);
     }
 
     public void changeSerial2Array(String[] serial) {
@@ -613,7 +610,7 @@ public class Function {
         Log.v(TAG, "getAvailMemory : " + availMemory);
         String index = String.format("%03d", i);
         strbuf.append("index:" + index);
-        strbuf.append("\t").append(Time.getTime());
+        strbuf.append("\t").append(TimeUtil.getTime());
         strbuf.append("\t").append(getAvailMemory(mContext));
         ActivityManager am = (ActivityManager) mContext.getSystemService(Context.ACTIVITY_SERVICE);
 
@@ -707,23 +704,8 @@ public class Function {
         ExecUtil.kill(packageName);
     }
 
-    public boolean isRunningForeground() {
-        String packageName = "com.tencent.mobileqq";
-        String topActivityClassName = null;
-        ActivityManager activityManager =
-                (ActivityManager) (mContext.getSystemService(android.content.Context.ACTIVITY_SERVICE));
-        List<ActivityManager.RunningTaskInfo> runningTaskInfos = activityManager.getRunningTasks(1);
-        if (runningTaskInfos != null) {
-            ComponentName f = runningTaskInfos.get(0).topActivity;
-            topActivityClassName = f.getClassName();
-        }
-        Log.i(TAG, "packageName=" + packageName + ",topActivityClassName=" + topActivityClassName);
-        if (packageName != null && topActivityClassName != null && topActivityClassName.startsWith(packageName)) {
-            Log.i(TAG, "---> isRunningForeGround");
-            return true;
-        } else {
-            Log.i(TAG, "---> isRunningBackGround");
-            return false;
-        }
+    public void getScreenPic() {
+        String capPath = "/sdcard/screenshot.png";
+        ExecUtil.getScreenCap(capPath);
     }
 }

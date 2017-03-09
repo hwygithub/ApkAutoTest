@@ -1,6 +1,5 @@
 package com.tencent.apk_auto_test.runner;
 
-import android.app.AlarmManager;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -12,8 +11,6 @@ import android.content.IntentFilter;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
-import android.os.PowerManager;
-import android.os.SystemClock;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -23,24 +20,22 @@ import android.view.View.OnClickListener;
 import com.tencent.apk_auto_test.HelpActivity;
 import com.tencent.apk_auto_test.MainActivity;
 import com.tencent.apk_auto_test.R;
+import com.tencent.apk_auto_test.data.Global;
 import com.tencent.apk_auto_test.data.StaticData;
 import com.tencent.apk_auto_test.receiver.BatteryReceiver;
 import com.tencent.apk_auto_test.receiver.ScreenActionReceiver;
 import com.tencent.apk_auto_test.receiver.ShutDownReceiver;
-import com.tencent.apk_auto_test.services.unLockService;
 import com.tencent.apk_auto_test.util.Function;
-import com.tencent.apk_auto_test.util.Global;
-import com.tencent.apk_auto_test.util.Time;
+import com.tencent.apk_auto_test.util.TestMonitor;
+import com.tencent.apk_auto_test.util.TimeUtil;
 import com.tencent.apk_auto_test.util.UINodeOperate;
 import com.tencent.apk_auto_test.util.UIOperate;
 import com.test.function.Assert;
 import com.test.function.Operate;
-import com.test.function.Show;
 
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Date;
 
 public class CmShowAutoRunner extends Service {
     // static
@@ -58,7 +53,7 @@ public class CmShowAutoRunner extends Service {
     private Operate mOperate;
     private Assert mAssert;
     private Context mContext;
-    private Show mShow;
+    private TestMonitor mTestMonitor;
     private Function mFunction;
     private BatteryReceiver batteryReceiver;
     private ShutDownReceiver mShutDownReceiver;
@@ -129,7 +124,7 @@ public class CmShowAutoRunner extends Service {
         mHandler = new TestHandler();
         mContext = getApplicationContext();
         mOperate = new Operate(mContext);
-        mShow = new Show(mContext);
+        mTestMonitor = new TestMonitor(mContext);
         mAssert = new Assert(mContext);
         mFunction = new Function(mContext, mHandler);
         mEventHandler = new EventHandler();
@@ -168,7 +163,7 @@ public class CmShowAutoRunner extends Service {
 
         @Override
         public void onClick(View arg0) {
-            mShow.removeView();
+            mTestMonitor.removeView();
             stopSelf();
             mFunction.stopPackage(mContext.getPackageName());
         }
@@ -203,7 +198,7 @@ public class CmShowAutoRunner extends Service {
                     mFunction.delFolder(new File("/sdcard/tencent-test"));
                     // 设置系统对手Q的隐私权限为全部允许
                     // Set the update window
-                    mShow.addView(new StopClickListener());
+                    mTestMonitor.addView(new StopClickListener());
 
                     mHandler.sendEmptyMessage(RUN_SCHEME);
                     break;
@@ -233,7 +228,7 @@ public class CmShowAutoRunner extends Service {
                             .getSystemService(Context.TELEPHONY_SERVICE);
                     batteryReceiver.printStartLevel();
                     // start time
-                    StaticData.testStartTime = Time.getCurrentTime();
+                    StaticData.testStartTime = TimeUtil.getCurrentTime();
                     // start run
                     mHandler.sendEmptyMessage(RUN_TEST);
                     break;
@@ -255,15 +250,15 @@ public class CmShowAutoRunner extends Service {
                         StaticData.caseNumber = StaticData.runList.get(testNumber).runCaseNumber;
                         int caseTime = StaticData.runList.get(testNumber).runNumber;
                         // start
-                        StaticData.caseStartTime = Time.getCurrentTime();
+                        StaticData.caseStartTime = TimeUtil.getCurrentTime();
                         startRunCase(StaticData.caseNumber, caseTime);
                     }
                     break;
                 case END_TEST:
-                    String testTime = Time.getPassTimeString(
-                            StaticData.testStartTime, Time.getCurrentTime());
+                    String testTime = TimeUtil.getPassTimeString(
+                            StaticData.testStartTime, TimeUtil.getCurrentTime());
                     // write log
-                    BatteryReceiver.writeLog(Time.getCurrentTimeSecond(), 4, 1);
+                    BatteryReceiver.writeLog(TimeUtil.getCurrentTimeSecond(), 4, 1);
                     BatteryReceiver.writeLog(testTime, 5, 1);
                     BatteryReceiver.writeLog(StaticData.testFinishEvent, 6, 1);
                     // After test,send sms  ---remove in 2016/12/21
@@ -353,11 +348,11 @@ public class CmShowAutoRunner extends Service {
             @Override
             public void run() {
                 //悬浮窗显示状态
-                mShow.updateState("case: " + (testNumber++ + 1) + "\n" + StaticData.chooseListText[caseNumber]);
+                mTestMonitor.updateState("case:" + (testNumber++ + 1) + " \t" + StaticData.chooseListText[caseNumber]);
                 //初始化参数
-                mRunFileName = "CSAT-" + caseNumber + "-" + Time.getCurrentTimeSecond();
+                mRunFileName = "CSAT-" + caseNumber + "-" + TimeUtil.getCurrentTimeSecond();
                 //热启动手Q
-                if (caseNumber != 0)
+                if (caseNumber != 0 && caseNumber != 1)
                     _InitQQ();
                 try {
                     method.invoke(serviceObject, caseTime);
@@ -447,7 +442,7 @@ public class CmShowAutoRunner extends Service {
         }
     }
 
-    // 1.非开通厘米秀用户进入AIO
+    // [1]非开通厘米秀用户进入AIO
     public void CSAT_1(final int caseTime) {
         for (int i = 0; i < caseTime; i++) {
             // TODO: 2017/3/5 关闭厘米秀功能
@@ -463,10 +458,11 @@ public class CmShowAutoRunner extends Service {
             //进入好友AIO
             mNodeOperate.clickOnTextContain("我的好友", 2000);
             //// TODO: 2017/3/5 判断小人没有显示
+            mFunction.getScreenPic();
         }
     }
 
-    // 2.通过C2C功能面板开通厘米秀
+    // [2]通过C2C功能面板开通厘米秀
     public void CSAT_2(final int caseTime) {
         for (int i = 0; i < caseTime; i++) {
             //点击搜索栏
@@ -478,7 +474,8 @@ public class CmShowAutoRunner extends Service {
             //点击功能面板按钮
             mNodeOperate.clickOnResourceId("qq_aio_panel_plus", 1000, 0);
             //向左滑动
-            mUIOperate.swipe((float) Global.SCREEN_WIDTH - 100, (float) (Global.SCREEN_HEIGHT * 0.8), 100, (float) (Global.SCREEN_HEIGHT * 0.8), 1000);
+            mUIOperate.swipe((float) Global.SCREEN_WIDTH - 100, (float) (Global.SCREEN_HEIGHT * 0.8), 100, (float) (Global.SCREEN_HEIGHT * 0.8),
+                    1000);
             //点击厘米秀
             mNodeOperate.clickOnDesc("厘米秀按钮", 1000);
             //点击开启厘米秀
@@ -488,7 +485,7 @@ public class CmShowAutoRunner extends Service {
         }
     }
 
-    //3.进入抽屉页自动播放sayhi动作
+    // [3]进入抽屉页自动播放sayhi动作
     public void CSAT_3(final int caseTime) {
         for (int i = 0; i < caseTime; i++) {
             //进入抽屉页
@@ -497,7 +494,7 @@ public class CmShowAutoRunner extends Service {
         }
     }
 
-    //4.通过抽屉页入口进入web页
+    // [4] 通过抽屉页入口进入web页
     public void CSAT_4(final int caseTime) {
         for (int i = 0; i < caseTime; i++) {
             //进入抽屉页
@@ -508,7 +505,7 @@ public class CmShowAutoRunner extends Service {
         }
     }
 
-    //5.互动页切换到换装页
+    // [5] 互动页切换到换装页
     public void CSAT_5(final int caseTime) {
         for (int i = 0; i < caseTime; i++) {
             //进入抽屉页
@@ -520,6 +517,35 @@ public class CmShowAutoRunner extends Service {
             // TODO: 2017/3/5 切换到换装页；小人展示播放sayhi 
         }
     }
+
+    //［6］通过换装页分享入口进入分享浮层
+    public void CSAT_6(final int caseTime) {
+        for (int i = 0; i < caseTime; i++) {
+            //进入抽屉页
+            mNodeOperate.clickOnResourceId("conversation_head", 3000, 0);
+            //点击抽屉页厘米秀小人
+            mNodeOperate.clickOnResourceIdOffset("nightmode", 3000, 0, 200);
+            //点击切换到换装页
+            mNodeOperate.clickOnResourceIdOffset("rlCommenTitle", 3000, 0, -100);
+            //点击换装分享入口
+        }
+    }
+
+    //［7］分享浮层分享到好友
+    public void CSAT_7(final int caseTime) {
+        for (int i = 0; i < caseTime; i++) {
+            //进入抽屉页
+            mNodeOperate.clickOnResourceId("conversation_head", 3000, 0);
+            //点击抽屉页厘米秀小人
+            mNodeOperate.clickOnResourceIdOffset("nightmode", 3000, 0, 200);
+            //点击切换到换装页
+            mNodeOperate.clickOnResourceIdOffset("rlCommenTitle", 3000, 0, -100);
+            //点击换装分享入口
+        }
+    }
+    //［8］分享浮层分享到QQ空间
+    //［9］分享浮层下载图片
+    //［10］分享浮层更换小人动作
 
     /****************
      * 用例执行部分--结束

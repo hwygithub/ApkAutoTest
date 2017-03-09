@@ -1,20 +1,15 @@
 package com.tencent.apk_auto_test.runner;
 
-import android.app.AlarmManager;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
-import android.os.PowerManager;
-import android.os.SystemClock;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -29,15 +24,14 @@ import com.tencent.apk_auto_test.receiver.BatteryReceiver;
 import com.tencent.apk_auto_test.receiver.ScreenActionReceiver;
 import com.tencent.apk_auto_test.receiver.ShutDownReceiver;
 import com.tencent.apk_auto_test.util.Function;
-import com.tencent.apk_auto_test.util.Time;
+import com.tencent.apk_auto_test.util.TestMonitor;
+import com.tencent.apk_auto_test.util.TimeUtil;
 import com.tencent.apk_auto_test.util.UINodeOperate;
 import com.tencent.apk_auto_test.util.UIOperate;
 import com.test.function.Assert;
 import com.test.function.Operate;
-import com.test.function.Show;
 
 import java.io.File;
-import java.util.Date;
 
 public class CmShowDataRunner extends Service {
     // static
@@ -57,7 +51,7 @@ public class CmShowDataRunner extends Service {
     private Operate mOperate;
     private Assert mAssert;
     private Context mContext;
-    private Show mShow;
+    private TestMonitor mTestMonitor;
     private Function mFunction;
     private BatteryReceiver batteryReceiver;
     private ShutDownReceiver mShutDownReceiver;
@@ -125,7 +119,7 @@ public class CmShowDataRunner extends Service {
         mHandler = new TestHandler();
         mContext = getApplicationContext();
         mOperate = new Operate(mContext);
-        mShow = new Show(mContext);
+        mTestMonitor = new TestMonitor(mContext);
         mAssert = new Assert(mContext);
         mFunction = new Function(mContext, mHandler);
         mEventHandler = new EventHandler();
@@ -163,7 +157,7 @@ public class CmShowDataRunner extends Service {
 
         @Override
         public void onClick(View arg0) {
-            mShow.removeView();
+            mTestMonitor.removeView();
             stopSelf();
             mFunction.stopPackage(mContext.getPackageName());
         }
@@ -196,7 +190,7 @@ public class CmShowDataRunner extends Service {
                     mFunction.setTrafficAlert(false, false);
                     // 设置系统对手Q的隐私权限为全部允许
                     // Set the update window
-                    mShow.addView(new StopClickListener());
+                    mTestMonitor.addView(new StopClickListener());
 
                     mHandler.sendEmptyMessage(RUN_SCHEME);
                     break;
@@ -226,7 +220,7 @@ public class CmShowDataRunner extends Service {
                             .getSystemService(Context.TELEPHONY_SERVICE);
                     batteryReceiver.printStartLevel();
                     // start time
-                    StaticData.testStartTime = Time.getCurrentTime();
+                    StaticData.testStartTime = TimeUtil.getCurrentTime();
                     // start run
                     mHandler.sendEmptyMessage(RUN_TEST);
                     break;
@@ -248,15 +242,15 @@ public class CmShowDataRunner extends Service {
                         StaticData.caseNumber = StaticData.runList.get(testNumber).runCaseNumber;
                         int caseTime = StaticData.runList.get(testNumber).runNumber;
                         // start
-                        StaticData.caseStartTime = Time.getCurrentTime();
+                        StaticData.caseStartTime = TimeUtil.getCurrentTime();
                         startRunCase(StaticData.caseNumber, caseTime);
                     }
                     break;
                 case END_TEST:
-                    String testTime = Time.getPassTimeString(
-                            StaticData.testStartTime, Time.getCurrentTime());
+                    String testTime = TimeUtil.getPassTimeString(
+                            StaticData.testStartTime, TimeUtil.getCurrentTime());
                     // write log
-                    BatteryReceiver.writeLog(Time.getCurrentTimeSecond(), 4, 1);
+                    BatteryReceiver.writeLog(TimeUtil.getCurrentTimeSecond(), 4, 1);
                     BatteryReceiver.writeLog(testTime, 5, 1);
                     BatteryReceiver.writeLog(StaticData.testFinishEvent, 6, 1);
                     // end the test
@@ -332,7 +326,7 @@ public class CmShowDataRunner extends Service {
      * @param caseTime
      */
     private void CSMT_0(final int caseTime) {
-        mShow.updateState("case: " + (testNumber + 1) + "\n" + "构造初始状态用户");
+        mTestMonitor.updateState("case: " + (testNumber + 1) + "\t" + "构造初始状态用户");
         Thread currentThread = new Thread(new Runnable() {
 
             @Override

@@ -1,24 +1,18 @@
 package com.tencent.apk_auto_test.util;
 
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
 
+import com.tencent.apk_auto_test.data.Global;
 import com.tencent.apk_auto_test.data.StaticData;
 import com.tencent.apk_auto_test.services.AccessibilityEventService;
 import com.test.function.Assert;
 import com.test.function.Operate;
 
 import android.annotation.SuppressLint;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.ServiceConnection;
 import android.graphics.Rect;
-import android.nfc.Tag;
-import android.os.IBinder;
 import android.os.SystemClock;
-import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.accessibility.AccessibilityNodeInfo;

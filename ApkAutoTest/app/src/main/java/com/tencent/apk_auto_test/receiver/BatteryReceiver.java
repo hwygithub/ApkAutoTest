@@ -6,7 +6,7 @@ import java.io.InputStreamReader;
 import com.tencent.apk_auto_test.R;
 import com.tencent.apk_auto_test.data.StaticData;
 import com.tencent.apk_auto_test.runner.CmShowMemRunner;
-import com.tencent.apk_auto_test.util.Time;
+import com.tencent.apk_auto_test.util.TimeUtil;
 import com.tencent.apk_auto_test.util.TxtUtil;
 import com.tencent.apk_auto_test.services.unLockService;
 import com.test.function.Operate;
@@ -55,7 +55,7 @@ public class BatteryReceiver extends BroadcastReceiver {
 
 	public void setName(String name) {
 		this.name = name;
-		mTestTime = Time.getCurrentTimeSecond();
+		mTestTime = TimeUtil.getCurrentTimeSecond();
 		mFileName = name + mTestTime + ".xls";
 		recordHeader();
 	}
@@ -86,8 +86,8 @@ public class BatteryReceiver extends BroadcastReceiver {
 		context.startService(intentToFire);
 		// write the last case log
 		TxtUtil.saveMsg(OutFilePath, "testIndex:" + CmShowMemRunner.testNumber, mFileName, mContext, index, 0);
-		TxtUtil.saveMsg(OutFilePath, Time.getCurrentTimeSecond(), mFileName, mContext, index, 1);
-		TxtUtil.saveMsg(OutFilePath, Time.getPassTime(StaticData.caseStartTime, Time.getCurrentTime()), mFileName,
+		TxtUtil.saveMsg(OutFilePath, TimeUtil.getCurrentTimeSecond(), mFileName, mContext, index, 1);
+		TxtUtil.saveMsg(OutFilePath, TimeUtil.getPassTime(StaticData.caseStartTime, TimeUtil.getCurrentTime()), mFileName,
 				mContext, index, 2);
 		TxtUtil.saveMsg(OutFilePath, mLevel + "%", mFileName, mContext, index, 3);
 		TxtUtil.saveMsg(OutFilePath, (float) voltage / 1000 + "v", mFileName, mContext, index, 4);
@@ -130,8 +130,8 @@ public class BatteryReceiver extends BroadcastReceiver {
 
 			StringBuilder sb = new StringBuilder();
 			TxtUtil.saveMsg(OutFilePath, "testIndex:" + testNumber, mFileName, mContext, index, 0);
-			TxtUtil.saveMsg(OutFilePath, Time.getCurrentTimeSecond(), mFileName, mContext, index, 1);
-			TxtUtil.saveMsg(OutFilePath, Time.getPassTime(StaticData.caseStartTime, Time.getCurrentTime()), mFileName,
+			TxtUtil.saveMsg(OutFilePath, TimeUtil.getCurrentTimeSecond(), mFileName, mContext, index, 1);
+			TxtUtil.saveMsg(OutFilePath, TimeUtil.getPassTime(StaticData.caseStartTime, TimeUtil.getCurrentTime()), mFileName,
 					mContext, index, 2);
 			TxtUtil.saveMsg(OutFilePath, mLevel + "%", mFileName, mContext, index, 3);
 			TxtUtil.saveMsg(OutFilePath, (float) voltage / 1000 + "v", mFileName, mContext, index, 4);
