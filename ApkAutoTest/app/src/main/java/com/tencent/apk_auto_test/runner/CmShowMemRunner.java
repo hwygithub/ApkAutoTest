@@ -12,8 +12,6 @@ import android.content.IntentFilter;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
-import android.os.PowerManager;
-import android.os.SystemClock;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -31,6 +29,7 @@ import com.tencent.apk_auto_test.services.unLockService;
 import com.tencent.apk_auto_test.util.Function;
 import com.tencent.apk_auto_test.util.TestMonitor;
 import com.tencent.apk_auto_test.util.TimeUtil;
+import com.tencent.apk_auto_test.util.UICvOperate;
 import com.tencent.apk_auto_test.util.UINodeOperate;
 import com.tencent.apk_auto_test.util.UIOperate;
 import com.test.function.Assert;
@@ -70,6 +69,7 @@ public class CmShowMemRunner extends Service {
     private TelephonyManager teleMgr;
     private UINodeOperate mNodeOperate;
     private UIOperate mUIOperate;
+    private UICvOperate mUiCvOperate;
     private Method method;
     private CmShowMemRunner serviceObject;
 
@@ -136,6 +136,7 @@ public class CmShowMemRunner extends Service {
         mEventHandler = new EventHandler();
         mNodeOperate = new UINodeOperate(mContext);
         mUIOperate = new UIOperate(mContext);
+        mUiCvOperate = new UICvOperate(mContext);
         serviceObject = this;
     }
 
@@ -664,6 +665,7 @@ public class CmShowMemRunner extends Service {
         for (int i = 0; i < caseTime; i++) {
             //点击AIO输入输入框上方的中间部分区域
             mNodeOperate.clickOnResourceIdOffset("inputBar", 2000, 1, -100);
+
             //点击开始游戏
             mNodeOperate.clickOnResourceId("apollo_aio_game_item_first", 3500, 0);
             //如果进入新手引导则返回
@@ -672,7 +674,8 @@ public class CmShowMemRunner extends Service {
                 continue;
             }
             //通过y偏移点击退出按钮
-            mNodeOperate.clickOnResourceIdOffset("ivTitleBtnLeft", 2000, 1, 100);
+            //mNodeOperate.clickOnResourceIdOffset("ivTitleBtnLeft", 2000, 1, 100);
+            mUiCvOperate.clickOnImage("btn_game_exit", 3000);
 
             //每轮查询可用内存和进程内存情况,并保存到终端存储
             mFunction.saveMem("com.tencent.mobileqq", mRunFileName, i);
@@ -742,11 +745,6 @@ public class CmShowMemRunner extends Service {
         alarms.cancel(makePendingIntent(mContext));
     }
 
-    private void goToSleep() {
-        PowerManager powerManager = (PowerManager) mContext
-                .getSystemService(Context.POWER_SERVICE);
-        powerManager.goToSleep(SystemClock.uptimeMillis());
-    }
 
     @SuppressWarnings("deprecation")
     private void sendNotification() {

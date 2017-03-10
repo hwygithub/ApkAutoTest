@@ -704,8 +704,4 @@ public class Function {
         ExecUtil.kill(packageName);
     }
 
-    public void getScreenPic() {
-        String capPath = "/sdcard/screenshot.png";
-        ExecUtil.getScreenCap(capPath);
-    }
 }

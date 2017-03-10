@@ -1,21 +1,5 @@
 package com.tencent.apk_auto_test;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import com.tencent.apk_auto_test.data.ChoosePartAdapter;
-import com.tencent.apk_auto_test.data.RunPara;
-import com.tencent.apk_auto_test.data.RunPartAdapter;
-import com.tencent.apk_auto_test.data.StaticData;
-import com.tencent.apk_auto_test.data.TestCase;
-import com.tencent.apk_auto_test.runner.CmShowAutoRunner;
-import com.tencent.apk_auto_test.runner.CmShowDataRunner;
-import com.tencent.apk_auto_test.runner.CmShowMemRunner;
-import com.tencent.apk_auto_test.util.ExecUtil;
-import com.tencent.apk_auto_test.util.Function;
-import com.tencent.apk_auto_test.data.Global;
-
-import android.os.Bundle;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -23,8 +7,10 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.os.Bundle;
 import android.provider.Settings;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -43,7 +29,27 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.tencent.apk_auto_test.data.ChoosePartAdapter;
+import com.tencent.apk_auto_test.data.Global;
+import com.tencent.apk_auto_test.data.RunPara;
+import com.tencent.apk_auto_test.data.RunPartAdapter;
+import com.tencent.apk_auto_test.data.StaticData;
+import com.tencent.apk_auto_test.data.TestCase;
+import com.tencent.apk_auto_test.runner.CmShowAutoRunner;
+import com.tencent.apk_auto_test.runner.CmShowDataRunner;
+import com.tencent.apk_auto_test.runner.CmShowMemRunner;
+import com.tencent.apk_auto_test.util.ExecUtil;
+import com.tencent.apk_auto_test.util.Function;
+
+import org.opencv.android.BaseLoaderCallback;
+import org.opencv.android.LoaderCallbackInterface;
+import org.opencv.android.OpenCVLoader;
+
+import java.util.ArrayList;
+import java.util.List;
+
 public class MainActivity extends Activity implements OnClickListener {
+    private static final String TAG = "MainActivity";
     // state
     // class
     private Context mContext;
@@ -68,9 +74,33 @@ public class MainActivity extends Activity implements OnClickListener {
         setListener();
         setData();
         setEnvironment();
-
+        setOpenCv();
 
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        OpenCVLoader.initAsync(OpenCVLoader.OPENCV_VERSION_3_2_0, this,
+                mLoaderCallback);
+    }
+
+    private BaseLoaderCallback mLoaderCallback = new BaseLoaderCallback(this) {
+        @Override
+        public void onManagerConnected(int status) {
+            switch (status) {
+                case LoaderCallbackInterface.SUCCESS: {
+                    Log.i(TAG, "OpenCV loaded successfully");
+                }
+                break;
+                default: {
+                    super.onManagerConnected(status);
+                }
+                break;
+            }
+        }
+    };
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -178,6 +208,13 @@ public class MainActivity extends Activity implements OnClickListener {
         StaticData.testPwd = shareData.getString("testPwd", "tencent");
         if (!isHelpDialogLocked) {
             showHelpDialog();
+        }
+    }
+
+    private void setOpenCv() {
+        if (!OpenCVLoader.initDebug()) {
+            // Handle initialization error
+            Log.e(TAG, "initialization error");
         }
     }
 

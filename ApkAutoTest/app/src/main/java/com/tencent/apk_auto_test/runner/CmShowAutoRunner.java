@@ -458,7 +458,6 @@ public class CmShowAutoRunner extends Service {
             //进入好友AIO
             mNodeOperate.clickOnTextContain("我的好友", 2000);
             //// TODO: 2017/3/5 判断小人没有显示
-            mFunction.getScreenPic();
         }
     }
 

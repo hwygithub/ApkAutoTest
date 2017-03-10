@@ -1,13 +1,5 @@
 package com.tencent.apk_auto_test.util;
 
-import java.util.ArrayList;
-
-import com.tencent.apk_auto_test.data.Global;
-import com.tencent.apk_auto_test.data.StaticData;
-import com.tencent.apk_auto_test.services.AccessibilityEventService;
-import com.test.function.Assert;
-import com.test.function.Operate;
-
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
@@ -16,6 +8,14 @@ import android.os.SystemClock;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.accessibility.AccessibilityNodeInfo;
+
+import com.tencent.apk_auto_test.data.Global;
+import com.tencent.apk_auto_test.data.StaticData;
+import com.tencent.apk_auto_test.services.AccessibilityEventService;
+import com.test.function.Assert;
+import com.test.function.Operate;
+
+import java.util.ArrayList;
 
 @SuppressLint("NewApi")
 public class UINodeOperate {
