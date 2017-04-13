@@ -1,7 +1,5 @@
 package com.tencent.apk_auto_test.data;
 
-import android.util.Log;
-
 public class TestCase {
     private String name;
     private String className;
@@ -62,6 +60,7 @@ public class TestCase {
         if (null == caseOrder) {
             return;
         }
+        caseOrder = caseOrder.replaceAll("\\s*", "");
         this.caseOrder = caseOrder.split(",");
     }
 }

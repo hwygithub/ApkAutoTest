@@ -75,8 +75,8 @@ public class MainActivity extends Activity implements OnClickListener {
         setData();
         setEnvironment();
         setOpenCv();
-
     }
+
 
     @Override
     protected void onResume() {
@@ -187,8 +187,8 @@ public class MainActivity extends Activity implements OnClickListener {
         StaticData.runAdapter = new RunPartAdapter(mContext);
         mRunList.setAdapter(StaticData.runAdapter);
 
-        StaticData.chooseArray = new boolean[19];
-        for (int i = 0; i < 18; i++) {
+        StaticData.chooseArray = new boolean[50];
+        for (int i = 0; i < 50; i++) {
             StaticData.chooseArray[i] = false;
         }
 

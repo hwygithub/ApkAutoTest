@@ -1,14 +1,12 @@
 package com.tencent.apk_auto_test.data;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-
 import android.os.Environment;
-import android.widget.CheckBox;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.tencent.apk_auto_test.services.AccessibilityEventService;
+
+import java.util.ArrayList;
 
 public class StaticData {
     // Resouce uri
@@ -42,7 +40,7 @@ public class StaticData {
     // // config
     // debug to set 0.1,to shorten the test time
     public static double timeGene = 1;
-    public static String vision = "Mp_Battery_Test_Out_v0.1_150114";
+    public static String vision = "Apk_Auto_Test_v0.1";
     /*
      * test phone number:cmcc:10086,unicom:10010 ,telecom:10000
      */

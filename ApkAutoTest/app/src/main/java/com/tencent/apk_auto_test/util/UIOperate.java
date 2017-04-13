@@ -16,30 +16,6 @@ package com.tencent.apk_auto_test.util;
  * limitations under the License.
  */
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.DataOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.List;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipException;
-import java.util.zip.ZipFile;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.xmlpull.v1.XmlPullParserException;
-
 import android.annotation.SuppressLint;
 import android.app.ActivityManager;
 import android.app.ActivityManager.MemoryInfo;
@@ -55,7 +31,6 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.graphics.Point;
-import android.hardware.input.InputManager;
 import android.net.Uri;
 import android.os.Binder;
 import android.os.Bundle;
@@ -75,6 +50,30 @@ import android.view.inputmethod.InputMethodInfo;
 
 import com.android.internal.statusbar.IStatusBarService;
 import com.test.function.Operate;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.xmlpull.v1.XmlPullParserException;
+
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.List;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipException;
+import java.util.zip.ZipFile;
 
 /**
  * System.nanoTime()/1000000L The InteractionProvider is responsible for
@@ -126,6 +125,48 @@ public class UIOperate {
             String line = null;
             dataOut = new DataOutputStream(process.getOutputStream());
             dataOut.writeBytes("input tap " + x + " " + y + ";");
+            dataOut.flush();
+            dataOut.close();
+            process.waitFor();
+            mOperate.sleep(waitTime);
+            while ((line = err.readLine()) != null) {
+                Log.i(LOG_TAG, line);
+                return false;
+            }
+            while ((line = bufferReader.readLine()) != null) {
+                Log.i(LOG_TAG, line);
+            }
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            Log.i(LOG_TAG, e.getMessage());
+            return false;
+        }
+
+    }
+
+    /**
+     * Clicks at coordinates without waiting for device idle. This may be used
+     * for operations that require stressing the target.
+     *
+     * @param x
+     * @param y
+     * @param waitTime
+     * @param clickTime
+     * @return
+     */
+    public boolean click(float x, float y, int waitTime, int clickTime) {
+        Log.d(LOG_TAG, "click long (" + x + ", " + y + ")," + clickTime);
+        try {
+            Runtime runtime = Runtime.getRuntime();
+            DataOutputStream dataOut;
+            Process process = runtime.exec("su ");
+            InputStream in = process.getInputStream();
+            BufferedReader bufferReader = new BufferedReader(new InputStreamReader(in));
+            BufferedReader err = new BufferedReader(new InputStreamReader(process.getErrorStream()));
+            String line = null;
+            dataOut = new DataOutputStream(process.getOutputStream());
+            dataOut.writeBytes("input swipe " + x + " " + y + " " + x + " " + y + " " + clickTime + ";");
             dataOut.flush();
             dataOut.close();
             process.waitFor();
@@ -259,7 +300,7 @@ public class UIOperate {
         }
     }
 
-    public boolean sendKey(int keyCode,int waitTime) {
+    public boolean sendKey(int keyCode, int waitTime) {
         int metaState = 0;
         if (DEBUG) {
             Log.d(LOG_TAG, "sendKey (" + keyCode + ", " + metaState + ")");

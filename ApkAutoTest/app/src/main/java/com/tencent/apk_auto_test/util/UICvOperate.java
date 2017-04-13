@@ -14,6 +14,9 @@ import org.opencv.core.Mat;
 import org.opencv.core.Point;
 import org.opencv.imgproc.Imgproc;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 
 /**
@@ -22,6 +25,8 @@ import java.io.IOException;
 
 public class UICvOperate {
     private static final String TAG = "UICvOperate";
+
+    private final int SIZE_SCALE = 2;
 
     private UIOperate mUiOperate;
     private Context mContext;
@@ -40,14 +45,7 @@ public class UICvOperate {
         long start = System.currentTimeMillis();
         //截图并读出bitmap格式的数据
         Bitmap capImg = getScreenPic();
-        //从res根据name读出match img的数据
-        AssetManager assetManager = mContext.getResources().getAssets();
-        Bitmap matchImg = null;
-        try {
-            matchImg = BitmapFactory.decodeStream(assetManager.open("drawable/" + matchImgName + ".png"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        Bitmap matchImg = getMatchPic(matchImgName);
         Log.i(TAG, "cap and read bitmap cost time: " + (System.currentTimeMillis() - start));
         //匹配图片并返回匹配区域的中心点
         Point p = getMatchPoint(capImg, matchImg);
@@ -70,8 +68,8 @@ public class UICvOperate {
             return null;
         }
         //缩放原图和匹配图，提高运行效率
-        capImg = zoomImg(capImg, 0.5f);
-        matchImg = zoomImg(matchImg, 0.5f);
+        capImg = zoomImg(capImg, 1.0f / SIZE_SCALE);
+        matchImg = zoomImg(matchImg, 1.0f / SIZE_SCALE);
         //转成mat格式的数据
         Mat img1 = new Mat();
         Utils.bitmapToMat(capImg, img1);
@@ -88,16 +86,22 @@ public class UICvOperate {
         //Core.normalize(result, result, 0, 100, Core.NORM_MINMAX, -1, new Mat());
         //通过函数 minMaxLoc 定位最匹配的位置
         Core.MinMaxLocResult mmr = Core.minMaxLoc(result);
-        //匹配的数值太小就认为不是该图
-
+        //匹配的最小数值太大就认为不是该图
+        mmr.minLoc.x *= SIZE_SCALE;
+        mmr.minLoc.y *= SIZE_SCALE;
+        Log.i(TAG, "cv match min val: " + mmr.minVal + "--match x:" + mmr.minLoc.x + ",match y:" + mmr.minLoc.y);
+        if (mmr.minVal > 0.03) {
+            Log.e(TAG, "image match false");
+            return null;
+        }
         Point matchLoc;
         //对于方法 SQDIFF 和 SQDIFF_NORMED, 越小的数值代表更高的匹配结果. 而对于其他方法, 数值越大匹配越好
         matchLoc = mmr.minLoc;
         //坐标值还原放大
         Point point = new Point();
-        point.x = matchLoc.x * 2 + matchImg.getWidth();
-        point.y = matchLoc.y * 2 + matchImg.getHeight();
-        Log.i(TAG, "point.x:" + point.x + "\tpoint.y:" + point.y);
+        point.x = matchLoc.x + matchImg.getWidth() * SIZE_SCALE / 2;
+        point.y = matchLoc.y + matchImg.getHeight() * SIZE_SCALE / 2;
+        Log.i(TAG, "match success , point.x:" + point.x + "\tpoint.y:" + point.y);
         return point;
     }
 
@@ -114,9 +118,33 @@ public class UICvOperate {
         String capPath = "/sdcard/screenshot.png";
         //su 命令执行截图命令
         ExecUtil.getScreenCap(capPath);
+        File file = new File(capPath);
+        if (!file.exists()) {
+            Log.e(TAG, "cap img file is not found");
+            return null;
+        }
         //获取位图数据
-        Bitmap capBmp = BitmapFactory.decodeFile(capPath);
+        Bitmap capBmp = null;
+        try {
+            //首先读入获取到长宽，然后再读入缩放后的图片
+            capBmp = BitmapFactory.decodeStream(new FileInputStream(file));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
         return capBmp;
+    }
+
+    private Bitmap getMatchPic(String matchImgName) {
+        //从res根据name读出match img的数据
+        AssetManager assetManager = mContext.getResources().getAssets();
+        Bitmap matchImg = null;
+        try {
+            //首先读入获取到长宽，然后再读入缩放后的图片
+            matchImg = BitmapFactory.decodeStream(assetManager.open("drawable/" + matchImgName + ".png"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return matchImg;
     }
 
 

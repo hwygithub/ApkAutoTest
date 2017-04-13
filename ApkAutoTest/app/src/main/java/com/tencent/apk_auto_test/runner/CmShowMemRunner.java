@@ -405,8 +405,7 @@ public class CmShowMemRunner extends Service {
         //点击测试群
         mNodeOperate.clickOnText("测试号集中营", 3000);
         //点击AIO输入输入框上方的中间部分区域
-        mNodeOperate.clickOnResourceIdOffset("inputBar", 2000, 1,
-                -100);
+        mNodeOperate.clickOnResourceIdOffset("inputBar", 2000, 0, 1, -100);
     }
 
     /****************
@@ -448,8 +447,7 @@ public class CmShowMemRunner extends Service {
             //如果没有点击成功判断面板是否隐藏了
             //通过厘米秀面板的特别动作id点击
             if (!mNodeOperate.clickOnResourceId("avatar_item_imageview", 1000, 0)) {
-                mNodeOperate.clickOnResourceIdOffset("inputBar", 2000, 1,
-                        -100);
+                mNodeOperate.clickOnResourceIdOffset("inputBar", 2000, 0, 1, -100);
             }
             mFunction.inputText("群单人交叉发送:" + i, 1000);
             mNodeOperate.clickOnResourceId("avatar_item_imageview", 2000, 1);
@@ -494,8 +492,7 @@ public class CmShowMemRunner extends Service {
             //如果没有点击成功判断面板是否隐藏了
             //通过厘米秀面板的特别动作id点击
             if (!mNodeOperate.clickOnResourceId("avatar_item_imageview", 2000, 0)) {
-                mNodeOperate.clickOnResourceIdOffset("inputBar", 2000, 1,
-                        -100);
+                mNodeOperate.clickOnResourceIdOffset("inputBar", 2000, 0, 1, -100);
             }
             mNodeOperate.clickOnTextContain("大群主", 1000);
             mFunction.inputText("群双人交叉发送:" + i, 1000);
@@ -519,8 +516,7 @@ public class CmShowMemRunner extends Service {
             //如果没有点击成功判断面板是否隐藏了
             //通过厘米秀面板的特别动作id点击
             if (!mNodeOperate.clickOnResourceId("avatar_item_imageview", 2000, 0)) {
-                mNodeOperate.clickOnResourceIdOffset("inputBar", 2000, 1,
-                        -100);
+                mNodeOperate.clickOnResourceIdOffset("inputBar", 2000, 0, 1, -100);
             }
             mNodeOperate.clickOnTextContain("大群主", 1000);
             mFunction.inputText("弹幕发送:" + i, 2000);
@@ -542,8 +538,7 @@ public class CmShowMemRunner extends Service {
             //通过厘米秀面板的特别动作id点击
             mFunction.inputText("群和C2C切换发送:" + i, 1000);
             if (!mNodeOperate.clickOnResourceId("avatar_item_imageview", 2000, 0)) {
-                mNodeOperate.clickOnResourceIdOffset("inputBar", 2000, 1,
-                        -100);
+                mNodeOperate.clickOnResourceIdOffset("inputBar", 2000, 0, 1, -100);
                 mNodeOperate.clickOnResourceId("avatar_item_imageview", 2000, 0);
             }
 
@@ -555,15 +550,13 @@ public class CmShowMemRunner extends Service {
             //进入C2C
             mNodeOperate.clickOnTextContain("厘米", 1000);
             //点击AIO输入输入框上方的中间部分区域
-            mNodeOperate.clickOnResourceIdOffset("inputBar", 2000, 1,
-                    -100);
+            mNodeOperate.clickOnResourceIdOffset("inputBar", 2000, 0, 1, -100);
             //点击tab切换到单人动作
             mNodeOperate.clickOnResourceId("tabView", 2000, 1);
             //通过厘米秀面板的特别动作id点击
             mFunction.inputText("群和C2C切换发送:" + i, 2000);
             if (!mNodeOperate.clickOnResourceId("avatar_item_imageview", 1000, 0)) {
-                mNodeOperate.clickOnResourceIdOffset("inputBar", 2000, 1,
-                        -100);
+                mNodeOperate.clickOnResourceIdOffset("inputBar", 2000, 0, 1, -100);
                 mNodeOperate.clickOnResourceId("avatar_item_imageview", 1000, 0);
             }
 
@@ -585,12 +578,11 @@ public class CmShowMemRunner extends Service {
         //如果没有点击成功判断面板是否隐藏了
         //通过厘米秀面板的特别动作id点击
         if (!mNodeOperate.clickOnResourceId("avatar_item_imageview", 2000, 0)) {
-            mNodeOperate.clickOnResourceIdOffset("inputBar", 2000, 1,
-                    -100);
+            mNodeOperate.clickOnResourceIdOffset("inputBar", 2000, 0, 1, -100);
         }
         mNodeOperate.clickOnTextContain("大群主", 1000);
         //点击AIO输入输入框上方的中间部分区域
-        mNodeOperate.clickOnResourceIdOffset("inputBar", 2000, 1, -100);
+        mNodeOperate.clickOnResourceIdOffset("inputBar", 2000, 0, 1, -100);
 
         for (int i = 0; i < caseTime; i++) {
             mNodeOperate.clickOnTextContain("大群主", 3000);
@@ -608,9 +600,9 @@ public class CmShowMemRunner extends Service {
             //点击商城入口按钮
             mNodeOperate.clickOnResourceId("btn_more_apollo", 5000, 0);
             //切换到互动页
-            mNodeOperate.clickOnResourceIdOffset("rlCommenTitle", 3000, 0, 100);
+            mNodeOperate.clickOnResourceIdOffset("rlCommenTitle", 3000, 0, 0, 100);
             //切换到商城页
-            mNodeOperate.clickOnResourceIdOffset("rlCommenTitle", 3000, 0, -100);
+            mNodeOperate.clickOnResourceIdOffset("rlCommenTitle", 3000, 0, 0, -100);
 
             mUIOperate.sendKey(KeyEvent.KEYCODE_BACK, 3000);
 
@@ -625,11 +617,11 @@ public class CmShowMemRunner extends Service {
             //切换到抽屉页
             mNodeOperate.clickOnResourceId("conversation_head", 3000, 0);
             //点击厘米秀小人
-            mNodeOperate.clickOnResourceIdOffset("nightmode", 3000, 0, 200);
+            mNodeOperate.clickOnResourceIdOffset("nightmode", 3000, 0, 0, 200);
             //切换到商城页
-            mNodeOperate.clickOnResourceIdOffset("rlCommenTitle", 3000, 0, -100);
+            mNodeOperate.clickOnResourceIdOffset("rlCommenTitle", 3000, 0, 0, -100);
             //切换到互动页
-            mNodeOperate.clickOnResourceIdOffset("rlCommenTitle", 3000, 0, 100);
+            mNodeOperate.clickOnResourceIdOffset("rlCommenTitle", 3000, 0, 0, 100);
             mUIOperate.sendKey(KeyEvent.KEYCODE_BACK, 3000);
             //切换到消息列表
             mNodeOperate.clickOnResourceId("conversation_head", 3000, 0);
@@ -664,7 +656,7 @@ public class CmShowMemRunner extends Service {
 
         for (int i = 0; i < caseTime; i++) {
             //点击AIO输入输入框上方的中间部分区域
-            mNodeOperate.clickOnResourceIdOffset("inputBar", 2000, 1, -100);
+            mNodeOperate.clickOnResourceIdOffset("inputBar", 2000, 0, 1, -100);
 
             //点击开始游戏
             mNodeOperate.clickOnResourceId("apollo_aio_game_item_first", 3500, 0);
@@ -674,8 +666,7 @@ public class CmShowMemRunner extends Service {
                 continue;
             }
             //通过y偏移点击退出按钮
-            //mNodeOperate.clickOnResourceIdOffset("ivTitleBtnLeft", 2000, 1, 100);
-            mUiCvOperate.clickOnImage("btn_game_exit", 3000);
+            mNodeOperate.clickOnResourceIdOffset("ivTitleBtnLeft", 2000, 0, 1, 100);
 
             //每轮查询可用内存和进程内存情况,并保存到终端存储
             mFunction.saveMem("com.tencent.mobileqq", mRunFileName, i);
@@ -694,7 +685,7 @@ public class CmShowMemRunner extends Service {
 
         for (int i = 0; i < caseTime; i++) {
             //点击AIO输入输入框上方的中间部分区域
-            mNodeOperate.clickOnResourceIdOffset("inputBar", 2000, 1, -100);
+            mNodeOperate.clickOnResourceIdOffset("inputBar", 2000, 0, 1, -100);
             //点击挑战纪录
             mNodeOperate.clickOnResourceId("apollo_aio_game_item_second", 4000, 0);
             //如果进入新手引导则返回
@@ -703,7 +694,7 @@ public class CmShowMemRunner extends Service {
                 continue;
             }
             //通过y偏移点击退出按钮
-            mNodeOperate.clickOnResourceIdOffset("ivTitleBtnLeft", 2000, 1, 100);
+            mNodeOperate.clickOnResourceIdOffset("ivTitleBtnLeft", 2000, 0, 1, 100);
 
             //每轮查询可用内存和进程内存情况,并保存到终端存储
             mFunction.saveMem("com.tencent.mobileqq", mRunFileName, i);

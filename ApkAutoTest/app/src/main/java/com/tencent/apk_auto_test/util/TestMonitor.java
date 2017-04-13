@@ -49,7 +49,7 @@ public class TestMonitor {
         wmParams.alpha = 0.3f;
         state = new Button(mContext);
         state.setBackgroundColor(Color.GRAY);
-        state.setAlpha(0.1f);
+        state.setAlpha(0.4f);
         wm.addView(state, wmParams);
 
         WindowManager.LayoutParams wmParams2 = new WindowManager.LayoutParams();
@@ -57,8 +57,8 @@ public class TestMonitor {
         wmParams2.x = 5;
         wmParams2.y = 35;
         wmParams2.type = WindowManager.LayoutParams.TYPE_SYSTEM_ALERT;
-        wmParams2.width = 30;
-        wmParams2.height = 30;
+        wmParams2.width = 40;
+        wmParams2.height = 40;
         wmParams2.flags = 8;
         wmParams.alpha = 0.6f;
         wmParams2.gravity = Gravity.BOTTOM | Gravity.RIGHT;

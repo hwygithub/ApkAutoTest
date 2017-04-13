@@ -103,6 +103,19 @@ public class UINodeOperate {
         return true;
     }
 
+    private boolean click(int index, int clickTime) {
+        if (index < 0) {
+            return false;
+        }
+
+        Rect rect = getRect(index);
+        if (rect == null) {
+            return false;
+        }
+        mUIOperate.click(rect.centerX(), rect.centerY(), mWaitTime, clickTime);
+        return true;
+    }
+
     private boolean click(int index, int offsetType, int offset) {
         if (index < 0) {
             return false;
@@ -123,6 +136,31 @@ public class UINodeOperate {
                 break;
             default:
                 mUIOperate.click(rect.centerX(), rect.centerY(), mWaitTime);
+        }
+
+        return true;
+    }
+
+    private boolean click(int index, int offsetType, int offset, int clickTime) {
+        if (index < 0) {
+            return false;
+        }
+
+        Rect rect = getRect(index);
+        if (rect == null) {
+            return false;
+        }
+        switch (offsetType) {
+            case 0:
+                mUIOperate
+                        .click((float) (rect.centerX() + offset * mX), rect.centerY(), mWaitTime, clickTime);
+                break;
+            case 1:
+                mUIOperate
+                        .click(rect.centerX(), (float) (rect.centerY() + offset * mY), mWaitTime, clickTime);
+                break;
+            default:
+                mUIOperate.click(rect.centerX(), rect.centerY(), mWaitTime, clickTime);
         }
 
         return true;
@@ -234,6 +272,7 @@ public class UINodeOperate {
         for (int i = 0; i < infos.size(); i++) {
             String title = infos.get(i).getText() + "";
             if (title.equals(text)) {
+                Log.i(TAG, "---clickOnText " + text);
                 return click(i);
             }
         }
@@ -260,8 +299,10 @@ public class UINodeOperate {
         for (int i = 0; i < infos.size(); i++) {
             String idName = infos.get(i).getViewIdResourceName() + "";
             if (idName.contains(id)) {
-                if (index == j)
+                if (index == j) {
+                    Log.i(TAG, "---clickOnResourceId " + id);
                     return click(i);
+                }
                 j++;
             }
         }
@@ -269,6 +310,36 @@ public class UINodeOperate {
         Log.e(TAG, "clickOnResourceId " + id + " false!");
         return false;
     }
+
+    /**
+     * 根据id长按控件
+     *
+     * @param id       resouceid
+     * @param waitTime waittime
+     * @return
+     */
+    public boolean clickOnResourceId(String id, int waitTime, int index, int clickTime) {
+        mWaitTime = waitTime;
+        int j = 0;
+        getNodes();
+        if (infos == null || infos.size() == 0) {
+            return false;
+        }
+        for (int i = 0; i < infos.size(); i++) {
+            String idName = infos.get(i).getViewIdResourceName() + "";
+            if (idName.contains(id)) {
+                if (index == j) {
+                    Log.i(TAG, "---clickOnResourceId " + id);
+                    return click(i, clickTime);
+                }
+                j++;
+            }
+        }
+
+        Log.e(TAG, "clickOnResourceId " + id + " false!");
+        return false;
+    }
+
 
     /**
      * 2016-10-27 veehou
@@ -279,11 +350,9 @@ public class UINodeOperate {
      * @param offset     与该控件中心的偏移量，包含正负数
      * @return
      */
-    public boolean clickOnResourceIdOffset(String id, int waitTime,
-                                           int offsetType, int offset) {
-
-
+    public boolean clickOnResourceIdOffset(String id, int waitTime, int index, int offsetType, int offset) {
         mWaitTime = waitTime;
+        int j = 0;
         getNodes();
         if (infos == null || infos.size() == 0) {
             return false;
@@ -291,13 +360,50 @@ public class UINodeOperate {
         for (int i = 0; i < infos.size(); i++) {
             String idName = infos.get(i).getViewIdResourceName() + "";
             if (idName.contains(id)) {
-                return click(i, offsetType, offset);
+                if (index == j) {
+                    Log.i(TAG, "---clickOnResourceIdOffset " + id);
+                    return click(i, offsetType, offset);
+                }
+                j++;
             }
         }
 
         Log.e(TAG, "clickOnResourceId " + id + " false!");
         return false;
     }
+
+    /**
+     * 长按
+     *
+     * @param id
+     * @param clickTime
+     * @param waitTime
+     * @param offsetType
+     * @param offset
+     * @return
+     */
+    public boolean clickOnResourceIdOffset(String id, int waitTime, int index, int offsetType, int offset, int clickTime) {
+        mWaitTime = waitTime;
+        int j = 0;
+        getNodes();
+        if (infos == null || infos.size() == 0) {
+            return false;
+        }
+        for (int i = 0; i < infos.size(); i++) {
+            String idName = infos.get(i).getViewIdResourceName() + "";
+            if (idName.contains(id)) {
+                if (index == j) {
+                    Log.i(TAG, "---long clickOnResourceIdOffset " + id);
+                    return click(i, offsetType, offset, clickTime);
+                }
+                j++;
+            }
+        }
+
+        Log.e(TAG, "clickOnResourceId " + id + " false!");
+        return false;
+    }
+
 
     /**
      * click by description
@@ -315,9 +421,11 @@ public class UINodeOperate {
             String title = infos.get(i).getContentDescription() + "";
             //Log.d(TAG, title);
             if (title.equals(text)) {
+                Log.i(TAG, "clickOnDesc " + text);
                 return click(i);
             }
         }
+        Log.e(TAG, "clickOnText false!");
         return false;
     }
 
@@ -337,7 +445,7 @@ public class UINodeOperate {
         for (int i = 0; i < infos.size(); i++) {
             String title = infos.get(i).getText() + "";
             if (title.contains(text)) {
-                Log.e(TAG, "start click");
+                Log.i(TAG, "clickOnTextContain " + text);
                 return click(i);
             }
         }
