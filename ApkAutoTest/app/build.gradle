@@ -1,0 +1,27 @@
+apply plugin: 'com.android.application'
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:2.3.1'
+    }
+}
+android {
+    compileSdkVersion 19
+    buildToolsVersion '25.0.0'
+
+    defaultConfig {
+        minSdkVersion 17
+        targetSdkVersion 19
+        versionCode 2480
+        versionName "2.4.8"
+    }
+}
+dependencies {
+    compile project(':libraries:opencv')
+    provided files('libs/framework_5.1.jar')
+    compile files('libs/function.jar')
+    compile files('libs/poi-3.8-beta2-20110408.jar')
+    compile files('libs/uiautomator.jar')
+}

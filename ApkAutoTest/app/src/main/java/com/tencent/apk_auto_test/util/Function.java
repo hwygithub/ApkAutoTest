@@ -645,23 +645,6 @@ public class Function {
         return false;
     }
 
-    public boolean isAppDebug(String name) {
-        Set<String> debuggableApps = new HashSet<String>();
-        List<ApplicationInfo> allApps = mContext.getPackageManager()
-                .getInstalledApplications(PackageManager.GET_UNINSTALLED_PACKAGES);
-        for (ApplicationInfo app : allApps) {
-            String appName = app.packageName;
-            if ((app.flags & ApplicationInfo.FLAG_DEBUGGABLE) == ApplicationInfo.FLAG_DEBUGGABLE) {
-                //debuggableApps.add(appName);
-                if (appName.contains(name)) {
-                    Log.v(TAG, "mqq is debuggable");
-                    return true;
-                }
-
-            }
-        }
-        return false;
-    }
 
     /**
      * 递归删除文件夹和其中的文件
