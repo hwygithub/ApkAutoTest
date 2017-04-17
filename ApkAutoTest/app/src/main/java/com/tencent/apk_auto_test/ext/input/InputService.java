@@ -1,7 +1,4 @@
-package com.tencent.apk_auto_test.input;
-
-import com.tencent.apk_auto_test.input.IInputMethodService;
-import com.tencent.apk_auto_test.data.StaticData;
+package com.tencent.apk_auto_test.ext.input;
 
 import android.app.Service;
 import android.content.ComponentName;
@@ -11,14 +8,12 @@ import android.content.ServiceConnection;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.RemoteException;
-import android.os.SystemClock;
 import android.util.Log;
-import android.view.KeyEvent;
-import android.view.inputmethod.InputMethodManager;
+
+import com.tencent.apk_auto_test.data.StaticData;
+import com.tencent.apk_auto_test.input.IInputMethodService;
 
 public class InputService extends Service {
-    public static final String KEY_MSG = "key_msg";
-    public static final String KEY_MODE = "key_mode";
     public static IInputMethodService inputMethod;
 
     private static final String TAG = "InputService";
@@ -41,7 +36,7 @@ public class InputService extends Service {
 
     private void initAidlServer(Context context) {
         context.bindService(new Intent().setComponent(new ComponentName(
-                        "com.tencent.apk_auto_test", "com.tencent.apk_auto_test.input.IService")),
+                        "com.tencent.apk_auto_test", "com.tencent.apk_auto_test.ext.input.IService")),
                 serviceConnection, Context.BIND_AUTO_CREATE);
 
     }

@@ -1,14 +1,12 @@
-package com.tencent.apk_auto_test;
+package com.tencent.apk_auto_test.ui;
 
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,7 +14,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
@@ -27,8 +24,8 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.tencent.apk_auto_test.R;
 import com.tencent.apk_auto_test.core.TestManager;
 import com.tencent.apk_auto_test.data.ChoosePartAdapter;
 import com.tencent.apk_auto_test.data.Global;
@@ -36,10 +33,6 @@ import com.tencent.apk_auto_test.data.RunPara;
 import com.tencent.apk_auto_test.data.RunPartAdapter;
 import com.tencent.apk_auto_test.data.StaticData;
 import com.tencent.apk_auto_test.data.TestCase;
-import com.tencent.apk_auto_test.runner.CmShowAutoRunner;
-import com.tencent.apk_auto_test.runner.CmShowDataRunner;
-import com.tencent.apk_auto_test.runner.CmShowMemRunner;
-import com.tencent.apk_auto_test.util.ExecUtil;
 import com.tencent.apk_auto_test.util.Function;
 
 import org.opencv.android.BaseLoaderCallback;
@@ -129,7 +122,7 @@ public class MainActivity extends Activity implements OnClickListener {
     }
 
     private void setClass() {
-        mContext = getApplicationContext();
+        mContext = this;
         mFunction = new Function(mContext);
     }
 
@@ -138,23 +131,6 @@ public class MainActivity extends Activity implements OnClickListener {
         mRunList = (ListView) findViewById(R.id.runList);
         mBtnStart = (Button) findViewById(R.id.btn_startRun);
         mBtnStart.setOnClickListener(this);
-        // Get the sim operator number
-        // If the sim dismiss,disable the start button
-        if (mFunction.getSimOperatorNumber() == 0) {
-            // mBtnStart.setEnabled(false);
-            Toast.makeText(mContext, "sim card miss!", Toast.LENGTH_SHORT)
-                    .show();
-            // If the resource dismiss,disable the start button
-        } else if (!mFunction.isResouceExist()) {
-            Toast.makeText(mContext, "resource miss!", Toast.LENGTH_SHORT)
-                    .show();
-        } else {
-            mBtnStart.setEnabled(true);
-            Toast.makeText(mContext,
-                    "sim operator number:" + mFunction.getSimOperatorNumber(),
-                    Toast.LENGTH_SHORT).show();
-            StaticData.phoneNumber = mFunction.getSimOperatorNumber();
-        }
 
         mSpnTestOrder = (Spinner) findViewById(R.id.spn_test_order);
         mSpnTestOrder

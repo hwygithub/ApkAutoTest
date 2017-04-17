@@ -1,11 +1,14 @@
-package com.tencent.apk_auto_test.util;
+package com.tencent.apk_auto_test.ext;
 
 import android.content.Context;
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
+import android.os.Environment;
 import android.util.Log;
+
+import com.tencent.apk_auto_test.util.ProcessUtil;
 
 import org.opencv.android.Utils;
 import org.opencv.core.Core;
@@ -20,20 +23,18 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 
 /**
+ * 图像相关的测试工具箱
+ * <p>
  * Created by veehou on 2017/3/9.
  */
 
-public class UICvOperate {
-    private static final String TAG = "UICvOperate";
+public class UIImageActionBox extends UIActionBox {
+    private static final String TAG = "UIImageActionBox";
 
     private final int SIZE_SCALE = 2;
 
-    private UIOperate mUiOperate;
-    private Context mContext;
-
-    public UICvOperate(Context context) {
-        mContext = context;
-        mUiOperate = new UIOperate(context);
+    public UIImageActionBox(Context context) {
+        super(context);
     }
 
     /**
@@ -54,7 +55,7 @@ public class UICvOperate {
             return false;
         }
         //点击匹配区域的中心点
-        return mUiOperate.click((float) (p.x), (float) (p.y), waitTime);
+        return click((float) (p.x), (float) (p.y), waitTime);
     }
 
     private Point getMatchPoint(Bitmap capImg, Bitmap matchImg) {
@@ -115,9 +116,9 @@ public class UICvOperate {
     }
 
     private Bitmap getScreenPic() {
-        String capPath = "/sdcard/screenshot.png";
+        String capPath = Environment.getExternalStorageDirectory() + "/screenshot.png";
         //su 命令执行截图命令
-        ExecUtil.getScreenCap(capPath);
+        ProcessUtil.getScreenCap(capPath);
         File file = new File(capPath);
         if (!file.exists()) {
             Log.e(TAG, "cap img file is not found");

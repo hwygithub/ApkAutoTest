@@ -10,8 +10,8 @@ import java.io.OutputStream;
  * Created by veehou on 2016/11/15.22:44
  */
 
-public class ExecUtil {
-    private static final String TAG = "ExecUtil";
+public class ProcessUtil {
+    private static final String TAG = "ProcessUtil";
     private static Process process;
     private static byte[] tempBuffer;
     private static StringBuilder buffer;

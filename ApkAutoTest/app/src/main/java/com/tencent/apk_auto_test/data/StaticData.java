@@ -4,7 +4,7 @@ import android.os.Environment;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.tencent.apk_auto_test.services.AccessibilityEventService;
+import com.tencent.apk_auto_test.ext.node.NodeEventService;
 
 import java.util.ArrayList;
 
@@ -27,7 +27,7 @@ public class StaticData {
 
     // // class
     //public static FileDealer mDealer;/* The service with AIDL to write excel */
-    public static AccessibilityEventService accessibilityEventService;
+    public static NodeEventService nodeEventService;
     // // array
     public static RunPartAdapter runAdapter;
     public static ArrayList<RunPara> runList;

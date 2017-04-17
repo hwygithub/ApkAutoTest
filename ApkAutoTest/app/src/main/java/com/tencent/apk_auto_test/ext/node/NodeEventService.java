@@ -1,29 +1,21 @@
-package com.tencent.apk_auto_test.services;
-
-import java.util.Set;
+package com.tencent.apk_auto_test.ext.node;
 
 import android.accessibilityservice.AccessibilityService;
 import android.accessibilityservice.AccessibilityServiceInfo;
 import android.annotation.SuppressLint;
-import android.content.ComponentName;
-import android.content.Context;
-import android.content.Intent;
-import android.os.Binder;
-import android.os.IBinder;
 import android.util.Log;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
 
 import com.tencent.apk_auto_test.data.StaticData;
-import com.tencent.apk_auto_test.util.UINodeOperate;
 
 /**
  * This class process events that we receiver such as AccessibilityEvents and
  * send boardcast.
  */
-public class AccessibilityEventService extends AccessibilityService {
+public class NodeEventService extends AccessibilityService {
 
-    private static final String TAG = "AccessibilityEventService";
+    private static final String TAG = "AccessibilityService";
 
     public void onAccessibilityEvent(AccessibilityEvent event) {
     }
@@ -49,7 +41,7 @@ public class AccessibilityEventService extends AccessibilityService {
 
     @Override
     public void onCreate() {
-        StaticData.accessibilityEventService = this;
+        StaticData.nodeEventService = this;
         Log.v(TAG, TAG + " is OnCreate.");
     }
 

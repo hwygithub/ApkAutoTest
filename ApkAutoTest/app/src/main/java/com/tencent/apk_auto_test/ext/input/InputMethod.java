@@ -1,9 +1,4 @@
-package com.tencent.apk_auto_test.input;
-
-import java.util.concurrent.TimeUnit;
-
-import com.tencent.apk_auto_test.input.IInputMethodService;
-import com.test.function.Operate;
+package com.tencent.apk_auto_test.ext.input;
 
 import android.content.Context;
 import android.os.RemoteException;
@@ -12,12 +7,15 @@ import android.util.Log;
 import android.view.inputmethod.InputConnection;
 import android.view.inputmethod.InputMethodManager;
 
+import com.tencent.apk_auto_test.input.IInputMethodService;
+
+import java.util.concurrent.TimeUnit;
+
 public class InputMethod extends IInputMethodService.Stub {
-    private static final String INPUT_NAME = "com.tencent.apk_auto_test/.input.TestInputMethodService";
+    private static final String INPUT_NAME = "com.tencent.apk_auto_test/.ext.input.TestInputMethodService";
     private static String userInput;
     private static final String TAG = "InputMethod";
     private Context context;
-    private Operate mOperate;
 
     public InputMethod(Context context) {
         this.context = context;
@@ -66,15 +64,6 @@ public class InputMethod extends IInputMethodService.Stub {
                         .getApplicationContext().getContentResolver(),
                 Settings.Secure.DEFAULT_INPUT_METHOD);
         Log.d(TAG, "setUpInputMethodIfNeed : " + mLastInputMethodId);
-        //系统签名编译的app才能使用改方法，调用WRITE_SECURE_SETTINGS
-        /*if (!INPUT_NAME.equals(mLastInputMethodId)) {
-            userInput = mLastInputMethodId;
-            InputMethodManager ime = (InputMethodManager) context
-                    .getApplicationContext().getSystemService(
-                            Context.INPUT_METHOD_SERVICE);
-            ime.setInputMethod(null, INPUT_NAME);
-            return true;
-        }*/
         return false;
     }
 

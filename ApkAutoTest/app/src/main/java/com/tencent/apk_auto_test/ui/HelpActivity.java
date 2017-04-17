@@ -1,5 +1,6 @@
-package com.tencent.apk_auto_test;
+package com.tencent.apk_auto_test.ui;
 
+import com.tencent.apk_auto_test.R;
 import com.tencent.apk_auto_test.util.Function;
 
 import android.app.Activity;

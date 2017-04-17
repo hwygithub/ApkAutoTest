@@ -9,16 +9,12 @@ import android.util.Log;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
-import com.tencent.apk_auto_test.MainActivity;
-import com.tencent.apk_auto_test.runner.CmShowAutoRunner;
-import com.tencent.apk_auto_test.runner.CmShowDataRunner;
-import com.tencent.apk_auto_test.runner.CmShowMemRunner;
-import com.tencent.apk_auto_test.util.ExecUtil;
+import com.tencent.apk_auto_test.task.CmShowBasicTask;
+import com.tencent.apk_auto_test.task.CmShowMemTask;
+import com.tencent.apk_auto_test.util.ProcessUtil;
 import com.tencent.apk_auto_test.util.Function;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Created by veehou on 2017/4/16.22:46
@@ -29,17 +25,17 @@ public class TestManager {
     private Context mContext;
 
     public TestManager(Context context) {
-        context = mContext;
+        mContext = context;
     }
 
     /**
      * 检测测试环境
      *
-     * @return
+     * @return 是否通过检测
      */
     public boolean checkEnvironment() {
         //检查是否被root
-        if (!ExecUtil.isRoot()) {
+        if (!ProcessUtil.isRoot()) {
             Toast.makeText(mContext, "设备占未root，无法开始测试！！", Toast.LENGTH_LONG).show();
             return false;
         }
@@ -96,18 +92,16 @@ public class TestManager {
     /**
      * 开始测试
      *
-     * @param runnerIndex
+     * @param runnerIndex 序号
      */
     public void startTest(int runnerIndex) {
+        Log.i(TAG, "[startTest]:start " + runnerIndex);
         switch (runnerIndex) {
             case 0:
-                mContext.startService(new Intent(mContext, CmShowAutoRunner.class));
+                mContext.startService(new Intent(mContext, CmShowBasicTask.class));
                 break;
             case 1:
-                mContext.startService(new Intent(mContext, CmShowMemRunner.class));
-                break;
-            case 2:
-                mContext.startService(new Intent(mContext, CmShowDataRunner.class));
+                mContext.startService(new Intent(mContext, CmShowMemTask.class));
                 break;
         }
         Toast.makeText(mContext, "开始测试", Toast.LENGTH_LONG).show();
@@ -115,7 +109,9 @@ public class TestManager {
     }
 
     public void stopTest() {
+        mContext.stopService(new Intent(mContext, TestTask.class));
 
+        android.os.Process.killProcess(android.os.Process.myPid());
     }
 
 

@@ -1,7 +1,7 @@
 ﻿<?xmlversion=1.0 encoding=utf-8?>
 <Test>
     <case>
-        <name>厘米秀功能回归测试</name>
+        <name>厘米秀功能测试</name>
         <className>CmShowAutoRunner</className>
         <timeGene>1</timeGene>
         <runState>once</runState>
@@ -66,16 +66,6 @@
             11.C2C挑战好友记录后退出
         </caseName>
         <caseOrder>0-1,1-100,2-100,3-100,4-100,5-100,6-100,7-100,8-100,9-100,10-500,11-500</caseOrder>
-    </case>
-    <case>
-        <name>厘米秀数据构造测试</name>
-        <className>CmShowDataTest</className>
-        <timeGene>1</timeGene>
-        <runState>once</runState>
-        <caseName>
-            1.构造初始状态用户
-        </caseName>
-        <caseOrder>0-1</caseOrder>
     </case>
 
 </Test>

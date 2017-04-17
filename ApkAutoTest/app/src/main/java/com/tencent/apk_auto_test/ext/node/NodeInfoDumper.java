@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.tencent.apk_auto_test.util;
+package com.tencent.apk_auto_test.ext.node;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -27,7 +27,7 @@ import android.util.Log;
 import android.view.accessibility.AccessibilityNodeInfo;
 
 @SuppressLint("NewApi")
-public class AccessibilityNodeInfoDumper {
+public class NodeInfoDumper {
 
     @SuppressWarnings("unused")
     private Context mContext;
@@ -35,7 +35,7 @@ public class AccessibilityNodeInfoDumper {
 
     // private ArrayList<AccessibilityNode> list;
     private ArrayList<AccessibilityNodeInfo> listInfo;
-    private static final String TAG = "AccessibilityNodeInfoDumper";
+    private static final String TAG = "NodeInfoDumper";
     private static final String[] NAF_EXCLUDED_CLASSES = new String[]{
             android.widget.GridView.class.getName(),
             android.widget.GridLayout.class.getName(),
@@ -45,7 +45,7 @@ public class AccessibilityNodeInfoDumper {
 
     // write2Arraylist tolist;
 
-    public AccessibilityNodeInfoDumper(Context context) {
+    public NodeInfoDumper(Context context) {
         mContext = context;
     }
 
@@ -302,10 +302,10 @@ public class AccessibilityNodeInfoDumper {
 // *
 // * @hide
 // */
-// public class AccessibilityNodeInfoDumper {
+// public class NodeInfoDumper {
 //
 // private static final String TAG =
-// AccessibilityNodeInfoDumper.class.getSimpleName();
+// NodeInfoDumper.class.getSimpleName();
 // private static final String[] NAF_EXCLUDED_CLASSES = new String[] {
 // android.widget.GridView.class.getName(),
 // android.widget.GridLayout.class.getName(),
@@ -314,7 +314,7 @@ public class AccessibilityNodeInfoDumper {
 // };
 // private static Context mContext;
 //
-// AccessibilityNodeInfoDumper(Context context) {
+// NodeInfoDumper(Context context) {
 // mContext = context;
 // }
 //

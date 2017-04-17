@@ -32,7 +32,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme">
         <activity
-            android:name="com.tencent.apk_auto_test.MainActivity"
+            android:name="com.tencent.apk_auto_test.ui.MainActivity"
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -40,21 +40,16 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name="com.tencent.apk_auto_test.HelpActivity">
+        <activity android:name="com.tencent.apk_auto_test.ui.HelpActivity">
         </activity>
 
-        <!--case runner-->
-        <service android:name="com.tencent.apk_auto_test.runner.CmShowAutoRunner">
-        </service>
-        <service android:name="com.tencent.apk_auto_test.runner.CmShowMemRunner">
-        </service>
-        <service android:name="com.tencent.apk_auto_test.runner.CmShowDataRunner">
-        </service>
+        <service android:name=".task.CmShowBasicTask"/>
+        <service android:name=".task.CmShowMemTask"/>
 
 
         <!--AccessibilityService-->
         <service
-            android:name="com.tencent.apk_auto_test.services.AccessibilityEventService"
+            android:name="com.tencent.apk_auto_test.ext.node.NodeEventService"
             android:enabled="true"
             android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE">
             <intent-filter>
@@ -68,7 +63,7 @@
 
         <!-- input service -->
         <service
-            android:name="com.tencent.apk_auto_test.input.TestInputMethodService"
+            android:name="com.tencent.apk_auto_test.ext.input.TestInputMethodService"
             android:enabled="true"
             android:label="@string/app_name"
             android:permission="android.permission.BIND_INPUT_METHOD">
@@ -82,15 +77,12 @@
                 android:resource="@xml/method"/>
         </service>
         <service
-            android:name="com.tencent.apk_auto_test.input.IService"
+            android:name="com.tencent.apk_auto_test.ext.input.IService"
             android:enabled="true">
         </service>
-        <service android:name="com.tencent.apk_auto_test.input.InputService">
+        <service android:name="com.tencent.apk_auto_test.ext.input.InputService">
         </service>
         <!-- end input service -->
-
-        <service android:name="com.tencent.apk_auto_test.services.unLockService">
-        </service>
     </application>
 
 </manifest>
