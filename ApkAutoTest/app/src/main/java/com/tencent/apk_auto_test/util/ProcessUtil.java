@@ -55,6 +55,7 @@ public class ProcessUtil {
      * @return
      */
     public static boolean isRoot() {
+        initProcess();
         try {
             process = Runtime.getRuntime().exec("su");
             process.getOutputStream().write("exit\n".getBytes());
@@ -79,11 +80,13 @@ public class ProcessUtil {
      * @return png格式图片的字节数组
      */
     public static void getScreenCap(String capPath) {
+        initProcess();
         Log.i(TAG, "start capture screen..." + capPath);
         try {
-            process = Runtime.getRuntime().exec("su -c /system/bin/screencap -p " + capPath);
-            process.getOutputStream().write("exit\n".getBytes());
-            process.getOutputStream().flush();
+            OutputStream out = process.getOutputStream();
+            out.write(("/system/bin/screencap -p " + capPath).getBytes());
+            out.flush();
+            out.close();
             process.waitFor();
             Log.i(TAG, "end capture screen");
             close();
