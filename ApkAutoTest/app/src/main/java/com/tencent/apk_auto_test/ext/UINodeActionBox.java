@@ -34,13 +34,13 @@ public class UINodeActionBox extends UIActionBox {
     private double mX = 1.0;
     private double mY = 1.0;
 
+
     public UINodeActionBox(Context context) {
         super(context);
         //以1080P为标准根据分辨率拉伸需要的坐标值
         mY = Global.SCREEN_HEIGHT / 1920;
         mX = Global.SCREEN_WIDTH / 1080;
     }
-
 
     /**
      * update the infos list

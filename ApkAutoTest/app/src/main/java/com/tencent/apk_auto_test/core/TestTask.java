@@ -40,6 +40,7 @@ public abstract class TestTask extends Service {
     public UIActionBox mBox;
     public UINodeActionBox mNodeBox;
     public UIImageActionBox mImageBox;
+    public TestMonitor monitor;
     public Function mFunction;
 
     public String mTaskName;
@@ -99,6 +100,7 @@ public abstract class TestTask extends Service {
         mFunction = new Function(mContext);
         mTips = new TestTips(mContext);
         mTestTask = this;
+        monitor = new TestMonitor(getTaskSimpleName(), mNodeBox, mImageBox);
 
         int length = 0;
         for (int i = 0; i < StaticData.chooseArray.length; i++) {
