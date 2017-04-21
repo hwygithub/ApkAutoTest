@@ -46,7 +46,7 @@ public class Function {
             for (String s : serial) {
                 try {
                     RunPara mPara = new RunPara();
-                    mPara.runCase = getCaseName(s.split("-")[0]);
+                    mPara.runCaseName = getCaseName(s.split("-")[0]);
                     mPara.runCaseNumber = Integer.parseInt(s.split("-")[0]);
                     mPara.runNumber = Integer.parseInt(s.split("-")[1]);
                     StaticData.runList.add(mPara);

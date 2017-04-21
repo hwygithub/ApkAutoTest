@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 
 public class ChoosePartAdapter extends BaseAdapter {
@@ -60,7 +59,7 @@ public class ChoosePartAdapter extends BaseAdapter {
             public void onClick(View v) {
                 RunPara mPara = new RunPara();
                 mPara.runNumber = 1;
-                mPara.runCase = StaticData.chooseListText[position];
+                mPara.runCaseName = StaticData.chooseListText[position];
 
                 mPara.runCaseNumber = position;
 

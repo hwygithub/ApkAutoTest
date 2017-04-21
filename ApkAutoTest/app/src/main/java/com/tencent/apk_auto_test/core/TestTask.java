@@ -35,7 +35,7 @@ public abstract class TestTask extends Service {
     private Method method;
     private TestTask mTestTask;
 
-    private int testNumber = 0;
+    public int testNumber = 0;
 
     public UIActionBox mBox;
     public UINodeActionBox mNodeBox;
@@ -227,7 +227,7 @@ public abstract class TestTask extends Service {
     //［_InitQQ］杀手Q进程还原状态、启动手Q
     public void _InitQQ() {
         //杀手Q进程还原状态
-        //mFunction.killAppByPackageName("com.tencent.mobileqq");
+        mFunction.killAppByPackageName("com.tencent.mobileqq");
         mBox.sleep(1000);
         //热启动手Q
         try {

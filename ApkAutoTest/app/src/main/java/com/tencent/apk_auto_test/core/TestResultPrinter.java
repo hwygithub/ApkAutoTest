@@ -28,9 +28,10 @@ public class TestResultPrinter {
 
     public synchronized void printResult(String caseName, boolean isPass) {
         StringBuffer buffer = new StringBuffer();
-        buffer.append(TimeUtil.getCurrentTimeSecond() + "\t");
-        buffer.append(caseName);
-        buffer.append(isPass ? "pass" : "fail");
+        buffer.append(TimeUtil.getCurrentTimeSecond() + " ");
+        buffer.append(isPass ? " pass " : " ----------fail---------- ");
+        buffer.append(caseName + " ");
+        buffer.append("\n");
         Log.v(TAG, "[printResult] " + buffer.toString());
         TxtUtil.saveMsg("/sdcard/tencent-test/", buffer.toString(), mResultFileName);
     }

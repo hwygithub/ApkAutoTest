@@ -270,7 +270,7 @@ public class CmShowMemTask extends TestTask {
             //点击开始游戏
             mNodeBox.clickOnResourceId("apollo_aio_game_item_first", 3500, 0);
             //如果进入新手引导则返回
-            if (mNodeBox.isTextExits("新手引导")) {
+            if (mNodeBox.isNodeExits("text", "新手引导")) {
                 mNodeBox.clickOnText("返回", 2000);
                 continue;
             }
@@ -298,7 +298,7 @@ public class CmShowMemTask extends TestTask {
             //点击挑战纪录
             mNodeBox.clickOnResourceId("apollo_aio_game_item_second", 4000, 0);
             //如果进入新手引导则返回
-            if (mNodeBox.isTextExits("新手引导")) {
+            if (mNodeBox.isNodeExits("text", "新手引导")) {
                 mNodeBox.clickOnText("返回", 2000);
                 continue;
             }

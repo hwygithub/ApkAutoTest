@@ -46,7 +46,7 @@ public class UINodeActionBox extends UIActionBox {
      * update the infos list
      */
     @SuppressLint("NewApi")
-    public void getNodes() {
+    public void beforeClick() {
         AccessibilityNodeInfo rootNode = null;
         rootNode = getRootNode();
         if (rootNode == null) {
@@ -55,6 +55,9 @@ public class UINodeActionBox extends UIActionBox {
         NodeInfoDumper dumper = new NodeInfoDumper(
                 mContext);
         infos = dumper.dumpWindow(rootNode);
+    }
+
+    private void handleClickFalse() {
     }
 
 
@@ -67,7 +70,7 @@ public class UINodeActionBox extends UIActionBox {
      */
     public boolean clickOnText(String text, int waitTime) {
         mWaitTime = waitTime;
-        getNodes();
+        beforeClick();
         if (infos == null || infos.size() == 0) {
             return false;
         }
@@ -78,10 +81,12 @@ public class UINodeActionBox extends UIActionBox {
                 return click(i);
             }
         }
-
+        handleClickFalse();
         Log.e(TAG, "clickOnText false!");
         return false;
     }
+
+
 
 
     /**
@@ -94,7 +99,7 @@ public class UINodeActionBox extends UIActionBox {
     public boolean clickOnResourceId(String id, int waitTime, int index) {
         mWaitTime = waitTime;
         int j = 0;
-        getNodes();
+        beforeClick();
         if (infos == null || infos.size() == 0) {
             return false;
         }
@@ -123,7 +128,7 @@ public class UINodeActionBox extends UIActionBox {
     public boolean clickOnResourceId(String id, int waitTime, int index, int clickTime) {
         mWaitTime = waitTime;
         int j = 0;
-        getNodes();
+        beforeClick();
         if (infos == null || infos.size() == 0) {
             return false;
         }
@@ -155,7 +160,7 @@ public class UINodeActionBox extends UIActionBox {
     public boolean clickOnResourceIdOffset(String id, int waitTime, int index, int offsetType, int offset) {
         mWaitTime = waitTime;
         int j = 0;
-        getNodes();
+        beforeClick();
         if (infos == null || infos.size() == 0) {
             return false;
         }
@@ -187,7 +192,7 @@ public class UINodeActionBox extends UIActionBox {
     public boolean clickOnResourceIdOffset(String id, int waitTime, int index, int offsetType, int offset, int clickTime) {
         mWaitTime = waitTime;
         int j = 0;
-        getNodes();
+        beforeClick();
         if (infos == null || infos.size() == 0) {
             return false;
         }
@@ -215,7 +220,7 @@ public class UINodeActionBox extends UIActionBox {
      */
     public boolean clickOnDesc(String text, int waitTime) {
         mWaitTime = waitTime;
-        getNodes();
+        beforeClick();
         if (infos == null || infos.size() == 0) {
             return false;
         }
@@ -239,7 +244,7 @@ public class UINodeActionBox extends UIActionBox {
      */
     public boolean clickOnTextContain(String text, int waitTime) {
         mWaitTime = waitTime;
-        getNodes();
+        beforeClick();
         if (infos == null || infos.size() == 0) {
             Log.e(TAG, "info null & size==0");
             return false;
@@ -265,7 +270,7 @@ public class UINodeActionBox extends UIActionBox {
      */
     public boolean clickOnListViewByResourceId(String id, int index, int waitTime) {
         mWaitTime = waitTime;
-        getNodes();
+        beforeClick();
         if (null == getNodeByResourceId(id, 0)) {
             Log.e(TAG, "getNodeByResourceId null");
             return false;
@@ -334,12 +339,16 @@ public class UINodeActionBox extends UIActionBox {
     }
 
 
-    public boolean isTextExits(String text) {
+    public boolean isNodeExits(String nodeType, String text) {
         if (infos == null || infos.size() == 0) {
             return false;
         }
         for (int i = 0; i < infos.size(); i++) {
-            String title = infos.get(i).getText() + "";
+            String title = "";
+            if (nodeType.equals("text"))
+                title = infos.get(i).getText() + "";
+            else if (nodeType.equals("id"))
+                title = infos.get(i).getViewIdResourceName() + "";
             if (title.contains(text)) {
                 return true;
             }

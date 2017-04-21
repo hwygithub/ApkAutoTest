@@ -1,5 +1,8 @@
 package com.tencent.apk_auto_test.core;
 
+import android.util.Log;
+
+import com.tencent.apk_auto_test.data.StaticData;
 import com.tencent.apk_auto_test.ext.UIImageActionBox;
 import com.tencent.apk_auto_test.ext.UINodeActionBox;
 
@@ -8,6 +11,7 @@ import com.tencent.apk_auto_test.ext.UINodeActionBox;
  */
 
 public class TestMonitor {
+    private static final String TAG = "TestMonitor";
     private TestResultPrinter mPrinter;
     private UINodeActionBox mNodeBox;
     private UIImageActionBox mImageBox;
@@ -21,11 +25,15 @@ public class TestMonitor {
     /**
      * 检查node是否存在
      *
-     * @param nodeType
+     * @param nodeType 参数类型
      */
-    public void checkNode(String nodeType, String... args) {
-        if (nodeType.equals("text")) {
+    public void checkNode(String nodeType, String arg, int testNumber) {
+        if (mNodeBox.isNodeExits(nodeType, arg)) {
+            mPrinter.printResult(StaticData.runList.get(testNumber).runCaseName, true);
+            Log.d(TAG, nodeType + " node:" + arg + " is exist , pass");
         } else {
+            mPrinter.printResult(StaticData.runList.get(testNumber).runCaseName, false);
+            Log.e(TAG, "--------node not exist,fail");
         }
     }
 

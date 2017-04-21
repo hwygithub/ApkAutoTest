@@ -56,7 +56,7 @@ public class RunPartAdapter extends BaseAdapter {
 
         holder.runText.setText(StaticData.runList.get(position).runNumber + "");
         holder.text.setText((position) + "-"
-                + StaticData.runList.get(position).runCase);
+                + StaticData.runList.get(position).runCaseName);
 
         holder.button.setOnClickListener(new OnClickListener() {
 

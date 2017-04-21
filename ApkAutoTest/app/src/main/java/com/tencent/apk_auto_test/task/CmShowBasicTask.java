@@ -59,6 +59,7 @@ public class CmShowBasicTask extends TestTask {
             //进入好友AIO
             mNodeBox.clickOnTextContain("我的好友", 2000);
             //// TODO: 2017/3/5 判断小人没有显示
+
         }
     }
 
@@ -81,7 +82,7 @@ public class CmShowBasicTask extends TestTask {
             //点击开启厘米秀
             mNodeBox.clickOnText("开启厘米秀", 1000);
             // TODO: 2017/3/5 小人显示；弹起动作面板
-
+            monitor.checkNode("id", "container_apollo_shop", testNumber);
         }
     }
 
@@ -285,7 +286,7 @@ public class CmShowBasicTask extends TestTask {
             //点击挑战纪录按钮
             mNodeBox.clickOnResourceId("apollo_aio_game_item_second", 4000, 0);
             //如果进入新手引导则返回
-            if (mNodeBox.isTextExits("新手引导")) {
+            if (mNodeBox.isNodeExits("text", "新手引导")) {
                 mNodeBox.clickOnText("返回", 2000);
                 continue;
             }
@@ -321,7 +322,7 @@ public class CmShowBasicTask extends TestTask {
             //点击挑战纪录按钮
             mNodeBox.clickOnResourceId("apollo_aio_game_item_second", 4000, 0);
             //如果进入新手引导则返回
-            if (mNodeBox.isTextExits("新手引导")) {
+            if (mNodeBox.isNodeExits("text", "新手引导")) {
                 mNodeBox.clickOnText("返回", 2000);
                 continue;
             }
@@ -350,7 +351,7 @@ public class CmShowBasicTask extends TestTask {
             //点击挑战纪录按钮
             mNodeBox.clickOnResourceId("apollo_aio_game_item_second", 4000, 0);
             //如果进入新手引导则返回
-            if (mNodeBox.isTextExits("新手引导")) {
+            if (mNodeBox.isNodeExits("text", "新手引导")) {
                 mNodeBox.clickOnText("返回", 2000);
                 continue;
             }
@@ -371,7 +372,7 @@ public class CmShowBasicTask extends TestTask {
             //点击挑战纪录按钮
             mNodeBox.clickOnResourceId("apollo_aio_game_item_second", 4000, 0);
             //如果进入新手引导则返回
-            if (mNodeBox.isTextExits("新手引导")) {
+            if (mNodeBox.isNodeExits("text", "新手引导")) {
                 mNodeBox.clickOnText("返回", 2000);
                 continue;
             }
@@ -395,7 +396,7 @@ public class CmShowBasicTask extends TestTask {
             //点击挑战纪录按钮
             mNodeBox.clickOnResourceId("apollo_aio_game_item_second", 4000, 0);
             //如果进入新手引导则返回
-            if (mNodeBox.isTextExits("新手引导")) {
+            if (mNodeBox.isNodeExits("text", "新手引导")) {
                 mNodeBox.clickOnText("返回", 2000);
                 continue;
             }
