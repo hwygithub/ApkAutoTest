@@ -26,7 +26,6 @@ public class UINodeActionBox extends UIActionBox {
             ENABLED_ACCESSIBILITY_SERVICES_SEPARATOR);
 
     private ArrayList<AccessibilityNodeInfo> infos;
-    private NodeEventService eventService;
     private static String TAG = "UINodeActionBox";
 
     // the wait time after click
@@ -55,6 +54,40 @@ public class UINodeActionBox extends UIActionBox {
         NodeInfoDumper dumper = new NodeInfoDumper(
                 mContext);
         infos = dumper.dumpWindow(rootNode);
+    }
+
+    /**
+     * Get root node.
+     *
+     * @return AccessibilityNodeInfo
+     */
+    private AccessibilityNodeInfo getRootNode() {
+        AccessibilityNodeInfo rootNode = null;
+        int i = 0;
+        while (i < 10) {
+            NodeEventService eventService = StaticData.nodeEventService;
+            if (eventService != null) {
+                rootNode = eventService.getRootInActiveWindow();
+            } else {
+                Log.v(TAG, "eventService is null");
+            }
+            if (rootNode == null) {
+                if (DEBUG)
+                    Log.e(TAG, "try to connect:" + i);
+                i++;
+                openAccessibilityServiceIfNotStart();
+                SystemClock.sleep(500);
+            } else {
+                break;
+            }
+        }
+        return rootNode;
+    }
+
+    private void openAccessibilityServiceIfNotStart() {
+        Intent intent = new Intent();
+        intent.setClass(mContext, NodeEventService.class);
+        mContext.startService(intent);
     }
 
     private void handleClickFalse() {
@@ -87,8 +120,6 @@ public class UINodeActionBox extends UIActionBox {
     }
 
 
-
-
     /**
      * 根据id点击控件
      *
@@ -113,7 +144,7 @@ public class UINodeActionBox extends UIActionBox {
                 j++;
             }
         }
-
+        handleClickFalse();
         Log.e(TAG, "clickOnResourceId " + id + " false!");
         return false;
     }
@@ -142,7 +173,7 @@ public class UINodeActionBox extends UIActionBox {
                 j++;
             }
         }
-
+        handleClickFalse();
         Log.e(TAG, "clickOnResourceId " + id + " false!");
         return false;
     }
@@ -174,7 +205,7 @@ public class UINodeActionBox extends UIActionBox {
                 j++;
             }
         }
-
+        handleClickFalse();
         Log.e(TAG, "clickOnResourceId " + id + " false!");
         return false;
     }
@@ -206,7 +237,7 @@ public class UINodeActionBox extends UIActionBox {
                 j++;
             }
         }
-
+        handleClickFalse();
         Log.e(TAG, "clickOnResourceId " + id + " false!");
         return false;
     }
@@ -232,6 +263,7 @@ public class UINodeActionBox extends UIActionBox {
                 return click(i);
             }
         }
+        handleClickFalse();
         Log.e(TAG, "clickOnText false!");
         return false;
     }
@@ -239,8 +271,8 @@ public class UINodeActionBox extends UIActionBox {
     /**
      * click the view contains the text
      *
-     * @param text
-     * @return
+     * @param text 控件的text信息
+     * @return 是否点击成功
      */
     public boolean clickOnTextContain(String text, int waitTime) {
         mWaitTime = waitTime;
@@ -256,6 +288,7 @@ public class UINodeActionBox extends UIActionBox {
                 return click(i);
             }
         }
+        handleClickFalse();
         Log.e(TAG, "clickOnText false!");
         return false;
     }
@@ -281,28 +314,16 @@ public class UINodeActionBox extends UIActionBox {
         if (list.getChildCount() == 0) {
             return false;
         }
-        return click(list.getChild(index));
+        if (click(list.getChild(index))) {
+            return true;
+        } else {
+            handleClickFalse();
+            return false;
+        }
     }
 
 
-    public int getNodeByClass(String className, int index) {
-        if (className == null || className.equals("")) {
-            return -1;
-        }
-        int currentIndex = 0;
-        for (int i = 0; i < infos.size(); i++) {
-            String name = infos.get(i).getClassName() + "";
-            if (name.contains(className)) {
-                currentIndex++;
-                if (index == currentIndex) {
-                    return i;
-                }
-            }
-        }
-        return -1;
-    }
-
-    public AccessibilityNodeInfo getNodeByResourceId(String id, int index) {
+    private AccessibilityNodeInfo getNodeByResourceId(String id, int index) {
         if (id == null || id.equals("")) {
             return null;
         }
@@ -320,7 +341,7 @@ public class UINodeActionBox extends UIActionBox {
     }
 
 
-    public Rect getRect(AccessibilityNodeInfo node) {
+    private Rect getRect(AccessibilityNodeInfo node) {
         if (node == null) {
             return new Rect();
         }
@@ -329,7 +350,7 @@ public class UINodeActionBox extends UIActionBox {
         return r;
     }
 
-    public Rect getRect(int index) {
+    private Rect getRect(int index) {
         Rect r = new Rect();
         try {
             infos.get(index).getBoundsInScreen(r);
@@ -356,39 +377,6 @@ public class UINodeActionBox extends UIActionBox {
         return false;
     }
 
-    /**
-     * Get root node.
-     *
-     * @return AccessibilityNodeInfo
-     */
-    private AccessibilityNodeInfo getRootNode() {
-        AccessibilityNodeInfo rootNode = null;
-        int i = 0;
-        while (i < 10) {
-            eventService = StaticData.nodeEventService;
-            if (eventService != null) {
-                rootNode = eventService.getRootInActiveWindow();
-            } else {
-                Log.v(TAG, "eventService is null");
-            }
-            if (rootNode == null) {
-                if (DEBUG)
-                    Log.e(TAG, "try to connect:" + i);
-                i++;
-                openAccessibilityServiceIfNotStart();
-                SystemClock.sleep(500);
-            } else {
-                break;
-            }
-        }
-        return rootNode;
-    }
-
-    private void openAccessibilityServiceIfNotStart() {
-        Intent intent = new Intent();
-        intent.setClass(mContext, NodeEventService.class);
-        mContext.startService(intent);
-    }
 
     private boolean click(AccessibilityNodeInfo node) {
         if (node == null) {
