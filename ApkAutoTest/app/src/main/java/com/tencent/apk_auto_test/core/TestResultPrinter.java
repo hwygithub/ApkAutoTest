@@ -15,13 +15,16 @@ public class TestResultPrinter {
     public static TestResultPrinter testResultPrinter = null;
     private String mResultFileName;
 
-    private TestResultPrinter(String fileName) {
+    private TestResultPrinter() {
+    }
+
+    public void setFileName(String fileName) {
         mResultFileName = fileName;
     }
 
-    public static synchronized TestResultPrinter getInstance(String fileName) {
+    public static synchronized TestResultPrinter getInstance() {
         if (null == testResultPrinter) {
-            testResultPrinter = new TestResultPrinter(fileName);
+            testResultPrinter = new TestResultPrinter();
         }
         return testResultPrinter;
     }

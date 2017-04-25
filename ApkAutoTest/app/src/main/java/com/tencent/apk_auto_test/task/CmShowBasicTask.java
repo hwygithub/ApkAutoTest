@@ -30,9 +30,11 @@ public class CmShowBasicTask extends TestTask {
 
             _InitQQ();
 
+            mNodeBox.setStrictMode(false);
             //点击登录
             while (!mNodeBox.clickOnResourceId("btn_login", 2000, 0))
                 mBox.sleep(2000);
+            mNodeBox.setStrictMode(true);
             //点击输入QQ号
             mNodeBox.clickOnTextContain("QQ号", 1000);
             mFunction.inputText(StaticData.testUin, 1000);

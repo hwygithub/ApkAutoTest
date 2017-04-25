@@ -58,6 +58,23 @@ public class UIImageActionBox extends UIActionBox {
         return click((float) (p.x), (float) (p.y), waitTime);
     }
 
+    public boolean isImageExist(String matchImgName) {
+        long start = System.currentTimeMillis();
+        //截图并读出bitmap格式的数据
+        Bitmap capImg = getScreenPic();
+        Bitmap matchImg = getMatchPic(matchImgName);
+        Log.i(TAG, "cap and read bitmap cost time: " + (System.currentTimeMillis() - start));
+        //匹配图片并返回匹配区域的中心点
+        Point p = getMatchPoint(capImg, matchImg);
+        if (null == p) {
+            Log.e(TAG, "get point null");
+            return false;
+        } else {
+            Log.v(TAG, "find image " + matchImgName);
+            return true;
+        }
+    }
+
     private Point getMatchPoint(Bitmap capImg, Bitmap matchImg) {
         //输入图片为空判断
         if (null == capImg) {

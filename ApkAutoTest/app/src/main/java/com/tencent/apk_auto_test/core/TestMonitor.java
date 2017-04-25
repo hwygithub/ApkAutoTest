@@ -17,7 +17,8 @@ public class TestMonitor {
     private UIImageActionBox mImageBox;
 
     public TestMonitor(String name, UINodeActionBox nodeActionBox, UIImageActionBox imageActionBox) {
-        mPrinter = TestResultPrinter.getInstance(name);
+        mPrinter = TestResultPrinter.getInstance();
+        mPrinter.setFileName(name);
         mNodeBox = nodeActionBox;
         mImageBox = imageActionBox;
     }
@@ -33,11 +34,23 @@ public class TestMonitor {
             Log.d(TAG, nodeType + " node:" + arg + " is exist , pass");
         } else {
             mPrinter.printResult(StaticData.runList.get(testNumber).runCaseName, false);
-            Log.e(TAG, "--------node not exist,fail");
+            Log.e(TAG, "--------node:" + arg + " not exist,fail");
         }
     }
 
-    public void checkImage() {
+    /**
+     * 检查image是否存在
+     *
+     * @param imageName  图像资源名
+     * @param testNumber 测试用例序号
+     */
+    public void checkImage(String imageName, int testNumber) {
+        if (mImageBox.isImageExist(imageName)) {
+            mPrinter.printResult(StaticData.runList.get(testNumber).runCaseName, true);
+            Log.d(TAG, " imageName: " + imageName + " is exist , pass");
+        } else {
+            mPrinter.printResult(StaticData.runList.get(testNumber).runCaseName, false);
+            Log.e(TAG, "--------imageName: " + imageName + " not exist,fail");
+        }
     }
-
 }
