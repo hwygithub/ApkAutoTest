@@ -1,11 +1,20 @@
 package com.tencent.apk_auto_test.ui;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.hardware.display.DisplayManager;
+import android.hardware.display.VirtualDisplay;
+import android.media.Image;
+import android.media.ImageReader;
+import android.media.projection.MediaProjection;
+import android.media.projection.MediaProjectionManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -39,16 +48,19 @@ import org.opencv.android.BaseLoaderCallback;
 import org.opencv.android.LoaderCallbackInterface;
 import org.opencv.android.OpenCVLoader;
 
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends Activity implements OnClickListener {
     private static final String TAG = "MainActivity";
+    private static final int REQUEST_MEDIA_PROJECTION = 0;
     // state
     // class
     private Context mContext;
     private Function mFunction;
     private ChoosePartAdapter adapter;
+    private MediaProjectionManager mediaProjectionManager;
     // widget
     private ListView mChooseList;
     private ListView mRunList;
@@ -174,10 +186,12 @@ public class MainActivity extends Activity implements OnClickListener {
         getWindowManager().getDefaultDisplay().getMetrics(mDisplayMetrics);
         Global.SCREEN_WIDTH = mDisplayMetrics.widthPixels;
         Global.SCREEN_HEIGHT = mDisplayMetrics.heightPixels;
+        Global.DENSITY_DPI = mDisplayMetrics.densityDpi;
 
     }
 
     private void setEnvironment() {
+        // 帮助
         SharedPreferences shareData = getSharedPreferences("State", 0);
         isHelpDialogLocked = shareData.getBoolean("isLocked", false);
         // Test uin and password
@@ -185,6 +199,40 @@ public class MainActivity extends Activity implements OnClickListener {
         StaticData.testPwd = shareData.getString("testPwd", "tencent");
         if (!isHelpDialogLocked) {
             showHelpDialog();
+        }
+
+//        //设置5.0上面的截图方式
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+//            mediaProjectionManager = (MediaProjectionManager) getSystemService(MEDIA_PROJECTION_SERVICE);
+//            Intent intent = mediaProjectionManager.createScreenCaptureIntent();
+//            startActivityForResult(intent, REQUEST_MEDIA_PROJECTION);
+//        }
+    }
+
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_MEDIA_PROJECTION) {
+            MediaProjection mediaProjection = mediaProjectionManager.getMediaProjection(resultCode, data);
+            ImageReader imageReader = ImageReader.newInstance((int) Global.SCREEN_WIDTH, (int) Global.SCREEN_HEIGHT, 0x1, 2);
+            if (null == mediaProjection) {
+                Log.e(TAG, "get media projection error !!!");
+            } else {
+                Log.v(TAG, "open media projection ok...");
+            }
+            VirtualDisplay virtualDisplay = mediaProjection.createVirtualDisplay(TAG + "-display", (int) Global.SCREEN_WIDTH, (int) Global
+                    .SCREEN_HEIGHT, Global
+                    .DENSITY_DPI, DisplayManager
+                    .VIRTUAL_DISPLAY_FLAG_PUBLIC, imageReader.getSurface(), null, null);
+
+
+            Image image = imageReader.acquireLatestImage();
+            if (null == image) {
+                Log.e(TAG, "image is null!!!");
+                return;
+            }
+            Image.Plane[] planes = image.getPlanes();
+            ByteBuffer byteBuffer = planes[0].getBuffer();
         }
     }
 

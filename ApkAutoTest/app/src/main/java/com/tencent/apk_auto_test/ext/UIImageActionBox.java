@@ -5,6 +5,7 @@ import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
+import android.os.Build;
 import android.os.Environment;
 import android.util.Log;
 
@@ -32,6 +33,8 @@ public class UIImageActionBox extends UIActionBox {
     private static final String TAG = "UIImageActionBox";
 
     private final int SIZE_SCALE = 2;
+    private int mOsVersion = 0;
+
 
     public UIImageActionBox(Context context) {
         super(context);
@@ -133,21 +136,28 @@ public class UIImageActionBox extends UIActionBox {
     }
 
     private Bitmap getScreenPic() {
-        String capPath = Environment.getExternalStorageDirectory() + "/screenshot.png";
-        //su 命令执行截图命令
-        ProcessUtil.getScreenCap(capPath);
-        File file = new File(capPath);
-        if (!file.exists()) {
-            Log.e(TAG, "cap img file is not found");
-            return null;
-        }
-        //获取位图数据
         Bitmap capBmp = null;
-        try {
-            //首先读入获取到长宽，然后再读入缩放后的图片
-            capBmp = BitmapFactory.decodeStream(new FileInputStream(file));
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
+        if (mOsVersion == 0)
+            mOsVersion = Integer.valueOf(Build.VERSION.SDK_INT);
+        if (mOsVersion < 21) {
+            String capPath = Environment.getExternalStorageDirectory() + "/screenshot.png";
+            //su 命令执行截图命令
+            ProcessUtil.getScreenCap(capPath);
+            File file = new File(capPath);
+            if (!file.exists()) {
+                Log.e(TAG, "cap img file is not found");
+                return null;
+            }
+            //获取位图数据
+            try {
+                //首先读入获取到长宽，然后再读入缩放后的图片
+                capBmp = BitmapFactory.decodeStream(new FileInputStream(file));
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+        } else {
+
+
         }
         return capBmp;
     }

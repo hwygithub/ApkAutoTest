@@ -11,8 +11,8 @@ import android.widget.Toast;
 
 import com.tencent.apk_auto_test.task.CmShowBasicTask;
 import com.tencent.apk_auto_test.task.CmShowMemTask;
-import com.tencent.apk_auto_test.util.ProcessUtil;
 import com.tencent.apk_auto_test.util.Function;
+import com.tencent.apk_auto_test.util.ProcessUtil;
 
 import java.util.List;
 
