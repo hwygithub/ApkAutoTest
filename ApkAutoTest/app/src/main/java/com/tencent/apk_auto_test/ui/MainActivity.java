@@ -8,6 +8,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.graphics.Bitmap;
 import android.hardware.display.DisplayManager;
 import android.hardware.display.VirtualDisplay;
 import android.media.Image;
@@ -35,7 +36,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.tencent.apk_auto_test.R;
-import com.tencent.apk_auto_test.core.TestManager;
 import com.tencent.apk_auto_test.data.ChoosePartAdapter;
 import com.tencent.apk_auto_test.data.Global;
 import com.tencent.apk_auto_test.data.RunPara;
@@ -48,6 +48,8 @@ import org.opencv.android.BaseLoaderCallback;
 import org.opencv.android.LoaderCallbackInterface;
 import org.opencv.android.OpenCVLoader;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
@@ -201,12 +203,7 @@ public class MainActivity extends Activity implements OnClickListener {
             showHelpDialog();
         }
 
-//        //设置5.0上面的截图方式
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-//            mediaProjectionManager = (MediaProjectionManager) getSystemService(MEDIA_PROJECTION_SERVICE);
-//            Intent intent = mediaProjectionManager.createScreenCaptureIntent();
-//            startActivityForResult(intent, REQUEST_MEDIA_PROJECTION);
-//        }
+
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
@@ -214,25 +211,65 @@ public class MainActivity extends Activity implements OnClickListener {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_MEDIA_PROJECTION) {
             MediaProjection mediaProjection = mediaProjectionManager.getMediaProjection(resultCode, data);
-            ImageReader imageReader = ImageReader.newInstance((int) Global.SCREEN_WIDTH, (int) Global.SCREEN_HEIGHT, 0x1, 2);
+            final ImageReader imageReader = ImageReader.newInstance((int) Global.SCREEN_WIDTH, (int) Global.SCREEN_HEIGHT, 0x1, 2);
             if (null == mediaProjection) {
                 Log.e(TAG, "get media projection error !!!");
             } else {
                 Log.v(TAG, "open media projection ok...");
             }
-            VirtualDisplay virtualDisplay = mediaProjection.createVirtualDisplay(TAG + "-display", (int) Global.SCREEN_WIDTH, (int) Global
+            final VirtualDisplay virtualDisplay = mediaProjection.createVirtualDisplay(TAG + "-display", (int) Global.SCREEN_WIDTH, (int) Global
                     .SCREEN_HEIGHT, Global
                     .DENSITY_DPI, DisplayManager
                     .VIRTUAL_DISPLAY_FLAG_PUBLIC, imageReader.getSurface(), null, null);
 
-
-            Image image = imageReader.acquireLatestImage();
-            if (null == image) {
-                Log.e(TAG, "image is null!!!");
+            if (null == virtualDisplay) {
+                Log.e(TAG, "virtualDisplay is null!!!");
                 return;
             }
-            Image.Plane[] planes = image.getPlanes();
-            ByteBuffer byteBuffer = planes[0].getBuffer();
+            //imageReader 有耗时，回调后再继续
+            imageReader.setOnImageAvailableListener(new ImageReader.OnImageAvailableListener() {
+                @Override
+                public void onImageAvailable(ImageReader reader) {
+                    Log.v(TAG, "[onImageAvailable]");
+                    long startTime = System.currentTimeMillis();
+
+                    Image image = reader.acquireLatestImage();
+                    if (null == image) {
+                        Log.e(TAG, "image is null!!!");
+                        return;
+                    }
+
+                    int width = image.getWidth();
+                    int height = image.getHeight();
+                    Image.Plane[] planes = image.getPlanes();
+                    ByteBuffer byteBuffer = planes[0].getBuffer();
+                    int pixelStride = planes[0].getPixelStride();
+                    int rowStride = planes[0].getRowStride();
+                    int rowPadding = rowStride - pixelStride * width;
+                    Bitmap bitmap = Bitmap.createBitmap(width + rowPadding / pixelStride, height, Bitmap.Config.ARGB_8888);
+                    bitmap.copyPixelsFromBuffer(byteBuffer);
+                    bitmap.createBitmap(bitmap, 0, 0, width, height);
+                    Log.v(TAG, "capture cost time :" + (System.currentTimeMillis() - startTime));
+                    if (null == bitmap) {
+                        Log.e(TAG, "bitmap is null!!!");
+                        return;
+                    }
+                    File file = new File("sdcard/temp.png");
+                    if (file.exists())
+                        file.delete();
+                    try {
+                        FileOutputStream out = new FileOutputStream(file);
+                        bitmap.compress(Bitmap.CompressFormat.PNG, 90, out);
+                        out.flush();
+                        out.close();
+                    } catch (java.io.IOException e) {
+                        Log.e(TAG, "file not found!!!");
+                    }
+                    image.close();
+                    virtualDisplay.release();
+                }
+            }, null);
+
         }
     }
 
@@ -247,16 +284,23 @@ public class MainActivity extends Activity implements OnClickListener {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_startRun:
-                TestManager manager = new TestManager(mContext);
-                boolean isCheckOK = manager.checkEnvironment();
-                if (isCheckOK) {
-                    //还原一些变量
-                    for (int i = 0; i < StaticData.runList.size(); i++) {
-                        int caseNumber = StaticData.runList.get(i).runCaseNumber;
-                        StaticData.chooseArray[caseNumber] = true;
-                    }
-                    mBtnStart.setEnabled(false);
-                    manager.startTest(runnerIndex);
+//                TestManager manager = new TestManager(mContext);
+//                boolean isCheckOK = manager.checkEnvironment();
+//                if (isCheckOK) {
+//                    //还原一些变量
+//                    for (int i = 0; i < StaticData.runList.size(); i++) {
+//                        int caseNumber = StaticData.runList.get(i).runCaseNumber;
+//                        StaticData.chooseArray[caseNumber] = true;
+//                    }
+//                    mBtnStart.setEnabled(false);
+//                    manager.startTest(runnerIndex);
+//                }
+
+                //设置5.0上面的截图方式
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    mediaProjectionManager = (MediaProjectionManager) getSystemService(MEDIA_PROJECTION_SERVICE);
+                    Intent intent = mediaProjectionManager.createScreenCaptureIntent();
+                    startActivityForResult(intent, REQUEST_MEDIA_PROJECTION);
                 }
                 break;
         }
