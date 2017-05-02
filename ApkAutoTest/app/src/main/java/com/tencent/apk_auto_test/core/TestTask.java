@@ -10,15 +10,15 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 
+import com.tencent.apk_auto_test.R;
+import com.tencent.apk_auto_test.data.StaticData;
+import com.tencent.apk_auto_test.ext.UIActionBox;
+import com.tencent.apk_auto_test.ext.UIImageActionBox;
 import com.tencent.apk_auto_test.ext.UINodeActionBox;
 import com.tencent.apk_auto_test.ui.HelpActivity;
 import com.tencent.apk_auto_test.ui.MainActivity;
-import com.tencent.apk_auto_test.R;
-import com.tencent.apk_auto_test.data.StaticData;
 import com.tencent.apk_auto_test.util.Function;
 import com.tencent.apk_auto_test.util.TimeUtil;
-import com.tencent.apk_auto_test.ext.UIImageActionBox;
-import com.tencent.apk_auto_test.ext.UIActionBox;
 
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
