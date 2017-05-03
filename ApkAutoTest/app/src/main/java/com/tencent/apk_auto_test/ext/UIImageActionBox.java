@@ -163,7 +163,9 @@ public class UIImageActionBox extends UIActionBox {
                 bitmap.createBitmap(bitmap, 0, 0, width, height);
                 Log.v(TAG, "capture cost time :" + (System.currentTimeMillis() - startTime));
 
-                File file = new File("sdcard/temp.png");
+
+                startTime = System.currentTimeMillis();
+                File file = new File("sdcard/temp/temp_" + System.currentTimeMillis() + ".png");
                 if (file.exists())
                     file.delete();
                 try {

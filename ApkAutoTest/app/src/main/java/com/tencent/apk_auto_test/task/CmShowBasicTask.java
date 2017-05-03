@@ -1,5 +1,6 @@
 package com.tencent.apk_auto_test.task;
 
+import android.util.Log;
 import android.view.KeyEvent;
 
 import com.tencent.apk_auto_test.core.TestTask;
@@ -13,6 +14,8 @@ import com.tencent.apk_auto_test.util.TimeUtil;
  */
 
 public class CmShowBasicTask extends TestTask {
+    private static final String TAG = "CmShowBasicTask";
+
     @Override
     public String getTaskSimpleName() {
         return "CSAT";
@@ -28,7 +31,12 @@ public class CmShowBasicTask extends TestTask {
             mFunction.clearAppByPackageName("com.tencent.mobileqq");
             mBox.sleep(3000);
 
-            _InitQQ();
+            try {
+                mBox.openApp("com.tencent.mobileqq", "com.tencent.mobileqq.activity.SplashActivity");
+            } catch (Exception e) {
+                Log.e(TAG, "start test app activity error!");
+                return;
+            }
 
             mNodeBox.setStrictMode(false);
             //点击登录

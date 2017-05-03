@@ -175,6 +175,7 @@ public abstract class TestTask extends Service {
                 taskController.onCaseRunFinished();
             }
         });
+        currentThread.setName("apk_auto_test run thread");
         currentThread.start();
     }
 
