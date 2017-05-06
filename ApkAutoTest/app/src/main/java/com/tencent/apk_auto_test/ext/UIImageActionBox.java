@@ -45,9 +45,8 @@ import java.nio.ByteBuffer;
 public class UIImageActionBox extends UIActionBox {
     private static final String TAG = "UIImageActionBox";
 
-    private int mOsVersion = 0;
-
     private ImageShareApplication mImageShareApplication;
+    private ImageReader mImageReader;
 
     /**
      * >=5.0 以上走新的截图方式
@@ -73,12 +72,11 @@ public class UIImageActionBox extends UIActionBox {
      */
     public boolean clickOnImage(String matchImgName, int waitTime) {
         long start = System.currentTimeMillis();
-        //截图并读出bitmap格式的数据
         Bitmap capImg = getScreenPic();
         Bitmap matchImg = getMatchPic(matchImgName);
-        Log.i(TAG, "cap and read bitmap cost time: " + (System.currentTimeMillis() - start));
         //匹配图片并返回匹配区域的中心点
         Point p = getMatchPoint(capImg, matchImg);
+        Log.i(TAG, "----total cost time: " + (System.currentTimeMillis() - start));
         if (null == p) {
             Log.e(TAG, "get point null");
             return false;
@@ -98,9 +96,9 @@ public class UIImageActionBox extends UIActionBox {
         //截图并读出bitmap格式的数据
         Bitmap capImg = getScreenPic();
         Bitmap matchImg = getMatchPic(matchImgName);
-        Log.i(TAG, "cap and read bitmap cost time: " + (System.currentTimeMillis() - start));
         //匹配图片并返回匹配区域的中心点
         Point p = getMatchPoint(capImg, matchImg);
+        Log.i(TAG, "----total cost time: " + (System.currentTimeMillis() - start));
         if (null == p) {
             Log.e(TAG, "get point null");
             return false;
@@ -117,7 +115,7 @@ public class UIImageActionBox extends UIActionBox {
         Intent intent = mImageShareApplication.getIntent();
         MediaProjection mediaProjection = mediaProjectionManager.getMediaProjection(resultCode, intent);
 
-        final ImageReader imageReader = ImageReader.newInstance((int) Global.SCREEN_WIDTH, (int) Global.SCREEN_HEIGHT, 0x1, 2);
+        mImageReader = ImageReader.newInstance((int) Global.SCREEN_WIDTH, (int) Global.SCREEN_HEIGHT, 0x1, 2);
         if (null == mediaProjection) {
             Log.e(TAG, "get media projection error !!!");
             return;
@@ -128,59 +126,21 @@ public class UIImageActionBox extends UIActionBox {
         final VirtualDisplay virtualDisplay = mediaProjection.createVirtualDisplay(TAG + "-display", (int) Global.SCREEN_WIDTH, (int) Global
                 .SCREEN_HEIGHT, Global
                 .DENSITY_DPI, DisplayManager
-                .VIRTUAL_DISPLAY_FLAG_PUBLIC, imageReader.getSurface(), null, null);
+                .VIRTUAL_DISPLAY_FLAG_AUTO_MIRROR, mImageReader.getSurface(), null, null);
 
         if (null == virtualDisplay) {
             Log.e(TAG, "virtualDisplay is null!!!");
             return;
         }
-        //imageReader 有耗时，回调后再继续
-        imageReader.setOnImageAvailableListener(new ImageReader.OnImageAvailableListener() {
-            @Override
-            public void onImageAvailable(ImageReader reader) {
-                Log.v(TAG, "[onImageAvailable]");
-                long startTime = System.currentTimeMillis();
+    }
 
-                Image image = reader.acquireLatestImage();
-                if (null == image) {
-                    Log.e(TAG, "image is null!!!");
-                    return;
-                }
+    @TargetApi(Build.VERSION_CODES.KITKAT)
+    private class TestImageAvailableListener implements ImageReader.OnImageAvailableListener {
 
-                int width = image.getWidth();
-                int height = image.getHeight();
-                Image.Plane[] planes = image.getPlanes();
-                ByteBuffer byteBuffer = planes[0].getBuffer();
-                int pixelStride = planes[0].getPixelStride();
-                int rowStride = planes[0].getRowStride();
-                int rowPadding = rowStride - pixelStride * width;
-                Bitmap bitmap = Bitmap.createBitmap(width + rowPadding / pixelStride, height, Bitmap.Config.ARGB_8888);
-                if (null == bitmap) {
-                    Log.e(TAG, "bitmap is null!!!");
-                    return;
-                }
-                bitmap.copyPixelsFromBuffer(byteBuffer);
-                bitmap.createBitmap(bitmap, 0, 0, width, height);
-                Log.v(TAG, "capture cost time :" + (System.currentTimeMillis() - startTime));
-
-
-                startTime = System.currentTimeMillis();
-                File file = new File("sdcard/temp/temp_" + System.currentTimeMillis() + ".png");
-                if (file.exists())
-                    file.delete();
-                try {
-                    FileOutputStream out = new FileOutputStream(file);
-                    bitmap.compress(Bitmap.CompressFormat.PNG, 90, out);
-                    out.flush();
-                    out.close();
-                } catch (java.io.IOException e) {
-                    Log.e(TAG, "file not found!!!");
-                }
-                Log.v(TAG, "save bitmap cost time :" + (System.currentTimeMillis() - startTime));
-                image.close();
-                //virtualDisplay.release();
-            }
-        }, null);
+        @Override
+        public void onImageAvailable(ImageReader reader) {
+            Log.v(TAG, "[onImageAvailable]");
+        }
     }
 
     private Point getMatchPoint(Bitmap capImg, Bitmap matchImg) {
@@ -209,7 +169,7 @@ public class UIImageActionBox extends UIActionBox {
         long start = System.currentTimeMillis();
         //进行匹配和标准化
         Imgproc.matchTemplate(img1, img2, result, Imgproc.TM_SQDIFF_NORMED);
-        Log.i(TAG, "match cost time: " + (System.currentTimeMillis() - start));
+
         //Core.normalize(result, result, 0, 100, Core.NORM_MINMAX, -1, new Mat());
         //通过函数 minMaxLoc 定位最匹配的位置
         Core.MinMaxLocResult mmr = Core.minMaxLoc(result);
@@ -218,7 +178,7 @@ public class UIImageActionBox extends UIActionBox {
         mmr.minLoc.y *= SIZE_SCALE;
         Log.i(TAG, "cv match min val: " + mmr.minVal + "--match x:" + mmr.minLoc.x + ",match y:" + mmr.minLoc.y);
         if (mmr.minVal > 0.03) {
-            Log.e(TAG, "image match false");
+            Log.e(TAG, "image match false!!!");
             return null;
         }
         Point matchLoc;
@@ -228,7 +188,8 @@ public class UIImageActionBox extends UIActionBox {
         Point point = new Point();
         point.x = matchLoc.x + matchImg.getWidth() * SIZE_SCALE / 2;
         point.y = matchLoc.y + matchImg.getHeight() * SIZE_SCALE / 2;
-        Log.i(TAG, "match success , point.x:" + point.x + "\tpoint.y:" + point.y);
+        Log.i(TAG, "[getMatchPoint]match cost time: " + (System.currentTimeMillis() - start));
+        Log.i(TAG, "[getMatchPoint]match success , point.x:" + point.x + "\tpoint.y:" + point.y);
         return point;
     }
 
@@ -243,10 +204,47 @@ public class UIImageActionBox extends UIActionBox {
 
     private Bitmap getScreenPic() {
         Bitmap capBmp = null;
-        if (mOsVersion == 0)
-            mOsVersion = Integer.valueOf(Build.VERSION.SDK_INT);
 
-        if (mOsVersion < 21) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            //5.0以上通过 MediaProjection 投影类获取到屏幕截图
+            long startTime = System.currentTimeMillis();
+            Image image = mImageReader.acquireLatestImage();
+            if (null == image) {
+                Log.e(TAG, "image is null!!!");
+            }
+            int width = image.getWidth();
+            int height = image.getHeight();
+            Image.Plane[] planes = image.getPlanes();
+            ByteBuffer byteBuffer = planes[0].getBuffer();
+            int pixelStride = planes[0].getPixelStride();
+            int rowStride = planes[0].getRowStride();
+            int rowPadding = rowStride - pixelStride * width;
+            Bitmap bitmap = Bitmap.createBitmap(width + rowPadding / pixelStride, height, Bitmap.Config.ARGB_8888);
+            if (null == bitmap) {
+                Log.e(TAG, "bitmap is null!!!");
+                return null;
+            }
+            bitmap.copyPixelsFromBuffer(byteBuffer);
+            bitmap = Bitmap.createBitmap(bitmap, 0, 0, width, height);
+            Log.v(TAG, "[getScreenPic]capture cost time :" + (System.currentTimeMillis() - startTime));
+
+
+            startTime = System.currentTimeMillis();
+            File file = new File("sdcard/temp/temp_" + System.currentTimeMillis() + ".png");
+            if (file.exists())
+                file.delete();
+            try {
+                FileOutputStream out = new FileOutputStream(file);
+                bitmap.compress(Bitmap.CompressFormat.PNG, 100, out);
+                out.flush();
+                out.close();
+            } catch (java.io.IOException e) {
+                Log.e(TAG, "file not found!!!");
+            }
+            Log.v(TAG, "[getScreenPic]save bitmap cost time :" + (System.currentTimeMillis() - startTime));
+            image.close();
+            capBmp = bitmap;
+        } else {
             //5.0以下通过截图命令获取到屏幕截图
             String capPath = Environment.getExternalStorageDirectory() + "/screenshot.png";
             //su 命令执行截图命令
@@ -263,9 +261,6 @@ public class UIImageActionBox extends UIActionBox {
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
-        } else if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-            //5.0以上通过 MediaProjection 投影类获取到屏幕截图
-
         }
         return capBmp;
     }

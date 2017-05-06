@@ -30,10 +30,10 @@ public class TestMonitor {
      */
     public void checkNode(String nodeType, String arg, int testNumber) {
         if (mNodeBox.isNodeExits(nodeType, arg)) {
-            mPrinter.printResult(StaticData.runList.get(testNumber).runCaseName, true);
+            mPrinter.printResult(StaticData.runList.get(testNumber - 1).runCaseName, true);
             Log.d(TAG, nodeType + " node:" + arg + " is exist , pass");
         } else {
-            mPrinter.printResult(StaticData.runList.get(testNumber).runCaseName, false);
+            mPrinter.printResult(StaticData.runList.get(testNumber - 1).runCaseName, false);
             Log.e(TAG, "--------node:" + arg + " not exist,fail");
         }
     }

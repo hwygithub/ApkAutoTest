@@ -69,11 +69,11 @@ public class TestTips {
 
         WindowManager.LayoutParams wmParams2 = new WindowManager.LayoutParams();
         wmParams2.format = 1;
-        wmParams2.x = 5;
-        wmParams2.y = 55;
+        wmParams2.x = 15;
+        wmParams2.y = 35;
         wmParams2.type = WindowManager.LayoutParams.TYPE_SYSTEM_ALERT;
-        wmParams2.width = 40;
-        wmParams2.height = 40;
+        wmParams2.width = 50;
+        wmParams2.height = 50;
         wmParams2.flags = 8;
         wmParams.alpha = 0.6f;
         wmParams2.gravity = Gravity.BOTTOM | Gravity.END;

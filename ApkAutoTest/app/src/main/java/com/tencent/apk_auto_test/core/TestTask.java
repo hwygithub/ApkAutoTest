@@ -43,7 +43,6 @@ public abstract class TestTask extends Service {
     public TestMonitor monitor;
     public Function mFunction;
 
-    public String mTaskName;
     public String mRunFileName;
 
     @Override
@@ -158,7 +157,7 @@ public abstract class TestTask extends Service {
                 //悬浮窗显示状态
                 mTips.updateTips("case:" + (testNumber++ + 1) + " \t" + StaticData.chooseListText[caseNumber]);
                 //初始化参数
-                mRunFileName = mTaskName + caseNumber + "-" + TimeUtil.getCurrentTimeSecond();
+                mRunFileName = getTaskSimpleName() + caseNumber + "-" + TimeUtil.getCurrentTimeSecond();
                 //冷启动手Q
                 if (caseNumber != 0)
                     _InitQQ();
@@ -175,7 +174,7 @@ public abstract class TestTask extends Service {
                 taskController.onCaseRunFinished();
             }
         });
-        currentThread.setName("apk_auto_test run thread");
+        currentThread.setName("apk_auto_test run thread: " + getTaskSimpleName() + "-" + caseNumber);
         currentThread.start();
     }
 
@@ -229,7 +228,7 @@ public abstract class TestTask extends Service {
     public void _InitQQ() {
         //杀手Q进程还原状态
         mFunction.killAppByPackageName("com.tencent.mobileqq");
-        mBox.sleep(1000);
+        mBox.sleep(2000);
         //热启动手Q
         try {
             mBox.openApp("com.tencent.mobileqq", "com.tencent.mobileqq.activity.SplashActivity");
