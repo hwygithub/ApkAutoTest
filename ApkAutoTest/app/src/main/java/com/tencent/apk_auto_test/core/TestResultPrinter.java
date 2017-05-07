@@ -38,4 +38,13 @@ public class TestResultPrinter {
         Log.v(TAG, "[printResult] " + buffer.toString());
         TxtUtil.saveMsg("/sdcard/tencent-test/", buffer.toString(), mResultFileName);
     }
+
+    public synchronized void printInfo(String info) {
+        StringBuffer buffer = new StringBuffer();
+        buffer.append(TimeUtil.getCurrentTimeSecond() + " ");
+        buffer.append(info);
+        buffer.append("\n");
+        Log.v(TAG, "[printResult] " + buffer.toString());
+        TxtUtil.saveMsg("/sdcard/tencent-test/", buffer.toString(), mResultFileName);
+    }
 }

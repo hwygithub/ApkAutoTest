@@ -17,6 +17,7 @@ import android.os.Build;
 import android.os.Environment;
 import android.util.Log;
 
+import com.tencent.apk_auto_test.core.TestResultPrinter;
 import com.tencent.apk_auto_test.data.Global;
 import com.tencent.apk_auto_test.ext.temp.ImageShareApplication;
 import com.tencent.apk_auto_test.util.ProcessUtil;
@@ -79,6 +80,8 @@ public class UIImageActionBox extends UIActionBox {
         Log.i(TAG, "----total cost time: " + (System.currentTimeMillis() - start));
         if (null == p) {
             Log.e(TAG, "get point null");
+            TestResultPrinter mPrinter = TestResultPrinter.getInstance();
+            mPrinter.printResult("click image :" + matchImgName, false);
             return false;
         }
         //点击匹配区域的中心点
@@ -229,7 +232,8 @@ public class UIImageActionBox extends UIActionBox {
             Log.v(TAG, "[getScreenPic]capture cost time :" + (System.currentTimeMillis() - startTime));
 
 
-            startTime = System.currentTimeMillis();
+           /*
+           startTime = System.currentTimeMillis();
             File file = new File("sdcard/temp/temp_" + System.currentTimeMillis() + ".png");
             if (file.exists())
                 file.delete();
@@ -242,6 +246,7 @@ public class UIImageActionBox extends UIActionBox {
                 Log.e(TAG, "file not found!!!");
             }
             Log.v(TAG, "[getScreenPic]save bitmap cost time :" + (System.currentTimeMillis() - startTime));
+            */
             image.close();
             capBmp = bitmap;
         } else {

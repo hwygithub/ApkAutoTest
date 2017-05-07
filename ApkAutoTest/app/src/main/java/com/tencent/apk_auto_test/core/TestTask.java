@@ -142,6 +142,8 @@ public abstract class TestTask extends Service {
     private void startRunCase(final int caseNumber, final int caseTime, final MyTestTaskController taskController) {
         //2、根据用例number执行拼接后指定的用例·
         String caseMethod = getTaskSimpleName() + "_" + caseNumber;
+        TestResultPrinter mPrinter = TestResultPrinter.getInstance();
+        mPrinter.printInfo("[startRunCase]:" + caseMethod);
         //getDeclaredMethod 能获取所有方法,getMethod 只能获取public 方法
         try {
             method = getClass().getDeclaredMethod(caseMethod, int.class);
@@ -254,7 +256,10 @@ public abstract class TestTask extends Service {
     //［_OpenC2CActionTab］进入测试号AIO打开面板
     public void _OpenC2CActionTab() {
         //点击搜索栏
-        mNodeBox.clickOnText("搜索", 1000);
+        if (!mNodeBox.clickOnText("搜索", 1000)) {
+            mBox.sleep(5000);
+            mNodeBox.clickOnText("搜索", 1000);
+        }
         //输入群，点击进入
         mFunction.inputText("1220232584", 2000);
         //点击测试群

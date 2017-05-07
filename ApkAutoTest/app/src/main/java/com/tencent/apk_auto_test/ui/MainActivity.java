@@ -28,6 +28,7 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.tencent.apk_auto_test.R;
 import com.tencent.apk_auto_test.core.TestManager;
@@ -245,6 +246,8 @@ public class MainActivity extends Activity implements OnClickListener {
                     }
                     mBtnStart.setEnabled(false);
                     manager.startTest(runnerIndex);
+                } else {
+                    Toast.makeText(this, "start false,check environment", Toast.LENGTH_SHORT).show();
                 }
 
                 break;

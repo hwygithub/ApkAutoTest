@@ -51,7 +51,6 @@ public class CmShowBasicTask extends TestTask {
             mFunction.inputText(StaticData.testPwd, 1000);
 
             mNodeBox.clickOnDesc("登录", 5000);
-            mNodeBox.clickOnTextContain("关闭", 2000);
         }
     }
 
@@ -61,13 +60,8 @@ public class CmShowBasicTask extends TestTask {
             // TODO: 2017/3/5 关闭厘米秀功能
             //删除厘米秀素材
             //mFunction.delFolder(new File("sdcard/tencent/MobileQQ/.apollo"));
-
-            //点击搜索栏
-            mNodeBox.clickOnText("搜索", 1000);
-            //输入群，点击进入
-            mFunction.inputText("1220232584", 1000);
-            //进入好友AIO
-            mNodeBox.clickOnTextContain("我的好友", 2000);
+            //［_OpenC2CActionTab］进入测试号AIO打开面板
+            _OpenC2CActionTab();
             //// TODO: 2017/3/5 判断小人没有显示
 
         }
