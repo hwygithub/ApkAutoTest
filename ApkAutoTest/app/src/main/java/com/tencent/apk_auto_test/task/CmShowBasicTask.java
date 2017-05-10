@@ -75,7 +75,7 @@ public class CmShowBasicTask extends TestTask {
             //输入群，点击进入
             mFunction.inputText("1220232584", 1000);
             //进入好友AIO
-            mNodeBox.clickOnTextContain("我的好友", 2000);
+            mNodeBox.clickOnTextContain("我的好友", 4000);
             //点击功能面板按钮
             mNodeBox.clickOnResourceId("qq_aio_panel_plus", 1000, 0);
             //向左滑动
@@ -103,18 +103,18 @@ public class CmShowBasicTask extends TestTask {
     public void CSAT_4(final int caseTime) {
         for (int i = 0; i < caseTime; i++) {
             //进入抽屉页
-            mNodeBox.clickOnResourceId("conversation_head", 3000, 0);
+            mNodeBox.clickOnResourceId("conversation_head", 5000, 0);
             //点击抽屉页厘米秀小人
             mNodeBox.clickOnResourceIdOffset("nightmode", 3000, 0, 0, 200);
             //// TODO: 2017/3/5 进入Web页；小人展示、播放sayhi
         }
     }
 
-    // [5] 互动页切换到换装页
+    // [5] 通过动作面板入口进入换装页
     public void CSAT_5(final int caseTime) {
         for (int i = 0; i < caseTime; i++) {
-            //通过抽屉页进入换装页
-            _OpenChangeClothesWeb();
+            //通过AIO进入换装页
+            _AIOOpenChangeClothesWeb();
             // TODO: 2017/3/5 切换到换装页；小人展示播放sayhi
         }
     }
@@ -122,8 +122,8 @@ public class CmShowBasicTask extends TestTask {
     //［6］通过换装页分享入口进入分享浮层
     public void CSAT_6(final int caseTime) {
         for (int i = 0; i < caseTime; i++) {
-            //通过抽屉页进入换装页
-            _OpenChangeClothesWeb();
+            //通过AIO进入换装页
+            _AIOOpenChangeClothesWeb();
             //点击换装分享入口
             mImageBox.clickOnImage("btn_web_share", 2000);
             // TODO: 2017/3/14 小人展示、播放随机动作
@@ -133,8 +133,8 @@ public class CmShowBasicTask extends TestTask {
     //［7］分享浮层分享到好友
     public void CSAT_7(final int caseTime) {
         for (int i = 0; i < caseTime; i++) {
-            //通过抽屉页进入换装页
-            _OpenChangeClothesWeb();
+            //通过AIO进入换装页
+            _AIOOpenChangeClothesWeb();
             //点击换装分享入口
             mImageBox.clickOnImage("btn_web_share", 2000);
             //点击分享按钮
@@ -151,8 +151,8 @@ public class CmShowBasicTask extends TestTask {
     //［8］分享浮层分享到QQ空间
     public void CSAT_8(final int caseTime) {
         for (int i = 0; i < caseTime; i++) {
-            //通过抽屉页进入换装页
-            _OpenChangeClothesWeb();
+            //通过AIO进入换装页
+            _AIOOpenChangeClothesWeb();
             //点击换装分享入口
             mImageBox.clickOnImage("btn_web_share", 2000);
             //点击分享按钮
@@ -166,8 +166,8 @@ public class CmShowBasicTask extends TestTask {
     //［9］分享浮层下载图片
     public void CSAT_9(final int caseTime) {
         for (int i = 0; i < caseTime; i++) {
-            //通过抽屉页进入换装页
-            _OpenChangeClothesWeb();
+            //通过AIO进入换装页
+            _AIOOpenChangeClothesWeb();
             //点击换装分享入口
             mImageBox.clickOnImage("btn_web_share", 2000);
             //点击下载按钮
@@ -179,8 +179,8 @@ public class CmShowBasicTask extends TestTask {
     //［10］分享浮层更换小人动作
     public void CSAT_10(final int caseTime) {
         for (int i = 0; i < caseTime; i++) {
-            //通过抽屉页进入换装页
-            _OpenChangeClothesWeb();
+            //通过AIO进入换装页
+            _AIOOpenChangeClothesWeb();
             //点击换装分享入口
             mImageBox.clickOnImage("btn_web_share", 2000);
             //点击下载按钮
@@ -192,8 +192,8 @@ public class CmShowBasicTask extends TestTask {
     //［11］换装页更换装扮并保存
     public void CSAT_11(final int caseTime) {
         for (int i = 0; i < caseTime; i++) {
-            //通过抽屉页进入换装页
-            _OpenChangeClothesWeb();
+            //通过AIO进入换装页
+            _AIOOpenChangeClothesWeb();
             //点击装扮区的取消全部并保存
             mImageBox.clickOnImage("tab_web_clothes_2", 1000);
             mImageBox.clickOnImage("icon_web_clothes_white", 1000);
@@ -504,6 +504,6 @@ public class CmShowBasicTask extends TestTask {
 
 
     //[30] 通过自定义动作入口进入换装页动作面板
-    //[31] 跳转到web换装页
+    //[31] 通过动作面板入口进入换装页
     //[32] 通过互动页进入AI互动页
 }

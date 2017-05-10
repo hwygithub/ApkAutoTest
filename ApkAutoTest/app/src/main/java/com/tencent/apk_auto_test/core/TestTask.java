@@ -238,7 +238,7 @@ public abstract class TestTask extends Service {
             Log.e(TAG, "start test app activity error!");
             return;
         }
-        mBox.sleep(8000);
+        mBox.sleep(12000);
     }
 
     //［_OpenActionTab］进入群AIO打开动作面板
@@ -273,8 +273,16 @@ public abstract class TestTask extends Service {
         //进入抽屉页
         mNodeBox.clickOnResourceId("conversation_head", 3000, 0);
         //点击抽屉页厘米秀小人
-        mNodeBox.clickOnResourceIdOffset("nightmode", 3000, 0, 0, 200);
+        mNodeBox.clickOnResourceIdOffset("nightmode", 4000, 0, 0, 200);
         //点击切换到换装页
         mImageBox.clickOnImage("tab_web_change", 4000);
+    }
+
+    //[_AIOOpenChangeClothesWeb] 通过AIO进入换装页
+    public void _AIOOpenChangeClothesWeb() {
+        //［_OpenC2CActionTab］进入测试号AIO打开面板
+        _OpenC2CActionTab();
+        //点击换装入口
+        mNodeBox.clickOnResourceId("btn_more_apollo", 5000, 0);
     }
 }
