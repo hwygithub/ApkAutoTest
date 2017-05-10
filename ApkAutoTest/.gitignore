@@ -9,3 +9,7 @@
 /app/build
 /captures
 .externalNativeBuild
+/libraries/opencv/build/
+/.idea/
+/gradle.properties
+
