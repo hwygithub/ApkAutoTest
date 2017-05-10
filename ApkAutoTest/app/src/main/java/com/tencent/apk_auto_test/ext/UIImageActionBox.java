@@ -129,7 +129,7 @@ public class UIImageActionBox extends UIActionBox {
         final VirtualDisplay virtualDisplay = mediaProjection.createVirtualDisplay(TAG + "-display", (int) Global.SCREEN_WIDTH, (int) Global
                 .SCREEN_HEIGHT, Global
                 .DENSITY_DPI, DisplayManager
-                .	VIRTUAL_DISPLAY_FLAG_OWN_CONTENT_ONLY, mImageReader.getSurface(), null, null);
+                .VIRTUAL_DISPLAY_FLAG_OWN_CONTENT_ONLY, mImageReader.getSurface(), null, null);
 
         if (null == virtualDisplay) {
             Log.e(TAG, "virtualDisplay is null!!!");
@@ -233,7 +233,8 @@ public class UIImageActionBox extends UIActionBox {
 
 
 
-           startTime = System.currentTimeMillis();
+            /*
+            startTime = System.currentTimeMillis();
             File file = new File("sdcard/temp/temp_" + System.currentTimeMillis() + ".png");
             if (file.exists())
                 file.delete();
@@ -246,7 +247,7 @@ public class UIImageActionBox extends UIActionBox {
                 Log.e(TAG, "file not found!!!");
             }
             Log.v(TAG, "[getScreenPic]save bitmap cost time :" + (System.currentTimeMillis() - startTime));
-
+            */
             image.close();
             capBmp = bitmap;
         } else {

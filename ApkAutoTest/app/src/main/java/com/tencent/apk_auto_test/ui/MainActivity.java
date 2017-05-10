@@ -13,6 +13,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -44,8 +45,10 @@ import org.opencv.android.BaseLoaderCallback;
 import org.opencv.android.LoaderCallbackInterface;
 import org.opencv.android.OpenCVLoader;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
+
 
 public class MainActivity extends Activity implements OnClickListener {
     private static final String TAG = "MainActivity";
@@ -181,9 +184,28 @@ public class MainActivity extends Activity implements OnClickListener {
         DisplayMetrics mDisplayMetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(mDisplayMetrics);
         Global.SCREEN_WIDTH = mDisplayMetrics.widthPixels;
-        Global.SCREEN_HEIGHT = mDisplayMetrics.heightPixels;
+        Global.SCREEN_HEIGHT = getDpi();
         Global.DENSITY_DPI = mDisplayMetrics.densityDpi;
 
+    }
+
+    private int getDpi() {
+        int dpi = 0;
+        Display display = getWindowManager().getDefaultDisplay();
+        DisplayMetrics dm = new DisplayMetrics();
+        @SuppressWarnings("rawtypes")
+        Class c;
+        try {
+            c = Class.forName("android.view.Display");
+            @SuppressWarnings("unchecked")
+            Method method = c.getMethod("getRealMetrics", DisplayMetrics.class);
+            method.invoke(display, dm);
+            dpi = dm.heightPixels;
+            Log.v(TAG, "height:" + dpi);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return dpi;
     }
 
     private void setEnvironment() {

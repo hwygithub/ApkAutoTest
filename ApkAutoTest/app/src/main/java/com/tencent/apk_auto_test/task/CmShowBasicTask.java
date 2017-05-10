@@ -50,7 +50,7 @@ public class CmShowBasicTask extends TestTask {
             mNodeBox.clickOnResourceId("password", 1000, 0);
             mFunction.inputText(StaticData.testPwd, 1000);
 
-            mNodeBox.clickOnDesc("登录", 5000);
+            mNodeBox.clickOnDesc("登录", 7000);
         }
     }
 

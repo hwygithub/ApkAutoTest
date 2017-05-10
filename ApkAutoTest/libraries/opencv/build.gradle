@@ -8,8 +8,8 @@ buildscript {
     }
 }
 android {
-    compileSdkVersion 19
-    buildToolsVersion rootProject.ext.buildToolsVersion
+    compileSdkVersion 21
+    buildToolsVersion '25.0.3'
 
     defaultConfig {
         minSdkVersion 8
