@@ -232,11 +232,13 @@ public class Function {
                         .append("\t").append(self_mi[0].getTotalPss());
                         /*.append("\n TotalSharedDirty:").append(self_mi[0].getTotalSharedDirty());*/
 
-            }
-            Log.v(TAG, strbuf.toString());
+                Log.v(TAG, strbuf.toString());
 
-            TxtUtil.saveMsg("/sdcard/tencent-test/", strbuf.toString(), fileName);
-            return true;
+                TxtUtil.saveMsg("/sdcard/tencent-test/", strbuf.toString(), fileName);
+                return true;
+
+            }
+
         }
         return false;
     }
