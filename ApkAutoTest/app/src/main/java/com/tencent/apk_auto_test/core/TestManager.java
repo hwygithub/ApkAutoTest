@@ -110,7 +110,7 @@ public class TestManager {
 
     public void stopTest() {
         mContext.stopService(new Intent(mContext, TestTask.class));
-
+        ProcessUtil.kill("com.tencent.apk_auto_test");
         android.os.Process.killProcess(android.os.Process.myPid());
     }
 

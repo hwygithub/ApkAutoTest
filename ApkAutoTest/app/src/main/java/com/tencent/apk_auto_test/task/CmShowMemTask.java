@@ -272,31 +272,4 @@ public class CmShowMemTask extends TestTask {
         }
 
     }
-
-    // C2C挑战好友记录后退出
-    public void CSMT_11(final int caseTime) {
-        //点击搜索栏
-        mNodeBox.clickOnText("搜索", 1000);
-        //输入测试号码
-        mFunction.inputText("1220232584", 2000);
-        //点击进入
-        mNodeBox.clickOnTextContain("我的好友", 3000);
-
-        for (int i = 0; i < caseTime; i++) {
-            //点击AIO输入输入框上方的中间部分区域
-            mNodeBox.clickOnResourceIdOffset("inputBar", 2000, 0, 1, -100);
-            //点击挑战纪录
-            mNodeBox.clickOnResourceId("apollo_aio_game_item_second", 4000, 0);
-            //如果进入新手引导则返回
-            if (mNodeBox.isNodeExits("text", "新手引导")) {
-                mNodeBox.clickOnResourceId("ivdefaultLeftBtn", 1000, 0);
-                continue;
-            }
-            //通过y偏移点击退出按钮
-            mImageBox.clickOnImage("btn_game_exit", 1000);
-
-            //每轮查询可用内存和进程内存情况,并保存到终端存储
-            mFunction.saveMem("com.tencent.mobileqq", mRunFileName, i);
-        }
-    }
 }
