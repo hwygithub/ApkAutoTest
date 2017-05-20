@@ -84,9 +84,9 @@ public class CmShowBasicTask extends TestTask {
             //点击厘米秀
             mNodeBox.clickOnDesc("厘米秀按钮", 1000);
             //点击开启厘米秀
-            mNodeBox.clickOnText("开启厘米秀", 1000);
+            //mNodeBox.clickOnText("开启厘米秀", 1000);
             // TODO: 2017/3/5 小人显示；弹起动作面板
-            monitor.checkNode("id", "container_apollo_shop", testNumber);
+            monitor.checkNode("id", "btn_more_apollo", testNumber);
         }
     }
 
@@ -194,20 +194,23 @@ public class CmShowBasicTask extends TestTask {
         for (int i = 0; i < caseTime; i++) {
             //通过AIO进入换装页
             _AIOOpenChangeClothesWeb();
-            //点击装扮区的取消全部并保存
+
             mImageBox.clickOnImage("tab_web_clothes_2", 1000);
             mImageBox.clickOnImage("icon_web_clothes_white", 1000);
             mImageBox.clickOnImage("btn_web_save_dress", 2000);
-            // TODO: 2017/3/14 小人更换为默认打底装扮
-            //选择套装的new标签的套装并保存
-            mImageBox.clickOnImage("tab_web_clothes_1", 1000);
-            mImageBox.clickOnImage("icon_web_new", 1000);
+
+            mImageBox.clickOnImageOffset("icon_web_clothes_white", 2000, 1, 300);
             mImageBox.clickOnImage("btn_web_save_dress", 2000);
+
             // TODO: 2017/3/14 小人更换装扮成功
         }
     }
 
     //［12］换装页预览播放动作
+    public void CSAT_12(final int caseTime) {
+
+    }
+
     //［13］通过资料卡入口进入互动页
     public void CSAT_13(final int caseTime) {
         for (int i = 0; i < caseTime; i++) {
@@ -216,15 +219,36 @@ public class CmShowBasicTask extends TestTask {
             //点击本人头像
             mNodeBox.clickOnResourceId("head", 5000, 0);
             //点击资料卡小人
-            mImageBox.clickOnImage("cmshow_me_hide", 7000);
+            mImageBox.clickOnImage("cmshow_me_hide", 6000);
             // TODO: 2017/3/14 小人从部分隐藏变为展示；播放sayhi动作
             //再次点击资料卡小人
-            mImageBox.clickOnImage("cmshow_me_stand", 4000);
+            mImageBox.clickOnImage("cmshow_me_show", 4000);
             // TODO: 2017/3/14 切换到互动页
         }
     }
 
     //［14］通过陌生人资料卡入口进入换装页
+    public void CSAT_14(final int caseTime) {
+        for (int i = 0; i < caseTime; i++) {
+            //点击＋
+            mNodeBox.clickOnResourceId("conversation_title_right_btn", 1000, 0);
+            //加好友
+            mNodeBox.clickOnTextContain("加好友", 2000);
+            //搜索
+            mNodeBox.clickOnTextContain("QQ号", 1000);
+            //陌生人测试号
+            mFunction.inputText("503855711", 2000);
+            //找人
+            mNodeBox.clickOnTextContain("找人", 5000);
+            //点击资料卡小人
+            mImageBox.clickOnImage("cmshow_me_hide", 6000);
+            //再次点击资料卡小人
+            mImageBox.clickOnImage("cmshow_me_show", 4000);
+            // TODO: 2017/3/14 切换到互动页
+        }
+
+    }
+
     //［15］通过AIO小人浮层入口进入换装页
     public void CSAT_15(final int caseTime) {
         for (int i = 0; i < caseTime; i++) {
@@ -291,7 +315,7 @@ public class CmShowBasicTask extends TestTask {
             mNodeBox.clickOnResourceId("apollo_aio_game_item_second", 4000, 0);
             //如果进入新手引导则返回
             if (mNodeBox.isNodeExits("text", "新手引导")) {
-                mNodeBox.clickOnText("返回", 2000);
+                mNodeBox.clickOnResourceId("ivdefaultLeftBtn", 1000, 0);
                 continue;
             }
             // TODO: 2017/3/22 跳转到游戏界面；开始进行和测试号的影子比赛
@@ -327,7 +351,7 @@ public class CmShowBasicTask extends TestTask {
             mNodeBox.clickOnResourceId("apollo_aio_game_item_second", 4000, 0);
             //如果进入新手引导则返回
             if (mNodeBox.isNodeExits("text", "新手引导")) {
-                mNodeBox.clickOnText("返回", 2000);
+                mNodeBox.clickOnResourceId("ivdefaultLeftBtn", 1000, 0);
                 continue;
             }
             // TODO: 2017/3/22 跳转到游戏界面；开始进行和测试号的影子比赛
@@ -356,7 +380,7 @@ public class CmShowBasicTask extends TestTask {
             mNodeBox.clickOnResourceId("apollo_aio_game_item_second", 4000, 0);
             //如果进入新手引导则返回
             if (mNodeBox.isNodeExits("text", "新手引导")) {
-                mNodeBox.clickOnText("返回", 2000);
+                mNodeBox.clickOnResourceId("ivdefaultLeftBtn", 1000, 0);
                 continue;
             }
             //开始后点击左上角X结束游戏
@@ -377,7 +401,7 @@ public class CmShowBasicTask extends TestTask {
             mNodeBox.clickOnResourceId("apollo_aio_game_item_second", 4000, 0);
             //如果进入新手引导则返回
             if (mNodeBox.isNodeExits("text", "新手引导")) {
-                mNodeBox.clickOnText("返回", 2000);
+                mNodeBox.clickOnResourceId("ivdefaultLeftBtn", 1000, 0);
                 continue;
             }
             //开始后点击右上角最小化按钮最小化游戏
@@ -401,7 +425,7 @@ public class CmShowBasicTask extends TestTask {
             mNodeBox.clickOnResourceId("apollo_aio_game_item_second", 4000, 0);
             //如果进入新手引导则返回
             if (mNodeBox.isNodeExits("text", "新手引导")) {
-                mNodeBox.clickOnText("返回", 2000);
+                mNodeBox.clickOnResourceId("ivdefaultLeftBtn", 1000, 0);
                 continue;
             }
             //开始后点击back键

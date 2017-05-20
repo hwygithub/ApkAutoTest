@@ -209,7 +209,6 @@ public class Function {
         strbuf.append("\t").append(TimeUtil.getTime());
         strbuf.append("\t").append(getAvailMemory(mContext));
         ActivityManager am = (ActivityManager) mContext.getSystemService(Context.ACTIVITY_SERVICE);
-
         List<ActivityManager.RunningAppProcessInfo> procInfo = am.getRunningAppProcesses();
         for (ActivityManager.RunningAppProcessInfo runningAppProcessInfo : procInfo) {
             System.out.println(runningAppProcessInfo.processName + String.format(",pid = %d", runningAppProcessInfo.pid));
@@ -232,14 +231,16 @@ public class Function {
                         .append("\t").append(self_mi[0].getTotalPss());
                         /*.append("\n TotalSharedDirty:").append(self_mi[0].getTotalSharedDirty());*/
 
-                Log.v(TAG, strbuf.toString());
-
-                TxtUtil.saveMsg("/sdcard/tencent-test/", strbuf.toString(), fileName);
-                return true;
 
             }
 
+            Log.v(TAG, strbuf.toString());
+
+            TxtUtil.saveMsg("/sdcard/tencent-test/", strbuf.toString(), fileName);
+            return true;
+
         }
+
         return false;
     }
 

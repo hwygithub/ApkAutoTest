@@ -3,8 +3,12 @@ package com.tencent.apk_auto_test.util;
 
 import android.util.Log;
 
+import org.apache.poi.util.IOUtils;
+
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.concurrent.TimeoutException;
 
 /**
  * Created by veehou on 2016/11/15.22:44
@@ -16,6 +20,65 @@ public class ProcessUtil {
     private static byte[] tempBuffer;
     private static StringBuilder buffer;
 
+
+    public static ProcessStatus execute(final long timeout, final String... command) throws IOException,
+            TimeoutException, InterruptedException {
+        ProcessBuilder processBuilder = new ProcessBuilder(command);
+        processBuilder.redirectErrorStream(true);
+        Process process = processBuilder.start();
+
+        Worker worker = new Worker(process);
+        worker.start();
+        ProcessStatus processStatus = worker.getProcessStatus();
+        try {
+            worker.join(timeout);
+            if (processStatus.exitCode == ProcessStatus.CODE_STARTED) {
+                worker.interrupt();
+                throw new TimeoutException();
+            } else {
+                return processStatus;
+            }
+        } catch (InterruptedException e) {
+            worker.interrupt();
+            throw e;
+        } finally {
+            process.destroy();
+        }
+    }
+
+    private static class Worker extends Thread {
+        private final Process process;
+        private ProcessStatus processStatus;
+
+        private Worker(Process process) {
+            this.process = process;
+            this.processStatus = new ProcessStatus();
+        }
+
+        public void run() {
+            try {
+                InputStream inputStream = process.getInputStream();
+                try {
+                    processStatus.output = IOUtils.toByteArray(inputStream);
+                } catch (IOException ignore) {
+                }
+                processStatus.exitCode = process.waitFor();
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        }
+
+        public ProcessStatus getProcessStatus() {
+            return this.processStatus;
+        }
+
+    }
+
+    public static class ProcessStatus {
+        public static final int CODE_STARTED = -257;
+        public volatile int exitCode;
+        public volatile byte[] output;
+    }
 
     /**
      * 结束进程,执行操作调用即可

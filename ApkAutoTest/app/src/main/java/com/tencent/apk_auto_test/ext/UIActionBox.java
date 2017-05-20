@@ -65,6 +65,14 @@ public class UIActionBox {
             Log.i(TAG, e.getMessage());
             return false;
         }
+//        try {
+//            ProcessUtil.execute(5000, "su", "input", "tap", x + "", y + "");
+//            sleep(waitTime);
+//            return true;
+//        } catch (IOException | TimeoutException | InterruptedException e) {
+//            e.printStackTrace();
+//        }
+//        return false;
 
     }
 

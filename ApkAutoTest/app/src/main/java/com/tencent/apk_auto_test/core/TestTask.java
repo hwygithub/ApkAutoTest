@@ -250,19 +250,16 @@ public abstract class TestTask extends Service {
         //点击测试群
         mNodeBox.clickOnText("测试号集中营", 1000);
         //点击AIO输入输入框上方的中间部分区域
-        mNodeBox.clickOnResourceIdOffset("inputBar", 1000, 0, 1, -100);
+        mNodeBox.clickOnResourceIdOffset("inputBar", 2000, 0, 1, -100);
     }
 
     //［_OpenC2CActionTab］进入测试号AIO打开面板
     public void _OpenC2CActionTab() {
         //点击搜索栏
-        if (!mNodeBox.clickOnText("搜索", 1000)) {
-            mBox.sleep(5000);
-            mNodeBox.clickOnText("搜索", 1000);
-        }
+        mNodeBox.clickOnText("搜索", 1000);
         //输入群，点击进入
         mFunction.inputText("1220232584", 2000);
-        //点击测试群
+        //点击测试号
         mNodeBox.clickOnTextContain("我的好友", 2000);
         //点击AIO输入输入框上方的中间部分区域
         mNodeBox.clickOnResourceIdOffset("inputBar", 1000, 0, 1, -100);
@@ -283,6 +280,6 @@ public abstract class TestTask extends Service {
         //［_OpenC2CActionTab］进入测试号AIO打开面板
         _OpenC2CActionTab();
         //点击换装入口
-        mNodeBox.clickOnResourceId("btn_more_apollo", 5000, 0);
+        mNodeBox.clickOnResourceId("btn_more_apollo", 8000, 0);
     }
 }

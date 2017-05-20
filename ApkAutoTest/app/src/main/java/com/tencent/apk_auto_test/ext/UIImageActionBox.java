@@ -32,7 +32,6 @@ import org.opencv.imgproc.Imgproc;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 
@@ -49,6 +48,9 @@ public class UIImageActionBox extends UIActionBox {
     private ImageShareApplication mImageShareApplication;
     private ImageReader mImageReader;
 
+    private double mX = 1.0;
+    private double mY = 1.0;
+
     /**
      * >=5.0 以上走新的截图方式
      * <5.0 走老的截图方式
@@ -59,6 +61,10 @@ public class UIImageActionBox extends UIActionBox {
     public UIImageActionBox(Context context) {
         super(context);
         mImageShareApplication = (ImageShareApplication) context.getApplicationContext();
+
+        //以1080P为标准根据分辨率拉伸需要的坐标值
+        mY = Global.SCREEN_HEIGHT / 1920;
+        mX = Global.SCREEN_WIDTH / 1080;
 
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
             startVirtualDisplay();
@@ -86,6 +92,37 @@ public class UIImageActionBox extends UIActionBox {
         }
         //点击匹配区域的中心点
         return click((float) (p.x), (float) (p.y), waitTime);
+    }
+
+    /**
+     * 根据匹配图名称点击屏幕中匹配该图的偏移坐标
+     *
+     * @param waitTime   sleep time
+     * @param offsetType 0:x,1:y
+     * @param offset     与该控件中心的偏移量，包含正负数
+     * @return 是否点击成功
+     */
+    public boolean clickOnImageOffset(String matchImgName, int waitTime, int offsetType, int offset) {
+        long start = System.currentTimeMillis();
+        Bitmap capImg = getScreenPic();
+        Bitmap matchImg = getMatchPic(matchImgName);
+        //匹配图片并返回匹配区域的中心点
+        Point p = getMatchPoint(capImg, matchImg);
+        Log.i(TAG, "----total cost time: " + (System.currentTimeMillis() - start));
+        if (null == p) {
+            Log.e(TAG, "get point null");
+            TestResultPrinter mPrinter = TestResultPrinter.getInstance();
+            mPrinter.printResult("click image :" + matchImgName, false);
+            return false;
+        }
+        switch (offsetType) {
+            case 0:
+                return click((float) (p.x + offset * mX), (float) p.y, waitTime);
+            case 1:
+                return click((float) p.x, (float) (p.y + offset * mY), waitTime);
+            default:
+                return click((float) (p.x), (float) (p.y), waitTime);
+        }
     }
 
     /**
@@ -134,15 +171,6 @@ public class UIImageActionBox extends UIActionBox {
         if (null == virtualDisplay) {
             Log.e(TAG, "virtualDisplay is null!!!");
             return;
-        }
-    }
-
-    @TargetApi(Build.VERSION_CODES.KITKAT)
-    private class TestImageAvailableListener implements ImageReader.OnImageAvailableListener {
-
-        @Override
-        public void onImageAvailable(ImageReader reader) {
-            Log.v(TAG, "[onImageAvailable]");
         }
     }
 
