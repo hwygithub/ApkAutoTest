@@ -136,6 +136,7 @@ public class UINodeActionBox extends UIActionBox {
     public boolean clickOnResourceId(String id, int waitTime, int index, int clickTime) {
         mWaitTime = waitTime;
         int j = 0;
+        int k = 0;
         beforeClick();
         if (infos == null || infos.size() == 0) {
             return false;
@@ -143,12 +144,17 @@ public class UINodeActionBox extends UIActionBox {
         for (int i = 0; i < infos.size(); i++) {
             String idName = infos.get(i).getViewIdResourceName() + "";
             if (idName.contains(id)) {
-                if (index == j) {
+                if (index == j && index != -1) {
                     Log.i(TAG, "---clickOnResourceId " + id);
                     return longClick(i, clickTime);
                 }
                 j++;
+                k = i;
             }
+        }
+        if (index == -1) {
+            Log.i(TAG, "---clickOnResourceId " + id + " index " + k);
+            return longClick(k, clickTime);
         }
         handleClickFalse(id);
         Log.e(TAG, "clickOnResourceId " + id + " false!");

@@ -143,7 +143,7 @@ public abstract class TestTask extends Service {
         //2、根据用例number执行拼接后指定的用例·
         String caseMethod = getTaskSimpleName() + "_" + caseNumber;
         TestResultPrinter mPrinter = TestResultPrinter.getInstance();
-        mPrinter.printInfo("[startRunCase]:" + caseMethod);
+        mPrinter.printInfo("[startRunCase]:" + caseMethod + "\t" + StaticData.chooseListText[caseNumber]);
         //getDeclaredMethod 能获取所有方法,getMethod 只能获取public 方法
         try {
             method = getClass().getDeclaredMethod(caseMethod, int.class);

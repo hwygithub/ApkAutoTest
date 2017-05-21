@@ -82,7 +82,7 @@ public class CmShowBasicTask extends TestTask {
             mBox.swipe((float) Global.SCREEN_WIDTH - 100, (float) (Global.SCREEN_HEIGHT * 0.8), 100, (float) (Global.SCREEN_HEIGHT * 0.8),
                     1000);
             //点击厘米秀
-            mNodeBox.clickOnDesc("厘米秀按钮", 1000);
+            mNodeBox.clickOnDesc("厘米秀按钮", 3000);
             //点击开启厘米秀
             //mNodeBox.clickOnText("开启厘米秀", 1000);
             // TODO: 2017/3/5 小人显示；弹起动作面板
@@ -255,7 +255,7 @@ public class CmShowBasicTask extends TestTask {
             //［_OpenActionTab］进入测试群号AIO打开面板
             _OpenActionTab();
             //长按AIO自己小人
-            mNodeBox.clickOnResourceIdOffset("inputBar", 1000, 0, 1, -100, 2000);
+            mNodeBox.clickOnResourceIdOffset("inputBar", 1000, 0, 1, -100, 3000);
             //点击商城按钮
             mImageBox.clickOnImage("btn_aio_float_change", 4000);
             // TODO: 2017/3/16 跳转到换装页
@@ -429,7 +429,7 @@ public class CmShowBasicTask extends TestTask {
                 continue;
             }
             //开始后点击back键
-            mBox.sendKey(KeyEvent.KEYCODE_BACK, 2000);
+            mNodeBox.clickOnResourceId("ivdefaultLeftBtn", 2000, 0);
             //点击确认退出按钮
             mNodeBox.clickOnText("确定", 2000);
             // TODO: 2017/3/23  回到手q消息列表
@@ -515,7 +515,7 @@ public class CmShowBasicTask extends TestTask {
             //发送最新的动作
             mNodeBox.clickOnResourceId("avatar_item_imageview", 1000, 0);
             //长按消息列表的动作消息
-            mNodeBox.clickOnResourceId("qq_aio_apollo_action_icon", 2000, 0, 2000);
+            mNodeBox.clickOnResourceId("qq_aio_apollo_action_icon", 2000, -1, 2000);
             //点击存动作
             mNodeBox.clickOnText("存动作", 2000);
             //进入收藏面板

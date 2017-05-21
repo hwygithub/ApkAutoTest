@@ -1,3 +1,3 @@
-ApkAutoTest/libraries/opencv/build/
-ApkAutoTest/.idea/
-ApkAutoTest/gradle.properties
+ApkAutoTest/libraries/opencv
+.idea/
+
