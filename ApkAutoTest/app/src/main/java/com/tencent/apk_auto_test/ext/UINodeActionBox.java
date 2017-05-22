@@ -360,6 +360,7 @@ public class UINodeActionBox extends UIActionBox {
 
 
     public boolean isNodeExits(String nodeType, String text) {
+        beforeClick();
         if (infos == null || infos.size() == 0) {
             return false;
         }

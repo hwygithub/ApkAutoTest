@@ -95,6 +95,28 @@ public class UIImageActionBox extends UIActionBox {
     }
 
     /**
+     * 根据匹配图名称长按屏幕中匹配该图的中心坐标
+     *
+     * @return 是否点击成功
+     */
+    public boolean clickOnImage(String matchImgName, int waitTime, int clickTime) {
+        long start = System.currentTimeMillis();
+        Bitmap capImg = getScreenPic();
+        Bitmap matchImg = getMatchPic(matchImgName);
+        //匹配图片并返回匹配区域的中心点
+        Point p = getMatchPoint(capImg, matchImg);
+        Log.i(TAG, "----total cost time: " + (System.currentTimeMillis() - start));
+        if (null == p) {
+            Log.e(TAG, "get point null");
+            TestResultPrinter mPrinter = TestResultPrinter.getInstance();
+            mPrinter.printResult("long click image :" + matchImgName, false);
+            return false;
+        }
+        //点击匹配区域的中心点
+        return click((float) (p.x), (float) (p.y), waitTime, clickTime);
+    }
+
+    /**
      * 根据匹配图名称点击屏幕中匹配该图的偏移坐标
      *
      * @param waitTime   sleep time

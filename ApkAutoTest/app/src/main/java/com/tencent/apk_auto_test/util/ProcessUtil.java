@@ -3,12 +3,12 @@ package com.tencent.apk_auto_test.util;
 
 import android.util.Log;
 
-import org.apache.poi.util.IOUtils;
-
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.util.concurrent.TimeoutException;
 
 /**
  * Created by veehou on 2016/11/15.22:44
@@ -21,63 +21,48 @@ public class ProcessUtil {
     private static StringBuilder buffer;
 
 
-    public static ProcessStatus execute(final long timeout, final String... command) throws IOException,
-            TimeoutException, InterruptedException {
-        ProcessBuilder processBuilder = new ProcessBuilder(command);
-        processBuilder.redirectErrorStream(true);
-        Process process = processBuilder.start();
+    public static void execute(final String command) throws IOException, InterruptedException {
+        initProcess();
 
-        Worker worker = new Worker(process);
-        worker.start();
-        ProcessStatus processStatus = worker.getProcessStatus();
-        try {
-            worker.join(timeout);
-            if (processStatus.exitCode == ProcessStatus.CODE_STARTED) {
-                worker.interrupt();
-                throw new TimeoutException();
-            } else {
-                return processStatus;
-            }
-        } catch (InterruptedException e) {
-            worker.interrupt();
-            throw e;
-        } finally {
-            process.destroy();
-        }
+        DataOutputStream dataOut = new DataOutputStream(process.getOutputStream());
+        dataOut.writeBytes(command);
+        dataOut.flush();
+        dataOut.close();
+
+        StreamGobbler errorGobbler = new StreamGobbler(process.getErrorStream(), "Error");
+        StreamGobbler outputGobbler = new StreamGobbler(process.getInputStream(), "Output");
+        errorGobbler.start();
+        outputGobbler.start();
+        process.waitFor();
+
+        close();
     }
 
-    private static class Worker extends Thread {
-        private final Process process;
-        private ProcessStatus processStatus;
+    private static class StreamGobbler extends Thread {
+        InputStream inputStream;
+        String type;
 
-        private Worker(Process process) {
-            this.process = process;
-            this.processStatus = new ProcessStatus();
+        StreamGobbler(InputStream inputStream, String type) {
+            this.inputStream = inputStream;
+            this.type = type;
         }
 
         public void run() {
             try {
-                InputStream inputStream = process.getInputStream();
-                try {
-                    processStatus.output = IOUtils.toByteArray(inputStream);
-                } catch (IOException ignore) {
+                InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
+                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+                String line = null;
+                while ((line = bufferedReader.readLine()) != null) {
+                    if (type.equals("Error")) {
+                        Log.e(TAG, line);
+                    } else {
+                        Log.i(TAG, line);
+                    }
                 }
-                processStatus.exitCode = process.waitFor();
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         }
-
-        public ProcessStatus getProcessStatus() {
-            return this.processStatus;
-        }
-
-    }
-
-    public static class ProcessStatus {
-        public static final int CODE_STARTED = -257;
-        public volatile int exitCode;
-        public volatile byte[] output;
     }
 
     /**
@@ -183,5 +168,6 @@ public class ProcessUtil {
                 e.printStackTrace();
             }
     }
+
 
 }

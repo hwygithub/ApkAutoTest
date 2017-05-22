@@ -6,8 +6,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
+import com.tencent.apk_auto_test.util.ProcessUtil;
+
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
@@ -38,41 +41,42 @@ public class UIActionBox {
      */
     public boolean click(float x, float y, long waitTime) {
         Log.d(TAG, "click (" + x + ", " + y + ")");
-        try {
-            Runtime runtime = Runtime.getRuntime();
-            DataOutputStream dataOut;
-            Process process = runtime.exec("su ");
-            InputStream in = process.getInputStream();
-            BufferedReader bufferReader = new BufferedReader(new InputStreamReader(in));
-            BufferedReader err = new BufferedReader(new InputStreamReader(process.getErrorStream()));
-            String line = null;
-            dataOut = new DataOutputStream(process.getOutputStream());
-            dataOut.writeBytes("input tap " + x + " " + y + ";");
-            dataOut.flush();
-            dataOut.close();
-            process.waitFor();
-            sleep(waitTime);
-            while ((line = err.readLine()) != null) {
-                Log.i(TAG, line);
-                return false;
-            }
-            while ((line = bufferReader.readLine()) != null) {
-                Log.i(TAG, line);
-            }
-            return true;
-        } catch (Exception e) {
-            e.printStackTrace();
-            Log.i(TAG, e.getMessage());
-            return false;
-        }
 //        try {
-//            ProcessUtil.execute(5000, "su", "input", "tap", x + "", y + "");
+//            Runtime runtime = Runtime.getRuntime();
+//            DataOutputStream dataOut;
+//            Process process = runtime.exec("su ");
+//            InputStream in = process.getInputStream();
+//            BufferedReader bufferReader = new BufferedReader(new InputStreamReader(in));
+//            BufferedReader err = new BufferedReader(new InputStreamReader(process.getErrorStream()));
+//            String line = null;
+//            dataOut = new DataOutputStream(process.getOutputStream());
+//            dataOut.writeBytes("input tap " + x + " " + y + ";");
+//            dataOut.flush();
+//            dataOut.close();
+//            process.waitFor();
 //            sleep(waitTime);
+//            while ((line = err.readLine()) != null) {
+//                Log.i(TAG, line);
+//                return false;
+//            }
+//            while ((line = bufferReader.readLine()) != null) {
+//                Log.i(TAG, line);
+//            }
 //            return true;
-//        } catch (IOException | TimeoutException | InterruptedException e) {
+//        } catch (Exception e) {
 //            e.printStackTrace();
+//            Log.i(TAG, e.getMessage());
+//            return false;
 //        }
-//        return false;
+        try {
+            ProcessUtil.execute("input tap " + x + " " + y + ";");
+            sleep(waitTime);
+            return true;
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+        }
+        return false;
+
 
     }
 
@@ -86,6 +90,7 @@ public class UIActionBox {
      * @param clickTime
      * @return
      */
+
     public boolean click(float x, float y, long waitTime, int clickTime) {
         Log.d(TAG, "click long (" + x + ", " + y + ")," + clickTime);
         try {

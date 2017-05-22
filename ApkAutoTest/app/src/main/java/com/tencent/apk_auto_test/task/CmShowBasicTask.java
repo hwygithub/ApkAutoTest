@@ -1,7 +1,6 @@
 package com.tencent.apk_auto_test.task;
 
 import android.util.Log;
-import android.view.KeyEvent;
 
 import com.tencent.apk_auto_test.core.TestTask;
 import com.tencent.apk_auto_test.data.Global;
@@ -528,6 +527,26 @@ public class CmShowBasicTask extends TestTask {
 
 
     //[30] 通过自定义动作入口进入换装页动作面板
-    //[31] 通过动作面板入口进入换装页
-    //[32] 通过互动页进入AI互动页
+    public void CSAT_30(final int caseTime) {
+        for (int i = 0; i < caseTime; i++) {
+            //［_OpenC2CActionTab］进入测试号AIO打开面板
+            _OpenC2CActionTab();
+            //进入收藏收集面板
+            mNodeBox.clickOnResourceId("tabView", 2000, 4);
+            //点击管理动作按钮
+            mNodeBox.clickOnText("管理动作", 5000);
+            // TODO: 2017/3/23  检查进入换装页并切换到自定义动作面板
+        }
+    }
+
+    //[31] 通过互动页厘米秀形象进入AI互动页
+    public void CSAT_31(final int caseTime) {
+        for (int i = 0; i < caseTime; i++) {
+            //[_OpenChangeClothesWeb] 通过抽屉页进入互动页
+            _OpenChangeClothesWeb();
+            //长按厘米秀形象
+            mImageBox.clickOnImage("cmshow_me_web", 3000, 2000);
+            // TODO: 2017/3/23  进入到AI页
+        }
+    }
 }

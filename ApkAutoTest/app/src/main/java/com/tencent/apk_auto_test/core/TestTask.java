@@ -143,7 +143,7 @@ public abstract class TestTask extends Service {
         //2、根据用例number执行拼接后指定的用例·
         String caseMethod = getTaskSimpleName() + "_" + caseNumber;
         TestResultPrinter mPrinter = TestResultPrinter.getInstance();
-        mPrinter.printInfo("[startRunCase]:" + caseMethod + "\t" + StaticData.chooseListText[caseNumber]);
+        mPrinter.printInfo("[startRunCase]:" + "\t" + StaticData.chooseListText[caseNumber]);
         //getDeclaredMethod 能获取所有方法,getMethod 只能获取public 方法
         try {
             method = getClass().getDeclaredMethod(caseMethod, int.class);
@@ -246,7 +246,7 @@ public abstract class TestTask extends Service {
         //点击搜索栏
         mNodeBox.clickOnText("搜索", 1000);
         //输入群，点击进入
-        mFunction.inputText("546479585", 2000);
+        mFunction.inputText("546479585", 3000);
         //点击测试群
         mNodeBox.clickOnText("测试号集中营", 1000);
         //点击AIO输入输入框上方的中间部分区域
@@ -258,21 +258,19 @@ public abstract class TestTask extends Service {
         //点击搜索栏
         mNodeBox.clickOnText("搜索", 1000);
         //输入群，点击进入
-        mFunction.inputText("1220232584", 2000);
+        mFunction.inputText("1220232584", 3000);
         //点击测试号
         mNodeBox.clickOnTextContain("我的好友", 2000);
         //点击AIO输入输入框上方的中间部分区域
         mNodeBox.clickOnResourceIdOffset("inputBar", 1000, 0, 1, -100);
     }
 
-    //[_OpenChangeClothesWeb] 通过抽屉页进入换装页
+    //[_OpenChangeClothesWeb] 通过抽屉页进入互动页
     public void _OpenChangeClothesWeb() {
         //进入抽屉页
         mNodeBox.clickOnResourceId("conversation_head", 3000, 0);
         //点击抽屉页厘米秀小人
-        mNodeBox.clickOnResourceIdOffset("nightmode", 4000, 0, 0, 200);
-        //点击切换到换装页
-        mImageBox.clickOnImage("tab_web_change", 4000);
+        mNodeBox.clickOnResourceIdOffset("nightmode", 5000, 0, 0, 200);
     }
 
     //[_AIOOpenChangeClothesWeb] 通过AIO进入换装页
