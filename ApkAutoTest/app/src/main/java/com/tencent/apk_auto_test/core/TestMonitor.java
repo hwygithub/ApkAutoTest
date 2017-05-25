@@ -28,14 +28,16 @@ public class TestMonitor {
      *
      * @param nodeType 参数类型
      */
-    public void checkNode(String nodeType, String arg, int testNumber) {
+    public boolean checkNode(String nodeType, String arg, int testNumber) {
         if (mNodeBox.isNodeExits(nodeType, arg)) {
             mPrinter.printResult(StaticData.runList.get(testNumber - 1).runCaseName, true);
             Log.d(TAG, nodeType + " node:" + arg + " is exist , pass");
+            return true;
         } else {
             mPrinter.printResult(StaticData.runList.get(testNumber - 1).runCaseName, false);
             Log.e(TAG, "--------node:" + arg + " not exist,fail");
         }
+        return false;
     }
 
     /**
@@ -44,13 +46,15 @@ public class TestMonitor {
      * @param imageName  图像资源名
      * @param testNumber 测试用例序号
      */
-    public void checkImage(String imageName, int testNumber) {
+    public boolean checkImage(String imageName, int testNumber) {
         if (mImageBox.isImageExist(imageName)) {
             mPrinter.printResult(StaticData.runList.get(testNumber).runCaseName, true);
             Log.d(TAG, " imageName: " + imageName + " is exist , pass");
+            return true;
         } else {
             mPrinter.printResult(StaticData.runList.get(testNumber).runCaseName, false);
             Log.e(TAG, "--------imageName: " + imageName + " not exist,fail");
         }
+        return false;
     }
 }

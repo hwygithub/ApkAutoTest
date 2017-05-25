@@ -230,7 +230,7 @@ public abstract class TestTask extends Service {
     public void _InitQQ() {
         //杀手Q进程还原状态
         mFunction.killAppByPackageName("com.tencent.mobileqq");
-        mBox.sleep(2000);
+        mBox.sleep(4000);
         //热启动手Q
         try {
             mBox.openApp("com.tencent.mobileqq", "com.tencent.mobileqq.activity.SplashActivity");
