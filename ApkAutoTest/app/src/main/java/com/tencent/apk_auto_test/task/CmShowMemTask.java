@@ -192,14 +192,14 @@ public class CmShowMemTask extends TestTask {
         mNodeBox.clickOnResourceIdOffset("inputBar", 2000, 0, 1, -100);
 
         for (int i = 0; i < caseTime; i++) {
-            mNodeBox.clickOnResourceId("avatar_item_imageview", 2000, 0);
+            mNodeBox.clickOnResourceId("qq_aio_apollo_action_icon", 2000, -1);
 
             //每轮查询可用内存和进程内存情况,并保存到终端存储
             mFunction.saveMem("com.tencent.mobileqq", mRunFileName, i);
         }
     }
 
-    // 面板进入商城
+    // 面板进入换装页
     public void CSMT_7(final int caseTime) {
         //进入群AIO打开动作面板
         _OpenActionTab();
@@ -234,15 +234,18 @@ public class CmShowMemTask extends TestTask {
     public void CSMT_9(final int caseTime) {
         for (int i = 0; i < caseTime; i++) {
             for (int j = 1; j <= 5; j++) {
-                //切换到抽屉页
                 mNodeBox.clickOnListViewByResourceId("recent_chat_list", j, 500);
-                mNodeBox.clickOnResourceId("ivdefaultLeftBtn", 1000, 0);
+                mNodeBox.setStrictMode(false);
+                if (!mNodeBox.clickOnResourceId("ivdefaultLeftBtn", 500, 0)) {
+                    mNodeBox.clickOnResourceId("ivTitleBtnLeft", 1000, 0);
+                }
+                mNodeBox.setStrictMode(true);
             }
             //每轮查询可用内存和进程内存情况,并保存到终端存储
             mFunction.saveMem("com.tencent.mobileqq", mRunFileName, i);
         }
-
     }
+
 
     // 创建游戏后退出
     public void CSMT_10(final int caseTime) {
@@ -260,7 +263,7 @@ public class CmShowMemTask extends TestTask {
             //点击开始游戏
             mNodeBox.clickOnResourceId("apollo_aio_game_item_first", 3500, 0);
             //如果进入新手引导则返回
-            if (mNodeBox.isNodeExits("text", "新手引导")) {
+            if (mNodeBox.isNodeExist("text", "新手引导")) {
                 mNodeBox.clickOnResourceId("ivdefaultLeftBtn", 1000, 0);
                 continue;
             }

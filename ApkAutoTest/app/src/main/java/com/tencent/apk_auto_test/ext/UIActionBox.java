@@ -171,7 +171,7 @@ public class UIActionBox {
      * @param upX
      * @param upY
      * @param duration
-     * @return
+     * @return swipe successful or not
      */
     public boolean swipe(float downX, float downY, float upX, float upY, long duration) {
         try {
@@ -187,19 +187,25 @@ public class UIActionBox {
             dataOut.flush();
             dataOut.close();
             process.waitFor();
-            while ((line = err.readLine()) != null) {
-                Log.i(TAG, line);
+            if((line = err.readLine()) != null) {
+                do Log.i(TAG, line);
+                while((line = err.readLine()) != null);
                 return false;
             }
+            /*while ((line = err.readLine()) != null) {
+                Log.i(TAG, line);
+                return false;
+            }*/
             while ((line = bufferReader.readLine()) != null) {
                 Log.i(TAG, line);
             }
-            return true;
+            sleep(1000);
         } catch (Exception e) {
             e.printStackTrace();
             Log.i(TAG, e.getMessage());
             return false;
         }
+        return true;
     }
 
 

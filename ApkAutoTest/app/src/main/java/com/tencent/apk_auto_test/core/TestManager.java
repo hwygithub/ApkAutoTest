@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
+import com.tencent.apk_auto_test.ext.node.NodeEventService;
 import com.tencent.apk_auto_test.task.CmShowBasicTask;
 import com.tencent.apk_auto_test.task.CmShowMemTask;
 import com.tencent.apk_auto_test.util.Function;
@@ -110,6 +111,7 @@ public class TestManager {
 
     public void stopTest() {
         mContext.stopService(new Intent(mContext, TestTask.class));
+        mContext.stopService(new Intent(mContext, NodeEventService.class));
         ProcessUtil.kill("com.tencent.apk_auto_test");
         android.os.Process.killProcess(android.os.Process.myPid());
     }

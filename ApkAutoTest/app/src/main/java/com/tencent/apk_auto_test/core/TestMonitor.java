@@ -8,6 +8,7 @@ import com.tencent.apk_auto_test.ext.UINodeActionBox;
 
 /**
  * Created by veehou on 2017/4/16.23:00
+ * Modified by lloydgao on 2017/05/25.16:49
  */
 
 public class TestMonitor {
@@ -29,16 +30,34 @@ public class TestMonitor {
      * @param nodeType 参数类型
      */
     public boolean checkNode(String nodeType, String arg, int testNumber) {
-        if (mNodeBox.isNodeExits(nodeType, arg)) {
+        if (mNodeBox.isNodeExist(nodeType, arg)) {
             mPrinter.printResult(StaticData.runList.get(testNumber - 1).runCaseName, true);
-            Log.d(TAG, nodeType + " node:" + arg + " is exist , pass");
+            Log.d(TAG, nodeType + " node:" + arg + " is exist, pass");
             return true;
         } else {
             mPrinter.printResult(StaticData.runList.get(testNumber - 1).runCaseName, false);
-            Log.e(TAG, "--------node:" + arg + " not exist,fail");
+            Log.e(TAG, "--------node:" + arg + " not exist, fail");
         }
         return false;
     }
+
+    /**
+     * 检查node是否消失
+     *
+     * @param nodeType 参数类型
+     */
+    public boolean checkNodeDisappear(String nodeType, String arg, int testNumber) {
+        if (mNodeBox.isNodeExist(nodeType, arg)) {
+            mPrinter.printResult(StaticData.runList.get(testNumber - 1).runCaseName, false);
+            Log.e(TAG, "--------node:" + arg + " exist, fail");
+            return false;
+        } else {
+            mPrinter.printResult(StaticData.runList.get(testNumber - 1).runCaseName, true);
+            Log.d(TAG, nodeType + " node:" + arg + " exists, pass");
+        }
+        return true;
+    }
+
 
     /**
      * 检查image是否存在
@@ -48,13 +67,31 @@ public class TestMonitor {
      */
     public boolean checkImage(String imageName, int testNumber) {
         if (mImageBox.isImageExist(imageName)) {
-            mPrinter.printResult(StaticData.runList.get(testNumber).runCaseName, true);
-            Log.d(TAG, " imageName: " + imageName + " is exist , pass");
+            mPrinter.printResult(StaticData.runList.get(testNumber - 1).runCaseName, true);
+            Log.d(TAG, " imageName: " + imageName + " exists, pass");
             return true;
         } else {
-            mPrinter.printResult(StaticData.runList.get(testNumber).runCaseName, false);
-            Log.e(TAG, "--------imageName: " + imageName + " not exist,fail");
+            mPrinter.printResult(StaticData.runList.get(testNumber - 1).runCaseName, false);
+            Log.e(TAG, "--------imageName: " + imageName + " not exist, fail");
         }
         return false;
+    }
+
+    /**
+     * 检查image是否消失
+     *
+     * @param imageName  图像资源名
+     * @param testNumber 测试用例序号
+     */
+    public boolean checkImageDisappear(String imageName, int testNumber) {
+        if (mImageBox.isImageExist(imageName)) {
+            mPrinter.printResult(StaticData.runList.get(testNumber - 1).runCaseName, false);
+            Log.e(TAG, "--------imageName: " + imageName + " exists, fail");
+            return false;
+        } else {
+            mPrinter.printResult(StaticData.runList.get(testNumber - 1).runCaseName, true);
+            Log.d(TAG, " imageName: " + imageName + " not exists, pass");
+        }
+        return true;
     }
 }

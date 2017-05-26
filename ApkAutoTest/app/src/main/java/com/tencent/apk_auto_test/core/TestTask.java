@@ -15,6 +15,7 @@ import com.tencent.apk_auto_test.data.StaticData;
 import com.tencent.apk_auto_test.ext.UIActionBox;
 import com.tencent.apk_auto_test.ext.UIImageActionBox;
 import com.tencent.apk_auto_test.ext.UINodeActionBox;
+import com.tencent.apk_auto_test.ext.node.NodeEventService;
 import com.tencent.apk_auto_test.ui.HelpActivity;
 import com.tencent.apk_auto_test.ui.MainActivity;
 import com.tencent.apk_auto_test.util.Function;
@@ -217,6 +218,7 @@ public abstract class TestTask extends Service {
             intent.setClass(mContext, HelpActivity.class);
             startActivity(intent);
 
+            mContext.stopService(new Intent(mContext, NodeEventService.class));
             android.os.Process.killProcess(android.os.Process.myPid());
         }
     }

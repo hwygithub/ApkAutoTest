@@ -107,6 +107,7 @@ public class UINodeActionBox extends UIActionBox {
     public boolean clickOnResourceId(String id, int waitTime, int index) {
         mWaitTime = waitTime;
         int j = 0;
+        int k = 0;
         beforeClick();
         if (infos == null || infos.size() == 0) {
             return false;
@@ -119,7 +120,12 @@ public class UINodeActionBox extends UIActionBox {
                     return click(i);
                 }
                 j++;
+                k = i;
             }
+        }
+        if (index == -1) {
+            Log.i(TAG, "---clickOnResourceId " + id + " index " + k);
+            return click(k);
         }
         handleClickFalse(id);
         Log.e(TAG, "clickOnResourceId " + id + " false!");
@@ -359,7 +365,7 @@ public class UINodeActionBox extends UIActionBox {
     }
 
 
-    public boolean isNodeExits(String nodeType, String text) {
+    public boolean isNodeExist(String nodeType, String text) {
         beforeClick();
         if (infos == null || infos.size() == 0) {
             return false;
@@ -421,7 +427,6 @@ public class UINodeActionBox extends UIActionBox {
             Log.e(TAG, "click rect null");
             return false;
         }
-        Log.e(TAG, "click rect:" + rect.centerX() + " " + rect.centerY());
         click(rect.centerX(), rect.centerY(), mWaitTime);
         return true;
     }
