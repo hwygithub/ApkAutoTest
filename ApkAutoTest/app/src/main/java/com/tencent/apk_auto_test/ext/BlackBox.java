@@ -1,9 +1,11 @@
-package com.tencent.apk_auto_test.util;
+package com.tencent.apk_auto_test.ext;
 
 import android.app.ActivityManager;
 import android.app.ActivityManager.MemoryInfo;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
+import android.os.Build;
 import android.os.Debug;
 import android.os.RemoteException;
 import android.provider.Settings;
@@ -11,22 +13,30 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.tencent.apk_auto_test.core.TestMonitor;
+import com.tencent.apk_auto_test.core.TestResultPrinter;
 import com.tencent.apk_auto_test.data.RunPara;
 import com.tencent.apk_auto_test.data.StaticData;
 import com.tencent.apk_auto_test.data.TestCase;
-import com.tencent.apk_auto_test.ext.UIActionBox;
 import com.tencent.apk_auto_test.ext.input.InputService;
+import com.tencent.apk_auto_test.util.ParserUtil;
+import com.tencent.apk_auto_test.util.ProcessUtil;
+import com.tencent.apk_auto_test.util.TimeUtil;
+import com.tencent.apk_auto_test.util.TxtUtil;
+
+import junit.framework.Test;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Function {
-    private static final String TAG = "Function";
+public class BlackBox {
+    private static final String TAG = "BlackBox";
     private static final String NAME = "com.tencent.apk_auto_test/com.tencent.apk_auto_test.ext.node.NodeEventService";
     private static final String METHOD_NAME = "com.tencent.apk_auto_test/.ext.input.TestInputMethodService";
 
@@ -35,7 +45,7 @@ public class Function {
     private UIActionBox uiActionBox;
 
 
-    public Function(Context context) {
+    public BlackBox(Context context) {
         mContext = context;
         uiActionBox = new UIActionBox(context);
     }
@@ -199,6 +209,56 @@ public class Function {
         return false;
     }
 
+    /**
+     * 存储目标进程的进程信息
+     *
+     * @param pkgName  目标进程包的名字
+     * @param fileName 存储文件的名字
+     *                 by lloydgao
+     */
+    public boolean saveProcInfo(String pkgName, String fileName, int i) {
+        String device = Build.BRAND;
+        String info = null;
+        StringBuffer strbuf = new StringBuffer();
+        boolean flag;
+
+        Log.v(TAG, "getProcInfo of " + pkgName);
+        String index = String.format("%03d", i);
+        strbuf.append("index: " + index);
+        strbuf.append("\t").append(TimeUtil.getTime());
+
+        if (device.equalsIgnoreCase("xiaomi")) {
+            //TODO: 不能取得所有进程信息，待修改
+            ActivityManager am = (ActivityManager) mContext.getSystemService(Context.ACTIVITY_SERVICE);
+            List<ActivityManager.RunningAppProcessInfo> procInfo = am.getRunningAppProcesses();
+            for (ActivityManager.RunningAppProcessInfo tmpInfo : procInfo) {
+                Log.d(TAG, "ProcessList: " + tmpInfo.processName);
+                if (tmpInfo.processName.equalsIgnoreCase("com.tencent.mobileqq")) {
+                    Integer pid = tmpInfo.pid;
+                    info = TestMonitor.getProcInfo(pid.toString(), TestMonitor.psInfoType.ALL);
+                    break;
+                }
+            }
+        } else {
+            info = TestMonitor.getProcInfo(pkgName, TestMonitor.psInfoType.ALL);
+        }
+
+        if (info == null) {
+            strbuf.append("\t").append("----------------Error-----------------");
+            Log.e(TAG, "saveProcInfo: getProcessInfo failed!");
+            flag = false;
+        } else {
+            strbuf.append("\t").append(info);
+            Log.d(TAG, "saveProcInfo: getProcessInfo successful!");
+            flag = true;
+        }
+
+        Log.v(TAG, strbuf.toString());
+        TxtUtil.saveMsg("/sdcard/tencent-test/", strbuf.toString(), fileName);
+
+        return flag;
+    }
+
     public boolean saveMem(String packageName, String fileName, int i) {
         StringBuffer strbuf = new StringBuffer();
 
@@ -274,6 +334,22 @@ public class Function {
             if (isDeleted == false)
                 Log.e(TAG, "delete " + file.getName() + " failed");
         }
+    }
+
+    /**
+     * 复制asset文件到手机目录
+     */
+    public void copyAssetsFile(String assetsPath, String copyPath) throws IOException {
+        InputStream inputStream = mContext.getAssets().open(assetsPath);
+        FileOutputStream fileOutputStream = new FileOutputStream(new File(copyPath));
+        byte[] buffer = new byte[1024];
+        int byteCount = 0;
+        while ((byteCount = inputStream.read(buffer)) != -1) {
+            fileOutputStream.write(buffer, 0, byteCount);
+        }
+        fileOutputStream.flush();
+        inputStream.close();
+        fileOutputStream.close();
     }
 
     public void clearAppByPackageName(String packageName) {

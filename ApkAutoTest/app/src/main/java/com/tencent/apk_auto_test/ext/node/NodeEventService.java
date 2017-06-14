@@ -28,7 +28,7 @@ public class NodeEventService extends AccessibilityService {
      */
     public void onServiceConnected() {
         super.onServiceConnected();
-        Log.v(TAG, TAG + " is onConnected.");
+        Log.e(TAG, TAG + " is onConnected.");
         AccessibilityServiceInfo info = new AccessibilityServiceInfo();
         info.flags = AccessibilityServiceInfo.DEFAULT
                 | AccessibilityServiceInfo.FLAG_REQUEST_ENHANCED_WEB_ACCESSIBILITY
@@ -38,6 +38,7 @@ public class NodeEventService extends AccessibilityService {
         info.feedbackType = AccessibilityServiceInfo.FEEDBACK_GENERIC;
         setServiceInfo(info);
     }
+
 
     @Override
     public void onCreate() {

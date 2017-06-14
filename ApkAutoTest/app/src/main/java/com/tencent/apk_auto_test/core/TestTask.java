@@ -12,16 +12,16 @@ import android.view.View;
 
 import com.tencent.apk_auto_test.R;
 import com.tencent.apk_auto_test.data.StaticData;
+import com.tencent.apk_auto_test.ext.BlackBox;
 import com.tencent.apk_auto_test.ext.UIActionBox;
 import com.tencent.apk_auto_test.ext.UIImageActionBox;
 import com.tencent.apk_auto_test.ext.UINodeActionBox;
-import com.tencent.apk_auto_test.ext.node.NodeEventService;
 import com.tencent.apk_auto_test.ui.HelpActivity;
 import com.tencent.apk_auto_test.ui.MainActivity;
-import com.tencent.apk_auto_test.util.Function;
 import com.tencent.apk_auto_test.util.TimeUtil;
 
 import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
@@ -42,7 +42,7 @@ public abstract class TestTask extends Service {
     public UINodeActionBox mNodeBox;
     public UIImageActionBox mImageBox;
     public TestMonitor monitor;
-    public Function mFunction;
+    public BlackBox mBlackBox;
 
     public String mRunFileName;
 
@@ -60,8 +60,20 @@ public abstract class TestTask extends Service {
 
     @Override
     public void onDestroy() {
+        mContext = getApplicationContext();
+
         Log.i(TAG, "TestTask is destroy");
         stopForeground(true);
+
+        // return to the main activity
+        Intent intent = new Intent();
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.setClass(mContext, HelpActivity.class);
+        startActivity(intent);
+
+
+        android.os.Process.killProcess(android.os.Process.myPid());
+
         super.onDestroy();
     }
 
@@ -75,11 +87,10 @@ public abstract class TestTask extends Service {
                 notificationIntent, 0);
         notification.setLatestEventInfo(this, getText(R.string.app_name),
                 getText(R.string.txt_running), pendingIntent);
+
         startForeground(1, notification);
 
-        if (null == StaticData.chooseArray) {
-            onDestroy();
-        } else {
+        if (null != StaticData.chooseArray) {
             runBeforeTask();
         }
 
@@ -97,7 +108,7 @@ public abstract class TestTask extends Service {
         mNodeBox = new UINodeActionBox(mContext);
         mBox = new UIActionBox(mContext);
         mImageBox = new UIImageActionBox(mContext);
-        mFunction = new Function(mContext);
+        mBlackBox = new BlackBox(mContext);
         mTips = new TestTips(mContext);
         mTestTask = this;
         monitor = new TestMonitor(getTaskSimpleName(), mNodeBox, mImageBox);
@@ -115,8 +126,16 @@ public abstract class TestTask extends Service {
         // start time
         StaticData.testStartTime = TimeUtil.getCurrentTime();
 
-        mFunction.initInputMethod();
-        mFunction.delFolder(new File("/sdcard/tencent-test"));
+        mBlackBox.initInputMethod();
+        mBlackBox.delFolder(new File("/sdcard/tencent-test"));
+
+        try {
+            mBlackBox.copyAssetsFile("dress-test/cmshow_me_face.png", "sdcard/tencent/MobileQQ/.apollo/dress/3107/dress.png");
+        } catch (IOException e) {
+            Log.e(TAG, "copy face error");
+            e.printStackTrace();
+        }
+
 
         int number = StaticData.runList.get(testNumber).runCaseNumber;
         int time = StaticData.runList.get(testNumber).runNumber;
@@ -128,8 +147,7 @@ public abstract class TestTask extends Service {
         @Override
         public void onClick(View v) {
             mTips.removeTips();
-            TestManager testManager = new TestManager(mContext);
-            testManager.stopTest();
+            onDestroy();
         }
     }
 
@@ -209,17 +227,7 @@ public abstract class TestTask extends Service {
 
         @Override
         public void onTaskFinished() {
-            String testTime = TimeUtil.getPassTimeString(StaticData.testStartTime, TimeUtil.getCurrentTime());
-            // After test,send sms  ---remove in 2016/12/21
             stopSelf();
-            // return to the main activity
-            Intent intent = new Intent();
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            intent.setClass(mContext, HelpActivity.class);
-            startActivity(intent);
-
-            mContext.stopService(new Intent(mContext, NodeEventService.class));
-            android.os.Process.killProcess(android.os.Process.myPid());
         }
     }
 
@@ -231,7 +239,7 @@ public abstract class TestTask extends Service {
     //［_InitQQ］杀手Q进程还原状态、启动手Q
     public void _InitQQ() {
         //杀手Q进程还原状态
-        mFunction.killAppByPackageName("com.tencent.mobileqq");
+        mBlackBox.killAppByPackageName("com.tencent.mobileqq");
         mBox.sleep(4000);
         //热启动手Q
         try {
@@ -248,7 +256,7 @@ public abstract class TestTask extends Service {
         //点击搜索栏
         mNodeBox.clickOnText("搜索", 1000);
         //输入群，点击进入
-        mFunction.inputText("546479585", 3000);
+        mBlackBox.inputText("546479585", 3000);
         //点击测试群
         mNodeBox.clickOnText("测试号集中营", 1000);
         //点击AIO输入输入框上方的中间部分区域
@@ -260,7 +268,7 @@ public abstract class TestTask extends Service {
         //点击搜索栏
         mNodeBox.clickOnText("搜索", 1000);
         //输入群，点击进入
-        mFunction.inputText("1220232584", 3000);
+        mBlackBox.inputText("1220232584", 3000);
         //点击测试号
         mNodeBox.clickOnTextContain("我的好友", 2000);
         //点击AIO输入输入框上方的中间部分区域
@@ -272,7 +280,7 @@ public abstract class TestTask extends Service {
         //进入抽屉页
         mNodeBox.clickOnResourceId("conversation_head", 3000, 0);
         //点击抽屉页厘米秀小人
-        mNodeBox.clickOnResourceIdOffset("nightmode", 5000, 0, 0, 200);
+        mNodeBox.clickOnResourceIdOffset("nightmode", 8000, 0, 0, 200);
     }
 
     //[_AIOOpenChangeClothesWeb] 通过AIO进入换装页

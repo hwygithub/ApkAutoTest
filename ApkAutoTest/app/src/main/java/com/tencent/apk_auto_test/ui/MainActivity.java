@@ -38,8 +38,8 @@ import com.tencent.apk_auto_test.data.RunPara;
 import com.tencent.apk_auto_test.data.RunPartAdapter;
 import com.tencent.apk_auto_test.data.StaticData;
 import com.tencent.apk_auto_test.data.TestCase;
+import com.tencent.apk_auto_test.ext.BlackBox;
 import com.tencent.apk_auto_test.ext.temp.ImageShareApplication;
-import com.tencent.apk_auto_test.util.Function;
 
 import org.opencv.android.BaseLoaderCallback;
 import org.opencv.android.LoaderCallbackInterface;
@@ -56,7 +56,7 @@ public class MainActivity extends Activity implements OnClickListener {
     // state
     // class
     private Context mContext;
-    private Function mFunction;
+    private BlackBox mBlackBox;
     private ChoosePartAdapter adapter;
     private MediaProjectionManager mediaProjectionManager;
     // widget
@@ -134,7 +134,7 @@ public class MainActivity extends Activity implements OnClickListener {
 
     private void setClass() {
         mContext = this;
-        mFunction = new Function(mContext);
+        mBlackBox = new BlackBox(mContext);
     }
 
     private void setListener() {
@@ -147,7 +147,7 @@ public class MainActivity extends Activity implements OnClickListener {
         mSpnTestOrder
                 .setOnItemSelectedListener(new SpinnerItemSelectedListener());
         // Get testCase from the xml
-        mList = mFunction.parserXml();
+        mList = mBlackBox.parserXml();
         if (null == mList) {
             return;
         }
@@ -288,7 +288,7 @@ public class MainActivity extends Activity implements OnClickListener {
             String[] testCase = mList.get(index).getCaseOrder();
             runnerIndex = index;
             //重新从xml拉取用例的顺序，并更新 run adapter
-            mFunction.changeSerial2Array(testCase);
+            mBlackBox.changeSerial2Array(testCase);
         }
 
         @Override

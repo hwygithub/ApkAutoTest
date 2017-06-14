@@ -24,7 +24,7 @@ public class CmShowMemTask extends TestTask {
     public void CSMT_0(final int caseTime) {
         for (int i = 0; i < caseTime; i++) {
             //杀手Q进程还原状态
-            mFunction.clearAppByPackageName("com.tencent.mobileqq");
+            mBlackBox.clearAppByPackageName("com.tencent.mobileqq");
             mBox.sleep(3000);
 
             _InitQQ();
@@ -34,12 +34,12 @@ public class CmShowMemTask extends TestTask {
                 mBox.sleep(5000);
             //点击输入QQ号
             mNodeBox.clickOnTextContain("QQ号", 1000);
-            mFunction.inputText(StaticData.testUin, 1000);
+            mBlackBox.inputText(StaticData.testUin, 1000);
             //点击输入密码
             mNodeBox.clickOnResourceId("password", 1000, 0);
-            mFunction.inputText(StaticData.testPwd, 1000);
+            mBlackBox.inputText(StaticData.testPwd, 1000);
 
-            mNodeBox.clickOnDesc("登录", 10000);
+            mNodeBox.clickOnDesc("登录", 90000);
             mNodeBox.clickOnTextContain("关闭", 2000);
         }
     }
@@ -58,10 +58,14 @@ public class CmShowMemTask extends TestTask {
             if (!mNodeBox.clickOnResourceId("avatar_item_imageview", 1000, 0)) {
                 mNodeBox.clickOnResourceIdOffset("inputBar", 2000, 0, 1, -100);
             }
-            mFunction.inputText("群单人交叉发送:" + i, 1000);
-            mNodeBox.clickOnResourceId("avatar_item_imageview", 2000, 1);
+            monitor.checkAnimationPlay();
+            mBlackBox.inputText("群单人交叉发送:" + i, 1000);
+            mNodeBox.clickOnResourceId("avatar_item_imageview", 500, 1);
+
             //每轮查询可用内存和进程内存情况,并保存到终端存储
-            mFunction.saveMem("com.tencent.mobileqq", mRunFileName, i);
+            mBlackBox.saveMem("com.tencent.mobileqq", mRunFileName, i);
+            mBlackBox.saveProcInfo("com.tencent.mobileqq", mRunFileName, i);
+
         }
     }
 
@@ -77,13 +81,14 @@ public class CmShowMemTask extends TestTask {
             //点击单人tab的动作
             mNodeBox.clickOnResourceId("avatar_item_imageview", 1000, 0);
             //点击双人tab的动作
-            mFunction.inputText("单双人动作交叉发送:" + i, 1000);
+            mBlackBox.inputText("单双人动作交叉发送:" + i, 1000);
             //点击tab切换到双人动作
             mNodeBox.clickOnResourceId("tabView", 2000, 2);
             mNodeBox.clickOnResourceId("avatar_item_imageview", 2000, 0);
             mNodeBox.clickOnTextContain("大群主", 1000);
             //每轮查询可用内存和进程内存情况,并保存到终端存储
-            mFunction.saveMem("com.tencent.mobileqq", mRunFileName, i);
+            mBlackBox.saveMem("com.tencent.mobileqq", mRunFileName, i);
+            mBlackBox.saveProcInfo("com.tencent.mobileqq", mRunFileName, i);
         }
 
     }
@@ -104,11 +109,12 @@ public class CmShowMemTask extends TestTask {
                 mNodeBox.clickOnResourceIdOffset("inputBar", 2000, 0, 1, -100);
             }
             mNodeBox.clickOnTextContain("大群主", 1000);
-            mFunction.inputText("群双人交叉发送:" + i, 1000);
+            mBlackBox.inputText("群双人交叉发送:" + i, 1000);
             mNodeBox.clickOnResourceId("avatar_item_imageview", 2000, 1);
             mNodeBox.clickOnTextContain("大群主", 1000);
             //每轮查询可用内存和进程内存情况,并保存到终端存储
-            mFunction.saveMem("com.tencent.mobileqq", mRunFileName, i);
+            mBlackBox.saveMem("com.tencent.mobileqq", mRunFileName, i);
+            mBlackBox.saveProcInfo("com.tencent.mobileqq", mRunFileName, i);
         }
 
     }
@@ -128,10 +134,11 @@ public class CmShowMemTask extends TestTask {
                 mNodeBox.clickOnResourceIdOffset("inputBar", 2000, 0, 1, -100);
             }
             mNodeBox.clickOnTextContain("大群主", 1000);
-            mFunction.inputText("弹幕发送:" + i, 2000);
+            mBlackBox.inputText("弹幕发送:" + i, 2000);
 
             //每轮查询可用内存和进程内存情况,并保存到终端存储
-            mFunction.saveMem("com.tencent.mobileqq", mRunFileName, i);
+            mBlackBox.saveMem("com.tencent.mobileqq", mRunFileName, i);
+            mBlackBox.saveProcInfo("com.tencent.mobileqq", mRunFileName, i);
         }
     }
 
@@ -145,7 +152,7 @@ public class CmShowMemTask extends TestTask {
             mNodeBox.clickOnResourceId("tabView", 2000, 1);
             //如果没有点击成功判断面板是否隐藏了
             //通过厘米秀面板的特别动作id点击
-            mFunction.inputText("群和C2C切换发送:" + i, 1000);
+            mBlackBox.inputText("群和C2C切换发送:" + i, 1000);
             if (!mNodeBox.clickOnResourceId("avatar_item_imageview", 2000, 0)) {
                 mNodeBox.clickOnResourceIdOffset("inputBar", 2000, 0, 1, -100);
                 mNodeBox.clickOnResourceId("avatar_item_imageview", 2000, 0);
@@ -154,7 +161,7 @@ public class CmShowMemTask extends TestTask {
             mNodeBox.clickOnResourceId("ivdefaultLeftBtn", 1000, 0);
 
             //输入群，点击进入
-            mFunction.inputText("1220232584", 1000);
+            mBlackBox.inputText("1220232584", 1000);
             //进入C2C
             mNodeBox.clickOnTextContain("厘米", 2000);
             //点击AIO输入输入框上方的中间部分区域
@@ -162,7 +169,7 @@ public class CmShowMemTask extends TestTask {
             //点击tab切换到单人动作
             mNodeBox.clickOnResourceId("tabView", 2000, 1);
             //通过厘米秀面板的特别动作id点击
-            mFunction.inputText("群和C2C切换发送:" + i, 2000);
+            mBlackBox.inputText("群和C2C切换发送:" + i, 2000);
             if (!mNodeBox.clickOnResourceId("avatar_item_imageview", 1000, 0)) {
                 mNodeBox.clickOnResourceIdOffset("inputBar", 2000, 0, 1, -100);
                 mNodeBox.clickOnResourceId("avatar_item_imageview", 1000, 0);
@@ -171,7 +178,8 @@ public class CmShowMemTask extends TestTask {
             mNodeBox.clickOnResourceId("ivdefaultLeftBtn", 1000, 0);
 
             //每轮查询可用内存和进程内存情况,并保存到终端存储
-            mFunction.saveMem("com.tencent.mobileqq", mRunFileName, i);
+            mBlackBox.saveMem("com.tencent.mobileqq", mRunFileName, i);
+            mBlackBox.saveProcInfo("com.tencent.mobileqq", mRunFileName, i);
         }
 
     }
@@ -195,7 +203,8 @@ public class CmShowMemTask extends TestTask {
             mNodeBox.clickOnResourceId("qq_aio_apollo_action_icon", 2000, -1);
 
             //每轮查询可用内存和进程内存情况,并保存到终端存储
-            mFunction.saveMem("com.tencent.mobileqq", mRunFileName, i);
+            mBlackBox.saveMem("com.tencent.mobileqq", mRunFileName, i);
+            mBlackBox.saveProcInfo("com.tencent.mobileqq", mRunFileName, i);
         }
     }
 
@@ -210,7 +219,8 @@ public class CmShowMemTask extends TestTask {
             mBox.sendKey(KeyEvent.KEYCODE_BACK, 3000);
 
             //每轮查询可用内存和进程内存情况,并保存到终端存储
-            mFunction.saveMem("com.tencent.mobileqq", mRunFileName, i);
+            mBlackBox.saveMem("com.tencent.mobileqq", mRunFileName, i);
+            mBlackBox.saveProcInfo("com.tencent.mobileqq", mRunFileName, i);
         }
     }
 
@@ -226,7 +236,8 @@ public class CmShowMemTask extends TestTask {
             //切换到消息列表
             mNodeBox.clickOnResourceId("conversation_head", 3000, 0);
             //每轮查询可用内存和进程内存情况,并保存到终端存储
-            mFunction.saveMem("com.tencent.mobileqq", mRunFileName, i);
+            mBlackBox.saveMem("com.tencent.mobileqq", mRunFileName, i);
+            mBlackBox.saveProcInfo("com.tencent.mobileqq", mRunFileName, i);
         }
     }
 
@@ -242,7 +253,8 @@ public class CmShowMemTask extends TestTask {
                 mNodeBox.setStrictMode(true);
             }
             //每轮查询可用内存和进程内存情况,并保存到终端存储
-            mFunction.saveMem("com.tencent.mobileqq", mRunFileName, i);
+            mBlackBox.saveMem("com.tencent.mobileqq", mRunFileName, i);
+            mBlackBox.saveProcInfo("com.tencent.mobileqq", mRunFileName, i);
         }
     }
 
@@ -252,7 +264,7 @@ public class CmShowMemTask extends TestTask {
         //点击搜索栏
         mNodeBox.clickOnText("搜索", 1000);
         //输入群，点击进入
-        mFunction.inputText("546479585", 2000);
+        mBlackBox.inputText("546479585", 2000);
         //点击搜索栏
         mNodeBox.clickOnText("测试号集中营", 3000);
 
@@ -271,7 +283,51 @@ public class CmShowMemTask extends TestTask {
             mImageBox.clickOnImage("btn_game_exit", 1000);
 
             //每轮查询可用内存和进程内存情况,并保存到终端存储
-            mFunction.saveMem("com.tencent.mobileqq", mRunFileName, i);
+            mBlackBox.saveMem("com.tencent.mobileqq", mRunFileName, i);
+            mBlackBox.saveProcInfo("com.tencent.mobileqq", mRunFileName, i);
+        }
+
+    }
+
+    // AIO双击隐藏和显示厘米秀
+    public void CSMT_11(final int caseTime) {
+        //点击搜索栏
+        mNodeBox.clickOnText("搜索", 1000);
+        //输入群，点击进入
+        mBlackBox.inputText("546479585", 2000);
+        //点击搜索栏
+        mNodeBox.clickOnText("测试号集中营", 3000);
+
+        for (int i = 0; i < caseTime; i++) {
+            //双击隐藏
+            mNodeBox.clickOnResourceIdOffset("fun_btn", 10, 0, 1, -190);
+            mNodeBox.clickOnResourceIdOffset("fun_btn", 2000, 0, 1, -200);
+            //双击显示
+            mNodeBox.clickOnResourceIdOffset("fun_btn", 10, 0, 1, -100);
+            mNodeBox.clickOnResourceIdOffset("fun_btn", 2000, 0, 1, -200);
+            //每轮查询可用内存和进程内存情况,并保存到终端存储
+            mBlackBox.saveMem("com.tencent.mobileqq", mRunFileName, i);
+            mBlackBox.saveProcInfo("com.tencent.mobileqq", mRunFileName, i);
+        }
+
+    }
+
+    // c2c发送小白脸表情
+    public void CSMT_12(final int caseTime) {
+        //［_OpenC2CActionTab］进入测试号AIO打开面板
+        _OpenC2CActionTab();
+        //进入表情面板
+        mNodeBox.clickOnResourceId("qq_aio_panel_emotion", 2000, 0);
+
+        for (int i = 0; i < caseTime; i++) {
+            //循环点击小白脸动作
+            mImageBox.clickOnImage("icon_white_face_#1", 500);
+            mImageBox.clickOnImage("icon_white_face_#2", 500);
+            //发送
+            mNodeBox.clickOnResourceId("fun_btn", 2000, 0);
+
+            mBlackBox.saveMem("com.tencent.mobileqq", mRunFileName, i);
+            mBlackBox.saveProcInfo("com.tencent.mobileqq", mRunFileName, i);
         }
 
     }

@@ -9,10 +9,9 @@ import android.util.Log;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
-import com.tencent.apk_auto_test.ext.node.NodeEventService;
+import com.tencent.apk_auto_test.ext.BlackBox;
 import com.tencent.apk_auto_test.task.CmShowBasicTask;
 import com.tencent.apk_auto_test.task.CmShowMemTask;
-import com.tencent.apk_auto_test.util.Function;
 import com.tencent.apk_auto_test.util.ProcessUtil;
 
 import java.util.List;
@@ -47,7 +46,7 @@ public class TestManager {
             return false;
         }
         //检查accessibility service是否开启
-        if (!Function.isAccessibilitySettingsOn(mContext)) {
+        if (!BlackBox.isAccessibilitySettingsOn(mContext)) {
             //如果没有获取到系统的设置信息，跳转手动开启界面
             mContext.startActivity(new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS));
             //提示
@@ -55,7 +54,7 @@ public class TestManager {
             return false;
         }
         //检查输入法是否开启成测试工具
-        if (!Function.isInputMethodSettingsEnabled(mContext)) {
+        if (!BlackBox.isInputMethodSettingsEnabled(mContext)) {
             //跳转到输入法选择界面
             mContext.startActivity(new Intent(Settings.ACTION_INPUT_METHOD_SETTINGS));
             //提示
@@ -64,7 +63,7 @@ public class TestManager {
         }
 
         //检查输入法是否默认为测试工具
-        if (!Function.isInputMethodSettingsDefault(mContext)) {
+        if (!BlackBox.isInputMethodSettingsDefault(mContext)) {
             //监听如果是从输入法切换后回到工具界面时弹出输入法选择框
             ((InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE)).showInputMethodPicker();
             //提示
@@ -108,13 +107,5 @@ public class TestManager {
         Toast.makeText(mContext, "开始测试", Toast.LENGTH_LONG).show();
 
     }
-
-    public void stopTest() {
-        mContext.stopService(new Intent(mContext, TestTask.class));
-        mContext.stopService(new Intent(mContext, NodeEventService.class));
-        ProcessUtil.kill("com.tencent.apk_auto_test");
-        android.os.Process.killProcess(android.os.Process.myPid());
-    }
-
 
 }

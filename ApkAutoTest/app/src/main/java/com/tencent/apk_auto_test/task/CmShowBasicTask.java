@@ -27,7 +27,7 @@ public class CmShowBasicTask extends TestTask {
     public void CSAT_0(final int caseTime) {
         for (int i = 0; i < caseTime; i++) {
             //杀手Q进程还原状态
-            mFunction.clearAppByPackageName("com.tencent.mobileqq");
+            mBlackBox.clearAppByPackageName("com.tencent.mobileqq");
             mBox.sleep(3000);
 
             try {
@@ -44,12 +44,12 @@ public class CmShowBasicTask extends TestTask {
             mNodeBox.setStrictMode(true);
             //点击输入QQ号
             mNodeBox.clickOnTextContain("QQ号", 1000);
-            mFunction.inputText(StaticData.testUin, 1000);
+            mBlackBox.inputText(StaticData.testUin, 1000);
             //点击输入密码
             mNodeBox.clickOnResourceId("password", 1000, 0);
-            mFunction.inputText(StaticData.testPwd, 1000);
+            mBlackBox.inputText(StaticData.testPwd, 1000);
 
-            mNodeBox.clickOnDesc("登录", 7000);
+            mNodeBox.clickOnDesc("登录", 90000);
         }
     }
 
@@ -58,7 +58,7 @@ public class CmShowBasicTask extends TestTask {
         for (int i = 0; i < caseTime; i++) {
             // TODO: 2017/3/5 关闭厘米秀功能
             //删除厘米秀素材
-            //mFunction.delFolder(new File("sdcard/tencent/MobileQQ/.apollo"));
+            //mBlackBox.delFolder(new File("sdcard/tencent/MobileQQ/.apollo"));
             //［_OpenC2CActionTab］进入测试号AIO打开面板
             _OpenC2CActionTab();
             //// TODO: 2017/3/5 判断小人没有显示
@@ -72,7 +72,7 @@ public class CmShowBasicTask extends TestTask {
             //点击搜索栏
             mNodeBox.clickOnText("搜索", 1000);
             //输入群，点击进入
-            mFunction.inputText("1220232584", 1000);
+            mBlackBox.inputText("1220232584", 1000);
             //进入好友AIO
             mNodeBox.clickOnTextContain("我的好友", 4000);
             //点击功能面板按钮
@@ -218,10 +218,10 @@ public class CmShowBasicTask extends TestTask {
             //点击本人头像
             mNodeBox.clickOnResourceId("head", 5000, 0);
             //点击资料卡小人
-            mImageBox.clickOnImage("cmshow_me_hide", 6000);
+            mImageBox.clickOnImage("cmshow_me_show", 6000);
             // TODO: 2017/3/14 小人从部分隐藏变为展示；播放sayhi动作
             //再次点击资料卡小人
-            mImageBox.clickOnImage("cmshow_me_show", 4000);
+            mImageBox.clickOnImage("cmshow_me_show", 8000);
             // TODO: 2017/3/14 切换到互动页
         }
     }
@@ -236,13 +236,15 @@ public class CmShowBasicTask extends TestTask {
             //搜索
             mNodeBox.clickOnTextContain("QQ号", 1000);
             //陌生人测试号
-            mFunction.inputText("503855711", 2000);
+            mBlackBox.inputText("503855711", 2000);
             //找人
             mNodeBox.clickOnTextContain("找人", 5000);
             //点击资料卡小人
-            mImageBox.clickOnImage("cmshow_me_hide", 6000);
+            mImageBox.clickOnImage("cmshow_me_show", 6000);
             //再次点击资料卡小人
-            mImageBox.clickOnImage("cmshow_me_show", 4000);
+            mImageBox.clickOnImage("cmshow_me_show", 8000);
+            //点击商城按钮
+            mImageBox.clickOnImage("btn_aio_float_change", 4000);
             // TODO: 2017/3/14 切换到互动页
         }
 
@@ -311,7 +313,7 @@ public class CmShowBasicTask extends TestTask {
             //进入游戏面板
             mNodeBox.clickOnResourceId("tabView", 1000, 0);
             //检查当前游戏是否为厘米Fly
-            while(!mImageBox.isImageExist("logo_cmFly")) {
+            while (!mImageBox.isImageExist("logo_cmFly")) {
                 mBox.swipe((float) Global.SCREEN_WIDTH - 100, (float) (Global.SCREEN_HEIGHT * 0.8),
                         (float) (Global.SCREEN_WIDTH * 0.5), (float) (Global.SCREEN_HEIGHT * 0.8), 500);
             }
@@ -334,7 +336,7 @@ public class CmShowBasicTask extends TestTask {
             mNodeBox.clickOnText("好友", 4000);
             //点击测试号并发送
             mNodeBox.clickOnText("搜索", 1000);
-            mFunction.inputText("1220232584", 1000);
+            mBlackBox.inputText("1220232584", 1000);
             mNodeBox.clickOnTextContain("厘米", 1000);
             mNodeBox.clickOnText("发送", 2000);
             //点击关闭按钮
@@ -352,7 +354,7 @@ public class CmShowBasicTask extends TestTask {
             //进入游戏面板
             mNodeBox.clickOnResourceId("tabView", 1000, 0);
             //检查当前游戏是否为厘米Fly
-            while(!mImageBox.isImageExist("logo_cmFly")) {
+            while (!mImageBox.isImageExist("logo_cmFly")) {
                 mBox.swipe((float) Global.SCREEN_WIDTH - 100, (float) (Global.SCREEN_HEIGHT * 0.8),
                         (float) (Global.SCREEN_WIDTH * 0.5), (float) (Global.SCREEN_HEIGHT * 0.8), 500);
             }
@@ -386,7 +388,7 @@ public class CmShowBasicTask extends TestTask {
             //进入游戏面板
             mNodeBox.clickOnResourceId("tabView", 1000, 0);
             //检查当前游戏是否为厘米Fly
-            while(!mImageBox.isImageExist("logo_cmFly")) {
+            while (!mImageBox.isImageExist("logo_cmFly")) {
                 mBox.swipe((float) Global.SCREEN_WIDTH - 100, (float) (Global.SCREEN_HEIGHT * 0.8),
                         (float) (Global.SCREEN_WIDTH * 0.5), (float) (Global.SCREEN_HEIGHT * 0.8), 500);
             }
@@ -412,7 +414,7 @@ public class CmShowBasicTask extends TestTask {
             //进入游戏面板
             mNodeBox.clickOnResourceId("tabView", 1000, 0);
             //检查当前游戏是否为厘米Fly
-            while(!mImageBox.isImageExist("logo_cmFly")) {
+            while (!mImageBox.isImageExist("logo_cmFly")) {
                 mBox.swipe((float) Global.SCREEN_WIDTH - 100, (float) (Global.SCREEN_HEIGHT * 0.8),
                         (float) (Global.SCREEN_WIDTH * 0.5), (float) (Global.SCREEN_HEIGHT * 0.8), 500);
             }
@@ -441,7 +443,7 @@ public class CmShowBasicTask extends TestTask {
             //进入游戏面板
             mNodeBox.clickOnResourceId("tabView", 1000, 0);
             //检查当前游戏是否为厘米Fly
-            while(!mImageBox.isImageExist("logo_cmFly")) {
+            while (!mImageBox.isImageExist("logo_cmFly")) {
                 mBox.swipe((float) Global.SCREEN_WIDTH - 100, (float) (Global.SCREEN_HEIGHT * 0.8),
                         (float) (Global.SCREEN_WIDTH * 0.5), (float) (Global.SCREEN_HEIGHT * 0.8), 500);
             }
@@ -577,13 +579,13 @@ public class CmShowBasicTask extends TestTask {
 
     //[32] 首次进入厘米大乱斗游戏有新手引导
     public void CSAT_32(final int caseTime) {
-        for(int i = 0; i < caseTime; i++) {
+        for (int i = 0; i < caseTime; i++) {
             //［_OpenC2CActionTab］进入测试号AIO打开面板
             _OpenC2CActionTab();
             //进入游戏面板
             mNodeBox.clickOnResourceId("tabView", 2000, 0);
             //检查当前游戏是否为厘米大乱斗
-            while(!mImageBox.isImageExist("logo_cmLuandou")) {
+            while (!mImageBox.isImageExist("logo_cmLuandou")) {
                 mBox.swipe((float) Global.SCREEN_WIDTH - 100, (float) (Global.SCREEN_HEIGHT * 0.8),
                         (float) (Global.SCREEN_WIDTH * 0.5), (float) (Global.SCREEN_HEIGHT * 0.8), 500);
             }
@@ -596,13 +598,13 @@ public class CmShowBasicTask extends TestTask {
 
     //[33] 大乱斗游戏中退出游戏
     public void CSAT_33(final int caseTime) {
-        for(int i = 0; i < caseTime; i++) {
+        for (int i = 0; i < caseTime; i++) {
             //［_OpenC2CActionTab］进入测试号AIO打开面板
             _OpenC2CActionTab();
             //进入游戏面板
             mNodeBox.clickOnResourceId("tabView", 2000, 0);
             //检查当前游戏是否为厘米大乱斗
-            while(!mImageBox.isImageExist("logo_cmLuandou")) {
+            while (!mImageBox.isImageExist("logo_cmLuandou")) {
                 mBox.swipe((float) Global.SCREEN_WIDTH - 100, (float) (Global.SCREEN_HEIGHT * 0.8),
                         (float) (Global.SCREEN_WIDTH * 0.5), (float) (Global.SCREEN_HEIGHT * 0.8), 500);
             }
@@ -623,13 +625,13 @@ public class CmShowBasicTask extends TestTask {
 
     //[34] 大乱斗游戏中最小化最大化游戏
     public void CSAT_34(final int caseTime) {
-        for(int i = 0; i < caseTime; i++) {
+        for (int i = 0; i < caseTime; i++) {
             //［_OpenC2CActionTab］进入测试号AIO打开面板
             _OpenC2CActionTab();
             //进入游戏面板
             mNodeBox.clickOnResourceId("tabView", 2000, 0);
             //检查当前游戏是否为厘米大乱斗
-            while(!mImageBox.isImageExist("logo_cmLuandou")) {
+            while (!mImageBox.isImageExist("logo_cmLuandou")) {
                 mBox.swipe((float) Global.SCREEN_WIDTH - 100, (float) (Global.SCREEN_HEIGHT * 0.8),
                         (float) (Global.SCREEN_WIDTH * 0.5), (float) (Global.SCREEN_HEIGHT * 0.8), 500);
             }
@@ -643,13 +645,11 @@ public class CmShowBasicTask extends TestTask {
             //开始后点击右上角最小化按钮结束游戏
             mImageBox.clickOnImage("btn_game_luandou_min", 2000);
             //检测是否成功最小化
-            if(mImageBox.isImageExist("btn_game_tab")) {
-                //最小化后点击顶部的状态栏回到游戏
-                mImageBox.clickOnImage("btn_game_tab", 2000);
-                //检测是否成功回到游戏
-                monitor.checkImage("btn_game_luandou_min", testNumber);
-            }
-            else monitor.checkImage("btn_game_tab", testNumber);
+            //最小化后点击顶部的状态栏回到游戏
+            mNodeBox.clickOnResourceId("qq_aio_tips_container", 3000, 0);
+            //检测是否成功回到游戏
+            monitor.checkImage("btn_game_luandou_min", testNumber);
         }
     }
+
 }
