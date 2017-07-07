@@ -11,6 +11,7 @@ import android.view.KeyEvent;
 import android.view.View;
 
 import com.tencent.apk_auto_test.R;
+import com.tencent.apk_auto_test.data.Global;
 import com.tencent.apk_auto_test.data.StaticData;
 import com.tencent.apk_auto_test.ext.BlackBox;
 import com.tencent.apk_auto_test.ext.UIActionBox;
@@ -274,6 +275,34 @@ public abstract class TestTask extends Service {
         //点击AIO输入输入框上方的中间部分区域
         mNodeBox.clickOnResourceIdOffset("inputBar", 1000, 0, 1, -100);
     }
+
+    //［_OpenGameTab］进入某个游戏的tab，默认为游戏排序界面
+    public void _OpenGameTab(String gameName) {
+        //［_OpenActionTab］进入群AIO打开动作面板
+        _OpenActionTab();
+        //点击游戏面板tab
+        mNodeBox.clickOnResourceId("tabView", 2000, 0);
+        String logoName = null;
+        if (gameName == "cmFly") {
+            logoName = "logo_small_cmfly";
+        } else if (gameName == "cmLuandou") {
+            logoName = "logo_small_cmluandou";
+        } else if (gameName == "gudong") {
+            logoName = "logo_small_gudong";
+        }
+
+        if (null != logoName) {
+            //检查当前游戏是否为目标游戏，否则上下滑动
+            int i = 0;
+            while (!mImageBox.isImageExist(logoName) && i != 5) {
+                mBox.swipe((float) Global.SCREEN_WIDTH - 100, (float) (Global.SCREEN_HEIGHT * 0.8),
+                        (float) (Global.SCREEN_WIDTH - 100), (float) (Global.SCREEN_HEIGHT * 0.7), 500);
+                i++;
+            }
+            mImageBox.clickOnImage(logoName, 3000);
+        }
+    }
+
 
     //[_OpenChangeClothesWeb] 通过抽屉页进入互动页
     public void _OpenChangeClothesWeb() {

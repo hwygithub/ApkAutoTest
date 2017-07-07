@@ -144,20 +144,21 @@ public class CmShowMemTask extends TestTask {
 
     // 群和C2C切换发送
     public void CSMT_5(final int caseTime) {
-
         for (int i = 0; i < caseTime; i++) {
-            //进入群AIO打开动作面板
-            _OpenActionTab();
+            //点击搜索栏
+            mNodeBox.clickOnText("搜索", 1000);
+            //输入群，点击进入
+            mBlackBox.inputText("546479585", 3000);
+            //点击测试群
+            mNodeBox.clickOnText("测试号集中营", 1000);
+            //点击AIO输入输入框上方的中间部分区域
+            mNodeBox.clickOnResourceIdOffset("inputBar", 2000, 0, 1, -100);
             //点击tab切换到单人动作
             mNodeBox.clickOnResourceId("tabView", 2000, 1);
             //如果没有点击成功判断面板是否隐藏了
             //通过厘米秀面板的特别动作id点击
             mBlackBox.inputText("群和C2C切换发送:" + i, 1000);
-            if (!mNodeBox.clickOnResourceId("avatar_item_imageview", 2000, 0)) {
-                mNodeBox.clickOnResourceIdOffset("inputBar", 2000, 0, 1, -100);
-                mNodeBox.clickOnResourceId("avatar_item_imageview", 2000, 0);
-            }
-
+            mNodeBox.clickOnResourceId("avatar_item_imageview", 2000, 0);
             mNodeBox.clickOnResourceId("ivdefaultLeftBtn", 1000, 0);
 
             //输入群，点击进入
@@ -170,11 +171,7 @@ public class CmShowMemTask extends TestTask {
             mNodeBox.clickOnResourceId("tabView", 2000, 1);
             //通过厘米秀面板的特别动作id点击
             mBlackBox.inputText("群和C2C切换发送:" + i, 2000);
-            if (!mNodeBox.clickOnResourceId("avatar_item_imageview", 1000, 0)) {
-                mNodeBox.clickOnResourceIdOffset("inputBar", 2000, 0, 1, -100);
-                mNodeBox.clickOnResourceId("avatar_item_imageview", 1000, 0);
-            }
-
+            mNodeBox.clickOnResourceId("avatar_item_imageview", 1000, 0);
             mNodeBox.clickOnResourceId("ivdefaultLeftBtn", 1000, 0);
 
             //每轮查询可用内存和进程内存情况,并保存到终端存储
@@ -259,28 +256,24 @@ public class CmShowMemTask extends TestTask {
     }
 
 
-    // 创建游戏后退出
+    // 创建旧引擎游戏后退出
     public void CSMT_10(final int caseTime) {
-        //点击搜索栏
-        mNodeBox.clickOnText("搜索", 1000);
-        //输入群，点击进入
-        mBlackBox.inputText("546479585", 2000);
-        //点击搜索栏
-        mNodeBox.clickOnText("测试号集中营", 3000);
+        //进入厘米fly游戏面板详情页
+        _OpenGameTab("cmFly");
 
         for (int i = 0; i < caseTime; i++) {
-            //点击AIO输入输入框上方的中间部分区域
-            mNodeBox.clickOnResourceIdOffset("inputBar", 2000, 0, 1, -100);
-
             //点击开始游戏
-            mNodeBox.clickOnResourceId("apollo_aio_game_item_first", 3500, 0);
+            mNodeBox.clickOnResourceId("btn_start_game_single", 3500, 0);
             //如果进入新手引导则返回
             if (mNodeBox.isNodeExist("text", "新手引导")) {
-                mNodeBox.clickOnResourceId("ivdefaultLeftBtn", 1000, 0);
+                mNodeBox.clickOnResourceId("ivTitleBtnLeft", 1000, 0);
                 continue;
             }
-            //通过y偏移点击退出按钮
-            mImageBox.clickOnImage("btn_game_exit", 1000);
+            //点击退出
+            mImageBox.clickOnImage("btn_game_cmFly_exit", 1000);
+
+            //点击AIO输入输入框上方的中间部分区域
+            mNodeBox.clickOnResourceIdOffset("inputBar", 1000, 0, 1, -100);
 
             //每轮查询可用内存和进程内存情况,并保存到终端存储
             mBlackBox.saveMem("com.tencent.mobileqq", mRunFileName, i);
@@ -326,6 +319,34 @@ public class CmShowMemTask extends TestTask {
             //发送
             mNodeBox.clickOnResourceId("fun_btn", 2000, 0);
 
+            mBlackBox.saveMem("com.tencent.mobileqq", mRunFileName, i);
+            mBlackBox.saveProcInfo("com.tencent.mobileqq", mRunFileName, i);
+        }
+
+    }
+
+    // 创建新引擎游戏后退出
+    public void CSMT_13(final int caseTime) {
+        //进入咕咚游戏面板详情页
+        _OpenGameTab("gudong");
+
+        for (int i = 0; i < caseTime; i++) {
+            //点击开始游戏
+            mNodeBox.clickOnResourceId("btn_start_game_single", 3500, 0);
+            //如果进入新手引导则返回
+            if (mNodeBox.isNodeExist("text", "新手引导")) {
+                mNodeBox.clickOnResourceId("ivTitleBtnLeft", 1000, 0);
+                continue;
+            }
+
+            //点击开始游戏
+            mImageBox.clickOnImage("btn_game_start", 3000);
+            //点击退出
+            mImageBox.clickOnImage("btn_game_gudong_exit", 2000);
+            //点击AIO输入输入框上方的中间部分区域
+            mNodeBox.clickOnResourceIdOffset("inputBar", 1000, 0, 1, -100);
+
+            //每轮查询可用内存和进程内存情况,并保存到终端存储
             mBlackBox.saveMem("com.tencent.mobileqq", mRunFileName, i);
             mBlackBox.saveProcInfo("com.tencent.mobileqq", mRunFileName, i);
         }

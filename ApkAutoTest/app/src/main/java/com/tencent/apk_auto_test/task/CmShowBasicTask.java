@@ -5,7 +5,6 @@ import android.util.Log;
 import com.tencent.apk_auto_test.core.TestTask;
 import com.tencent.apk_auto_test.data.Global;
 import com.tencent.apk_auto_test.data.StaticData;
-import com.tencent.apk_auto_test.util.TimeUtil;
 
 /**
  * 厘米秀基本功能回归测试
@@ -139,7 +138,7 @@ public class CmShowBasicTask extends TestTask {
             //点击分享按钮
             mImageBox.clickOnImage("btn_web_share_send", 2000);
             //点击好友按钮
-            mNodeBox.clickOnText("好友", 4000);
+            mNodeBox.clickOnText("好友", 6000);
             //点击我的电脑并发送
             mNodeBox.clickOnText("我的电脑", 1000);
             mNodeBox.clickOnText("发送", 2000);
@@ -305,95 +304,45 @@ public class CmShowBasicTask extends TestTask {
         }
     }
 
-    //［19］FLY小游戏结束后分享成绩到AIO
+    //[19] 通过AIO游戏面板启动厘米FLY
     public void CSAT_19(final int caseTime) {
         for (int i = 0; i < caseTime; i++) {
-            //［_OpenC2CActionTab］进入测试号AIO打开面板
-            _OpenC2CActionTab();
-            //进入游戏面板
-            mNodeBox.clickOnResourceId("tabView", 1000, 0);
-            //检查当前游戏是否为厘米Fly
-            while (!mImageBox.isImageExist("logo_cmFly")) {
-                mBox.swipe((float) Global.SCREEN_WIDTH - 100, (float) (Global.SCREEN_HEIGHT * 0.8),
-                        (float) (Global.SCREEN_WIDTH * 0.5), (float) (Global.SCREEN_HEIGHT * 0.8), 500);
-            }
-            //点击挑战纪录按钮
-            mNodeBox.clickOnResourceId("apollo_aio_game_item_second", 4000, 0);
+            //进入厘米FLY游戏面板详情页
+            _OpenGameTab("cmFly");
+            //点击开始游戏
+            mNodeBox.clickOnResourceId("btn_start_game_single", 8000, 0);
             //如果进入新手引导则返回
-            if (mNodeBox.isNodeExist("text", "厘米FLY新手引导")) {
-                mNodeBox.clickOnResourceId("ivTitleBtnLeft", 1000, 0);
-                continue;
+            if (mNodeBox.isNodeExist("text", "新手引导")) {
+                mNodeBox.clickOnResourceId("ivTitleBtnLeft", 2000, 0);
+                //点击开始游戏
+                mNodeBox.clickOnResourceId("btn_start_game_single", 8000, 0);
             }
-            // TODO: 2017/3/22 跳转到游戏界面；开始进行和测试号的影子比赛
-            //循环长按点击屏幕等待，60s游戏结束
-            long startTime = System.currentTimeMillis();
-            while (!TimeUtil.isTimeOver(startTime, (float) 1.5)) {
-                mBox.click((float) (Global.SCREEN_WIDTH / 2), (float) (Global.SCREEN_HEIGHT / 2), 3000, 1000);
-            }
-            //点击分享按钮
-            mImageBox.clickOnImage("btn_game_end_share", 2000);
-            //点击分享好友按钮
-            mNodeBox.clickOnText("好友", 4000);
-            //点击测试号并发送
-            mNodeBox.clickOnText("搜索", 1000);
-            mBlackBox.inputText("1220232584", 1000);
-            mNodeBox.clickOnTextContain("厘米", 1000);
-            mNodeBox.clickOnText("发送", 2000);
-            //点击关闭按钮
-            mImageBox.clickOnImage("btn_game_end_close", 2000);
-
-            // TODO: 2017/3/22 AIO中显示分享的结构化消息；回到AIO；AIO小人正常显示
         }
     }
 
-    //［20］FLY小游戏结束后分享成绩到QQ空间
+    //[20] 通过AIO游戏面板启动厘米大乱斗
     public void CSAT_20(final int caseTime) {
         for (int i = 0; i < caseTime; i++) {
-            //［_OpenC2CActionTab］进入测试号AIO打开面板
-            _OpenC2CActionTab();
-            //进入游戏面板
-            mNodeBox.clickOnResourceId("tabView", 1000, 0);
-            //检查当前游戏是否为厘米Fly
-            while (!mImageBox.isImageExist("logo_cmFly")) {
-                mBox.swipe((float) Global.SCREEN_WIDTH - 100, (float) (Global.SCREEN_HEIGHT * 0.8),
-                        (float) (Global.SCREEN_WIDTH * 0.5), (float) (Global.SCREEN_HEIGHT * 0.8), 500);
-            }
-            //点击挑战纪录按钮
-            mNodeBox.clickOnResourceId("apollo_aio_game_item_second", 4000, 0);
+            //进入厘米大乱斗游戏面板详情页
+            _OpenGameTab("cmLuandou");
+            //点击开始游戏
+            mNodeBox.clickOnResourceId("btn_start_game_single", 8000, 0);
             //如果进入新手引导则返回
-            if (mNodeBox.isNodeExist("text", "厘米FLY新手引导")) {
+            if (mNodeBox.isNodeExist("text", "新手引导")) {
                 mNodeBox.clickOnResourceId("ivTitleBtnLeft", 1000, 0);
-                continue;
+                //点击开始游戏
+                mNodeBox.clickOnResourceId("btn_start_game_single", 8000, 0);
             }
-            // TODO: 2017/3/22 跳转到游戏界面；开始进行和测试号的影子比赛
-            //循环长按点击屏幕等待，60s游戏结束
-            long startTime = System.currentTimeMillis();
-            while (!TimeUtil.isTimeOver(startTime, (float) 1.5)) {
-                mBox.click((float) (Global.SCREEN_WIDTH / 2), (float) (Global.SCREEN_HEIGHT / 2), 3000, 1000);
-            }
-            //点击分享按钮
-            mImageBox.clickOnImage("btn_game_end_share", 2000);
-            //点击qq空间按钮
-            mNodeBox.clickOnText("QQ空间", 4000);
-            // TODO: 2017/3/22 跳转到说说发表页
-
         }
     }
 
     // [21] FLY小游戏开始后退出游戏
     public void CSAT_21(final int caseTime) {
         for (int i = 0; i < caseTime; i++) {
-            //［_OpenC2CActionTab］进入测试号AIO打开面板
-            _OpenC2CActionTab();
-            //进入游戏面板
-            mNodeBox.clickOnResourceId("tabView", 1000, 0);
-            //检查当前游戏是否为厘米Fly
-            while (!mImageBox.isImageExist("logo_cmFly")) {
-                mBox.swipe((float) Global.SCREEN_WIDTH - 100, (float) (Global.SCREEN_HEIGHT * 0.8),
-                        (float) (Global.SCREEN_WIDTH * 0.5), (float) (Global.SCREEN_HEIGHT * 0.8), 500);
-            }
+            //进入厘米FLY游戏面板详情页
+            _OpenGameTab("cmFly");
             //点击挑战纪录按钮
-            mNodeBox.clickOnResourceId("apollo_aio_game_item_second", 4000, 0);
+            mNodeBox.clickOnResourceId("btn_start_game_single", 4000, 0);
             //如果进入新手引导则返回
             if (mNodeBox.isNodeExist("text", "厘米FLY新手引导")) {
                 mNodeBox.clickOnResourceId("ivTitleBtnLeft", 1000, 0);
@@ -409,19 +358,12 @@ public class CmShowBasicTask extends TestTask {
     // [22] FLY小游戏开始游戏后最小最大化
     public void CSAT_22(final int caseTime) {
         for (int i = 0; i < caseTime; i++) {
-            //［_OpenC2CActionTab］进入测试号AIO打开面板
-            _OpenC2CActionTab();
-            //进入游戏面板
-            mNodeBox.clickOnResourceId("tabView", 1000, 0);
-            //检查当前游戏是否为厘米Fly
-            while (!mImageBox.isImageExist("logo_cmFly")) {
-                mBox.swipe((float) Global.SCREEN_WIDTH - 100, (float) (Global.SCREEN_HEIGHT * 0.8),
-                        (float) (Global.SCREEN_WIDTH * 0.5), (float) (Global.SCREEN_HEIGHT * 0.8), 500);
-            }
+            //进入厘米FLY游戏面板详情页
+            _OpenGameTab("cmFly");
             //点击挑战纪录按钮
-            mNodeBox.clickOnResourceId("apollo_aio_game_item_second", 4000, 0);
+            mNodeBox.clickOnResourceId("btn_start_game_single", 4000, 0);
             //如果进入新手引导则返回
-            if (mNodeBox.isNodeExist("text", "厘米FLY新手引导")) {
+            if (mNodeBox.isNodeExist("text", "新手引导")) {
                 mNodeBox.clickOnResourceId("ivTitleBtnLeft", 1000, 0);
                 continue;
             }
@@ -438,19 +380,12 @@ public class CmShowBasicTask extends TestTask {
     // [23] FLY小游戏开始游戏后返回消息列表
     public void CSAT_23(final int caseTime) {
         for (int i = 0; i < caseTime; i++) {
-            //［_OpenC2CActionTab］进入测试号AIO打开面板
-            _OpenC2CActionTab();
-            //进入游戏面板
-            mNodeBox.clickOnResourceId("tabView", 1000, 0);
-            //检查当前游戏是否为厘米Fly
-            while (!mImageBox.isImageExist("logo_cmFly")) {
-                mBox.swipe((float) Global.SCREEN_WIDTH - 100, (float) (Global.SCREEN_HEIGHT * 0.8),
-                        (float) (Global.SCREEN_WIDTH * 0.5), (float) (Global.SCREEN_HEIGHT * 0.8), 500);
-            }
+            //进入厘米FLY游戏面板详情页
+            _OpenGameTab("cmFly");
             //点击挑战纪录按钮
-            mNodeBox.clickOnResourceId("apollo_aio_game_item_second", 4000, 0);
+            mNodeBox.clickOnResourceId("btn_start_game_single", 4000, 0);
             //如果进入新手引导则返回
-            if (mNodeBox.isNodeExist("text", "厘米FLY新手引导")) {
+            if (mNodeBox.isNodeExist("text", "新手引导")) {
                 mNodeBox.clickOnResourceId("ivTitleBtnLeft", 1000, 0);
                 continue;
             }
@@ -580,17 +515,10 @@ public class CmShowBasicTask extends TestTask {
     //[32] 首次进入厘米大乱斗游戏有新手引导
     public void CSAT_32(final int caseTime) {
         for (int i = 0; i < caseTime; i++) {
-            //［_OpenC2CActionTab］进入测试号AIO打开面板
-            _OpenC2CActionTab();
-            //进入游戏面板
-            mNodeBox.clickOnResourceId("tabView", 2000, 0);
-            //检查当前游戏是否为厘米大乱斗
-            while (!mImageBox.isImageExist("logo_cmLuandou")) {
-                mBox.swipe((float) Global.SCREEN_WIDTH - 100, (float) (Global.SCREEN_HEIGHT * 0.8),
-                        (float) (Global.SCREEN_WIDTH * 0.5), (float) (Global.SCREEN_HEIGHT * 0.8), 500);
-            }
+            //进入厘米大乱斗游戏面板详情页
+            _OpenGameTab("cmLuandou");
             //点击开始游戏
-            mNodeBox.clickOnResourceId("apollo_aio_game_item_first", 4000, 0);
+            mNodeBox.clickOnResourceId("btn_start_game_single", 4000, 0);
             //检查是否进入了新手引导页面
             monitor.checkNode("text", "新手引导", testNumber);
         }
@@ -599,17 +527,10 @@ public class CmShowBasicTask extends TestTask {
     //[33] 大乱斗游戏中退出游戏
     public void CSAT_33(final int caseTime) {
         for (int i = 0; i < caseTime; i++) {
-            //［_OpenC2CActionTab］进入测试号AIO打开面板
-            _OpenC2CActionTab();
-            //进入游戏面板
-            mNodeBox.clickOnResourceId("tabView", 2000, 0);
-            //检查当前游戏是否为厘米大乱斗
-            while (!mImageBox.isImageExist("logo_cmLuandou")) {
-                mBox.swipe((float) Global.SCREEN_WIDTH - 100, (float) (Global.SCREEN_HEIGHT * 0.8),
-                        (float) (Global.SCREEN_WIDTH * 0.5), (float) (Global.SCREEN_HEIGHT * 0.8), 500);
-            }
+            //进入厘米大乱斗游戏面板详情页
+            _OpenGameTab("cmLuandou");
             //点击开始游戏
-            mNodeBox.clickOnResourceId("apollo_aio_game_item_first", 4000, 0);
+            mNodeBox.clickOnResourceId("btn_start_game_single", 4000, 0);
             //如果进入新手引导页面则退出重来
             if (mNodeBox.isNodeExist("text", "新手引导")) {
                 mNodeBox.clickOnResourceId("ivdefaultLeftBtn", 1000, 0);
@@ -626,17 +547,10 @@ public class CmShowBasicTask extends TestTask {
     //[34] 大乱斗游戏中最小化最大化游戏
     public void CSAT_34(final int caseTime) {
         for (int i = 0; i < caseTime; i++) {
-            //［_OpenC2CActionTab］进入测试号AIO打开面板
-            _OpenC2CActionTab();
-            //进入游戏面板
-            mNodeBox.clickOnResourceId("tabView", 2000, 0);
-            //检查当前游戏是否为厘米大乱斗
-            while (!mImageBox.isImageExist("logo_cmLuandou")) {
-                mBox.swipe((float) Global.SCREEN_WIDTH - 100, (float) (Global.SCREEN_HEIGHT * 0.8),
-                        (float) (Global.SCREEN_WIDTH * 0.5), (float) (Global.SCREEN_HEIGHT * 0.8), 500);
-            }
+            //进入厘米大乱斗游戏面板详情页
+            _OpenGameTab("cmLuandou");
             //点击开始游戏
-            mNodeBox.clickOnResourceId("apollo_aio_game_item_first", 4000, 0);
+            mNodeBox.clickOnResourceId("btn_start_game_single", 4000, 0);
             //如果进入新手引导页面则退出重来
             if (mNodeBox.isNodeExist("text", "新手引导")) {
                 mNodeBox.clickOnResourceId("ivdefaultLeftBtn", 1000, 0);
@@ -651,5 +565,36 @@ public class CmShowBasicTask extends TestTask {
             monitor.checkImage("btn_game_luandou_min", testNumber);
         }
     }
+
+    //[35] C2C发送小白脸表情
+    public void CSAT_35(final int caseTime) {
+        for (int i = 0; i < caseTime; i++) {
+            //［_OpenC2CActionTab］进入测试号AIO打开面板
+            _OpenC2CActionTab();
+            //进入表情面板
+            mNodeBox.clickOnResourceId("qq_aio_panel_emotion", 2000, 0);
+            //循环点击小白脸动作
+            mImageBox.clickOnImage("icon_white_face_#1", 500);
+            mImageBox.clickOnImage("icon_white_face_#2", 500);
+            //发送
+            mNodeBox.clickOnResourceId("fun_btn", 2000, 0);
+        }
+    }
+
+    //[36] 群发送小白脸表情
+    public void CSAT_36(final int caseTime) {
+        for (int i = 0; i < caseTime; i++) {
+            //［_OpenActionTab］进入AIO打开面板
+            _OpenActionTab();
+            //进入表情面板
+            mNodeBox.clickOnResourceId("qq_aio_panel_emotion", 2000, 0);
+            //循环点击小白脸动作
+            mImageBox.clickOnImage("icon_white_face_#1", 500);
+            mImageBox.clickOnImage("icon_white_face_#2", 500);
+            //发送
+            mNodeBox.clickOnResourceId("fun_btn", 2000, 0);
+        }
+    }
+
 
 }
