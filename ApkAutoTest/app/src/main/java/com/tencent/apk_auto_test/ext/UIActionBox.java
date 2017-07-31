@@ -291,4 +291,16 @@ public class UIActionBox {
         mContext.startActivity(intent);
     }
 
+    /**
+     * 模拟HOME键，将当前APP切换至后台
+     * by lloydgao
+     */
+    public void switchToBackground(int waitTime) {
+        Intent intent = new Intent(Intent.ACTION_MAIN);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.addCategory(Intent.CATEGORY_HOME);
+        mContext.startActivity(intent);
+        Log.d(TAG, "switchToBackground: Successful");
+        sleep(waitTime);
+    }
 }

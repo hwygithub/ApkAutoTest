@@ -19,6 +19,7 @@ public class ProcessUtil {
     private static Process process;
     private static byte[] tempBuffer;
     private static StringBuilder buffer;
+    public static String firstLine = null;
 
 
     public static void execute(final String command) throws IOException, InterruptedException {
@@ -51,13 +52,18 @@ public class ProcessUtil {
             try {
                 InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
                 BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-                String line = null;
+                String line;
+                int cnt = 0;
                 while ((line = bufferedReader.readLine()) != null) {
+
+                    if (cnt == 0) firstLine = line;
+
                     if (type.equals("Error")) {
                         Log.e(TAG, line);
                     } else {
                         Log.i(TAG, line);
                     }
+                    cnt++;
                 }
             } catch (IOException e) {
                 e.printStackTrace();
@@ -143,7 +149,7 @@ public class ProcessUtil {
         }
     }
 
-    /*************私有方法**************/
+    //*************私有方法**************
     /**
      * 初始化进程
      */

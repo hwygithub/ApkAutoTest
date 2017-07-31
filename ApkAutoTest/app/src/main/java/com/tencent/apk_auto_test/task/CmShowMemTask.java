@@ -29,9 +29,12 @@ public class CmShowMemTask extends TestTask {
 
             _InitQQ();
 
+            mNodeBox.setStrictMode(false);
             //点击登录
             while (!mNodeBox.clickOnResourceId("btn_login", 3000, 0))
                 mBox.sleep(5000);
+            mNodeBox.setStrictMode(true);
+
             //点击输入QQ号
             mNodeBox.clickOnTextContain("QQ号", 1000);
             mBlackBox.inputText(StaticData.testUin, 1000);
@@ -58,13 +61,14 @@ public class CmShowMemTask extends TestTask {
             if (!mNodeBox.clickOnResourceId("avatar_item_imageview", 1000, 0)) {
                 mNodeBox.clickOnResourceIdOffset("inputBar", 2000, 0, 1, -100);
             }
+
             monitor.checkAnimationPlay();
+
             mBlackBox.inputText("群单人交叉发送:" + i, 1000);
             mNodeBox.clickOnResourceId("avatar_item_imageview", 500, 1);
 
             //每轮查询可用内存和进程内存情况,并保存到终端存储
-            mBlackBox.saveMem("com.tencent.mobileqq", mRunFileName, i);
-            mBlackBox.saveProcInfo("com.tencent.mobileqq", mRunFileName, i);
+            monitor.checkCrash("com.tencent.mobileqq", pid, mRunFileName, i);
 
         }
     }
@@ -87,8 +91,7 @@ public class CmShowMemTask extends TestTask {
             mNodeBox.clickOnResourceId("avatar_item_imageview", 2000, 0);
             mNodeBox.clickOnTextContain("大群主", 1000);
             //每轮查询可用内存和进程内存情况,并保存到终端存储
-            mBlackBox.saveMem("com.tencent.mobileqq", mRunFileName, i);
-            mBlackBox.saveProcInfo("com.tencent.mobileqq", mRunFileName, i);
+            monitor.checkCrash("com.tencent.mobileqq", pid, mRunFileName, i);
         }
 
     }
@@ -113,8 +116,7 @@ public class CmShowMemTask extends TestTask {
             mNodeBox.clickOnResourceId("avatar_item_imageview", 2000, 1);
             mNodeBox.clickOnTextContain("大群主", 1000);
             //每轮查询可用内存和进程内存情况,并保存到终端存储
-            mBlackBox.saveMem("com.tencent.mobileqq", mRunFileName, i);
-            mBlackBox.saveProcInfo("com.tencent.mobileqq", mRunFileName, i);
+            monitor.checkCrash("com.tencent.mobileqq", pid, mRunFileName, i);
         }
 
     }
@@ -137,8 +139,7 @@ public class CmShowMemTask extends TestTask {
             mBlackBox.inputText("弹幕发送:" + i, 2000);
 
             //每轮查询可用内存和进程内存情况,并保存到终端存储
-            mBlackBox.saveMem("com.tencent.mobileqq", mRunFileName, i);
-            mBlackBox.saveProcInfo("com.tencent.mobileqq", mRunFileName, i);
+            monitor.checkCrash("com.tencent.mobileqq", pid, mRunFileName, i);
         }
     }
 
@@ -175,8 +176,7 @@ public class CmShowMemTask extends TestTask {
             mNodeBox.clickOnResourceId("ivdefaultLeftBtn", 1000, 0);
 
             //每轮查询可用内存和进程内存情况,并保存到终端存储
-            mBlackBox.saveMem("com.tencent.mobileqq", mRunFileName, i);
-            mBlackBox.saveProcInfo("com.tencent.mobileqq", mRunFileName, i);
+            monitor.checkCrash("com.tencent.mobileqq", pid, mRunFileName, i);
         }
 
     }
@@ -200,8 +200,7 @@ public class CmShowMemTask extends TestTask {
             mNodeBox.clickOnResourceId("qq_aio_apollo_action_icon", 2000, -1);
 
             //每轮查询可用内存和进程内存情况,并保存到终端存储
-            mBlackBox.saveMem("com.tencent.mobileqq", mRunFileName, i);
-            mBlackBox.saveProcInfo("com.tencent.mobileqq", mRunFileName, i);
+            monitor.checkCrash("com.tencent.mobileqq", pid, mRunFileName, i);
         }
     }
 
@@ -216,8 +215,7 @@ public class CmShowMemTask extends TestTask {
             mBox.sendKey(KeyEvent.KEYCODE_BACK, 3000);
 
             //每轮查询可用内存和进程内存情况,并保存到终端存储
-            mBlackBox.saveMem("com.tencent.mobileqq", mRunFileName, i);
-            mBlackBox.saveProcInfo("com.tencent.mobileqq", mRunFileName, i);
+            monitor.checkCrash("com.tencent.mobileqq", pid, mRunFileName, i);
         }
     }
 
@@ -233,8 +231,8 @@ public class CmShowMemTask extends TestTask {
             //切换到消息列表
             mNodeBox.clickOnResourceId("conversation_head", 3000, 0);
             //每轮查询可用内存和进程内存情况,并保存到终端存储
-            mBlackBox.saveMem("com.tencent.mobileqq", mRunFileName, i);
-            mBlackBox.saveProcInfo("com.tencent.mobileqq", mRunFileName, i);
+
+            monitor.checkCrash("com.tencent.mobileqq", pid, mRunFileName, i);
         }
     }
 
@@ -250,8 +248,7 @@ public class CmShowMemTask extends TestTask {
                 mNodeBox.setStrictMode(true);
             }
             //每轮查询可用内存和进程内存情况,并保存到终端存储
-            mBlackBox.saveMem("com.tencent.mobileqq", mRunFileName, i);
-            mBlackBox.saveProcInfo("com.tencent.mobileqq", mRunFileName, i);
+            monitor.checkCrash("com.tencent.mobileqq", pid, mRunFileName, i);
         }
     }
 
@@ -276,8 +273,7 @@ public class CmShowMemTask extends TestTask {
             mNodeBox.clickOnResourceIdOffset("inputBar", 1000, 0, 1, -100);
 
             //每轮查询可用内存和进程内存情况,并保存到终端存储
-            mBlackBox.saveMem("com.tencent.mobileqq", mRunFileName, i);
-            mBlackBox.saveProcInfo("com.tencent.mobileqq", mRunFileName, i);
+            monitor.checkCrash("com.tencent.mobileqq", pid, mRunFileName, i);
         }
 
     }
@@ -299,8 +295,7 @@ public class CmShowMemTask extends TestTask {
             mNodeBox.clickOnResourceIdOffset("fun_btn", 10, 0, 1, -100);
             mNodeBox.clickOnResourceIdOffset("fun_btn", 2000, 0, 1, -200);
             //每轮查询可用内存和进程内存情况,并保存到终端存储
-            mBlackBox.saveMem("com.tencent.mobileqq", mRunFileName, i);
-            mBlackBox.saveProcInfo("com.tencent.mobileqq", mRunFileName, i);
+            monitor.checkCrash("com.tencent.mobileqq", pid, mRunFileName, i);
         }
 
     }
@@ -319,8 +314,7 @@ public class CmShowMemTask extends TestTask {
             //发送
             mNodeBox.clickOnResourceId("fun_btn", 2000, 0);
 
-            mBlackBox.saveMem("com.tencent.mobileqq", mRunFileName, i);
-            mBlackBox.saveProcInfo("com.tencent.mobileqq", mRunFileName, i);
+            monitor.checkCrash("com.tencent.mobileqq", pid, mRunFileName, i);
         }
 
     }
@@ -347,8 +341,28 @@ public class CmShowMemTask extends TestTask {
             mNodeBox.clickOnResourceIdOffset("inputBar", 1000, 0, 1, -100);
 
             //每轮查询可用内存和进程内存情况,并保存到终端存储
-            mBlackBox.saveMem("com.tencent.mobileqq", mRunFileName, i);
-            mBlackBox.saveProcInfo("com.tencent.mobileqq", mRunFileName, i);
+            monitor.checkCrash("com.tencent.mobileqq", pid, mRunFileName, i);
+        }
+
+    }
+
+    // 电商彩蛋数据验证临时用例
+    public void CSMT_14(final int caseTime) {
+        //进入群AIO
+        _OpenActionTab();
+
+        for (int i = 0; i < caseTime; i++) {
+            //输入框
+            mNodeBox.clickOnResourceId("inputBar", 3500, 0);
+            //随机输入彩蛋文字
+            String[] eggsString = {"购物/下单/付款/花钱长草/种草/拔草剁手", "6.18/划算/京东/三免一/海淘/优惠、降价、低价、特价、打折、秒杀、抢购、减价、爆款、囤货"
+                    , "领券/便宜/福利/随便花/有钱、买买买、想买", "吃土/买不起/好穷/土豪/省钱"};
+            int index = (int) (Math.random() * eggsString.length);
+            if (index == eggsString.length)
+                index = 0;
+            String eggs = eggsString[index];
+            mBlackBox.inputText(eggs, 1000);
+            mNodeBox.clickOnResourceId("fun_btn", 7000, 0);
         }
 
     }

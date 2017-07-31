@@ -38,6 +38,7 @@ public abstract class TestTask extends Service {
     private TestTask mTestTask;
 
     public int testNumber = 0;
+    public int pid;
 
     public UIActionBox mBox;
     public UINodeActionBox mNodeBox;
@@ -112,7 +113,7 @@ public abstract class TestTask extends Service {
         mBlackBox = new BlackBox(mContext);
         mTips = new TestTips(mContext);
         mTestTask = this;
-        monitor = new TestMonitor(getTaskSimpleName(), mNodeBox, mImageBox);
+        monitor = new TestMonitor(mContext, getTaskSimpleName(), mNodeBox, mImageBox, mBlackBox);
 
         int length = 0;
         for (int i = 0; i < StaticData.chooseArray.length; i++) {
@@ -183,6 +184,10 @@ public abstract class TestTask extends Service {
                 //冷启动手Q
                 if (caseNumber != 0)
                     _InitQQ();
+                //获取当前PID
+                if (null != mBlackBox.getAndroidProcess("com.tencent.mobileqq")) {
+                    pid = mBlackBox.getAndroidProcess("com.tencent.mobileqq").getPid();
+                }
                 try {
                     StaticData.caseStartTime = TimeUtil.getCurrentTime();
                     method.invoke(mTestTask, caseTime);

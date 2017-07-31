@@ -1,16 +1,18 @@
 package com.tencent.apk_auto_test.core;
 
+import android.content.Context;
 import android.util.Log;
 
 import com.tencent.apk_auto_test.data.StaticData;
+import com.tencent.apk_auto_test.ext.BlackBox;
 import com.tencent.apk_auto_test.ext.UIImageActionBox;
 import com.tencent.apk_auto_test.ext.UINodeActionBox;
+import com.tencent.apk_auto_test.ext.temp.AppEntity;
+import com.tencent.apk_auto_test.util.TimeUtil;
+import com.tencent.apk_auto_test.util.TxtUtil;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.io.File;
+import java.text.DecimalFormat;
 
 /**
  * Created by veehou on 2017/4/16.23:00
@@ -19,19 +21,21 @@ import java.util.regex.Pattern;
 
 public class TestMonitor {
     private static final String TAG = "TestMonitor";
+
     private TestResultPrinter mPrinter;
     private UINodeActionBox mNodeBox;
     private UIImageActionBox mImageBox;
+    private BlackBox mBlackBox;
+    private Context mContext;
 
-    public enum psInfoType {
-        ALL, USER, PID, PPID, VSIZE, RSS, WCHAN, PC, NAME
-    }
-
-    public TestMonitor(String name, UINodeActionBox nodeActionBox, UIImageActionBox imageActionBox) {
+    public TestMonitor(Context context, String name, UINodeActionBox nodeActionBox, UIImageActionBox imageActionBox, BlackBox blackBox) {
         mPrinter = TestResultPrinter.getInstance();
         mPrinter.setFileName(name);
+
         mNodeBox = nodeActionBox;
         mImageBox = imageActionBox;
+        mBlackBox = blackBox;
+        mContext = context;
     }
 
     /**
@@ -123,101 +127,64 @@ public class TestMonitor {
     }
 
     /**
-     * 调用ps命令获取某个特定包的进程信息
+     * 存储目标进程的进程的pid，同时检测pid是否改变
      *
-     * @param target 目标包名或者PID
-     * @param type   所需的参数(枚举类型)
-     * @return 所需的信息
-     * by lloydgao
+     * @param pkgName  目标进程包的名字
+     * @param fileName 存储文件的名字
+     *                 by lloydgao
      */
-    public static String getProcInfo(String target, psInfoType type) {
+    public boolean checkCrash(String pkgName, int pid, String fileName, int i) {
+        StringBuffer strbuf = new StringBuffer();
+        boolean flag;
 
-        if (target.isEmpty()) {
-            Log.e(TAG, "packageName is empty!");
-            return null;
-        }
+        String index = String.format("%03d", i);
+        strbuf.append("index:" + index);
+        strbuf.append("\t").append(TimeUtil.getTime());
 
-        Process process = null;
-        String psInfo = null;
-        String pattern = "(\\S+)(\\s+)(\\d+)(\\s+)(\\d+)(\\s+)(\\S+)(\\s+)(\\S+)(\\s+)(\\S+)" +
-                "(\\s+)(\\S+\\s\\S)(\\s+)(.+)";
+        long availMemory = mBlackBox.getAvailMemory(mContext);
+        strbuf.append("\tAvailMemory:").append(availMemory);
+        Log.v(TAG, "getAvailMemory : " + availMemory);
 
-        //因为非小米系统使用ps寻找指定包时，必须输入目标包名的最后15个字符，需要提前做判断
-        if (target.length() > 15)
-            target = target.substring(target.length() - 15);
+        AppEntity appEntity = mBlackBox.getAndroidProcess(pkgName);
+        strbuf.append("\tAppMemory:").append(appEntity.getMemorySize());
+        Log.v(TAG, "AppMemory : " + new DecimalFormat("0.00").format(appEntity.getMemorySize()));
 
-        try {
-            process = Runtime.getRuntime().exec("su");
-            Log.i(TAG, "Try to execute ps command to find..." + target);
+        int newPid = appEntity.getPid();
+        Log.v(TAG, "newPid : " + newPid);
 
-            OutputStream out = process.getOutputStream();
-            out.write(("ps " + target + "\n").getBytes());
-            out.flush();
-
-            BufferedReader br = new BufferedReader(new InputStreamReader(process.getInputStream()));
-
-            //第一行是无效信息,舍弃
-            br.readLine();
-            //第二行才是有用的信息
-            if (br.ready()) {
-                psInfo = br.readLine();
-                Log.d(TAG, psInfo);
-
-            } else {
-                Log.e(TAG, target + " was not found!");
-                process.getOutputStream().close();
-                return null;
-            }
-        } catch (Exception e) {
-            Log.e(TAG, "getProcessInfo: Exception occurred!");
-            e.printStackTrace();
-        }
-
-        Pattern r = Pattern.compile(pattern);
-        Matcher m = r.matcher(psInfo);
-        int groupIndex = 0;
-        if (m.find()) {
-            switch (type) {
-                case ALL:
-                    groupIndex = 0;
-                    break;
-                case USER:
-                    groupIndex = 1;
-                    break;
-                case PID:
-                    groupIndex = 3;
-                    break;
-                case PPID:
-                    groupIndex = 5;
-                    break;
-                case VSIZE:
-                    groupIndex = 7;
-                    break;
-                case RSS:
-                    groupIndex = 9;
-                    break;
-                case WCHAN:
-                    groupIndex = 11;
-                    break;
-                case PC:
-                    groupIndex = 13;
-                    break;
-                case NAME:
-                    groupIndex = 15;
-                    break;
-            }
+        if (newPid == pid) {
+            strbuf.append("\tPID:").append(newPid);
+            Log.d(TAG, "checkCrash: " + pkgName + " pid: " + newPid + " is alive.");
+            flag = true;
         } else {
-            Log.e(TAG, "getProcessInfo: -----------Match failed!");
+            strbuf.append("\t").append("-----Error-----PID:" + pid + "->" + newPid + "-----maybe crashed!-----");
+            Log.e(TAG, "checkCrash: " + pkgName + " may be crashed!");
+            flag = false;
         }
 
-        //关闭process
-        try {
-            process.getOutputStream().close();
-        } catch (Exception e) {
-            Log.e(TAG, "getProcessInfo: Exception occurred!");
-            e.printStackTrace();
-        }
+        Log.v(TAG, strbuf.toString());
+        TxtUtil.saveMsg("/sdcard/tencent-test/", strbuf.toString(), fileName);
 
-        return m.group(groupIndex);
+        return flag;
+    }
+
+    /**
+     * 查询资源文件是否存在（查询资源下载情况用）
+     * by lloydgao
+     *
+     * @param file 目标资源文件路径
+     */
+    public boolean checkResExist(File file) {
+        if (file.isDirectory()) {
+            String[] files = file.list();
+            if (files.length > 0) {
+                Log.d(TAG, "Resource " + file.getPath() + "exists! PASS!");
+                mPrinter.printResult("Resource " + file.getPath() + "exists!", true);
+                return true;
+            }
+        }
+        Log.d(TAG, "Resource " + file.getPath() + "NOT exist! FAILED!");
+        mPrinter.printResult("Resource " + file.getPath() + "NOT exists!", false);
+        return false;
     }
 }

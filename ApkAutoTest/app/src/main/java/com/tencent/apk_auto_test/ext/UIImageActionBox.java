@@ -206,10 +206,16 @@ public class UIImageActionBox extends UIActionBox {
             Log.e(TAG, "capImg is not found");
             return null;
         }
+        long startTime = System.currentTimeMillis();
+        //根据分辨率与标准1080p高宽ed比率缩放匹配图
+        if (mX != 1 | mY != 1) {
+            zoomImg(matchImg, (float) mX, (float) mY);
+            Log.v(TAG, "scale match image,mx=" + mX + "  my=" + mY + "---cost time:" + (System.currentTimeMillis() - startTime));
+        }
         //缩放原图和匹配图，提高运行效率
         int SIZE_SCALE = 2;
-        capImg = zoomImg(capImg, 1.0f / SIZE_SCALE);
-        matchImg = zoomImg(matchImg, 1.0f / SIZE_SCALE);
+        capImg = zoomImg(capImg, 1.0f / SIZE_SCALE, 1.0f / SIZE_SCALE);
+        matchImg = zoomImg(matchImg, 1.0f / SIZE_SCALE, 1.0f / SIZE_SCALE);
         //转成mat格式的数据
         Mat img1 = new Mat();
         Utils.bitmapToMat(capImg, img1);
@@ -219,10 +225,8 @@ public class UIImageActionBox extends UIActionBox {
         int result_cols = img1.cols() - img2.cols() + 1;
         int result_rows = img1.rows() - img2.rows() + 1;
         Mat result = new Mat(result_rows, result_cols, CvType.CV_32FC1);
-        long start = System.currentTimeMillis();
         //进行匹配和标准化
         Imgproc.matchTemplate(img1, img2, result, Imgproc.TM_SQDIFF_NORMED);
-
         //Core.normalize(result, result, 0, 100, Core.NORM_MINMAX, -1, new Mat());
         //通过函数 minMaxLoc 定位最匹配的位置
         Core.MinMaxLocResult mmr = Core.minMaxLoc(result);
@@ -241,26 +245,26 @@ public class UIImageActionBox extends UIActionBox {
         Point point = new Point();
         point.x = matchLoc.x + matchImg.getWidth() * SIZE_SCALE / 2;
         point.y = matchLoc.y + matchImg.getHeight() * SIZE_SCALE / 2;
-        Log.i(TAG, "[getMatchPoint]match cost time: " + (System.currentTimeMillis() - start));
+        Log.i(TAG, "[getMatchPoint]match cost time: " + (System.currentTimeMillis() - startTime));
         Log.i(TAG, "[getMatchPoint]match success , point.x:" + point.x + "\tpoint.y:" + point.y);
         return point;
     }
 
-    private Bitmap zoomImg(Bitmap im, float scale) {
+    private Bitmap zoomImg(Bitmap im, float xScale, float yScale) {
         int width = im.getWidth();
         int height = im.getHeight();
         Matrix matrix = new Matrix();
-        matrix.postScale(scale, scale);
+        matrix.postScale(xScale, yScale);
         Bitmap newBitmap = Bitmap.createBitmap(im, 0, 0, width, height, matrix, true);
         return newBitmap;
     }
 
     private Bitmap getScreenPic() {
+        long startTime = System.currentTimeMillis();
         Bitmap capBmp = null;
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             //5.0以上通过 MediaProjection 投影类获取到屏幕截图
-            long startTime = System.currentTimeMillis();
             Image image = mImageReader.acquireLatestImage();
             if (null == image) {
                 Log.e(TAG, "image is null!!!");
@@ -279,7 +283,7 @@ public class UIImageActionBox extends UIActionBox {
             }
             bitmap.copyPixelsFromBuffer(byteBuffer);
             bitmap = Bitmap.createBitmap(bitmap, 0, 0, width, height);
-            Log.v(TAG, "[getScreenPic]capture cost time :" + (System.currentTimeMillis() - startTime));
+            Log.v(TAG, "[getScreenPic]capture screen image cost time :" + (System.currentTimeMillis() - startTime));
 
 
 
@@ -322,6 +326,7 @@ public class UIImageActionBox extends UIActionBox {
     }
 
     private Bitmap getMatchPic(String matchImgName) {
+        long startTime = System.currentTimeMillis();
         //从res根据name读出match img的数据
         AssetManager assetManager = mContext.getResources().getAssets();
         Bitmap matchImg = null;
@@ -331,6 +336,7 @@ public class UIImageActionBox extends UIActionBox {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        Log.v(TAG, "[getMatchPic]get match image cost time :" + (System.currentTimeMillis() - startTime));
         return matchImg;
     }
 

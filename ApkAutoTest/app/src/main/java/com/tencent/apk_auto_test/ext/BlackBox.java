@@ -4,8 +4,8 @@ import android.app.ActivityManager;
 import android.app.ActivityManager.MemoryInfo;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
-import android.os.Build;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 import android.os.Debug;
 import android.os.RemoteException;
 import android.provider.Settings;
@@ -13,18 +13,17 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.tencent.apk_auto_test.core.TestMonitor;
-import com.tencent.apk_auto_test.core.TestResultPrinter;
+import com.jaredrummler.android.processes.ProcessManager;
+import com.jaredrummler.android.processes.models.AndroidAppProcess;
 import com.tencent.apk_auto_test.data.RunPara;
 import com.tencent.apk_auto_test.data.StaticData;
 import com.tencent.apk_auto_test.data.TestCase;
 import com.tencent.apk_auto_test.ext.input.InputService;
+import com.tencent.apk_auto_test.ext.temp.AppEntity;
 import com.tencent.apk_auto_test.util.ParserUtil;
 import com.tencent.apk_auto_test.util.ProcessUtil;
 import com.tencent.apk_auto_test.util.TimeUtil;
 import com.tencent.apk_auto_test.util.TxtUtil;
-
-import junit.framework.Test;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -34,6 +33,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class BlackBox {
     private static final String TAG = "BlackBox";
@@ -43,7 +44,6 @@ public class BlackBox {
     // class
     private Context mContext;
     private UIActionBox uiActionBox;
-
 
     public BlackBox(Context context) {
         mContext = context;
@@ -210,100 +210,105 @@ public class BlackBox {
     }
 
     /**
-     * 存储目标进程的进程信息
+     * 获取指定包的pid
      *
-     * @param pkgName  目标进程包的名字
-     * @param fileName 存储文件的名字
-     *                 by lloydgao
+     * @param pkgName 目标进程包的名字
+     * @return pid or 没有指定进程时返回null
      */
-    public boolean saveProcInfo(String pkgName, String fileName, int i) {
-        String device = Build.BRAND;
-        String info = null;
-        StringBuffer strbuf = new StringBuffer();
-        boolean flag;
+    public String getPID(String pkgName) {
+        String pid = null;
+        String pattern = "(\\d+)(\\s\\S*encent\\.mobileqq)";
+        Pattern r = Pattern.compile(pattern);
 
-        Log.v(TAG, "getProcInfo of " + pkgName);
-        String index = String.format("%03d", i);
-        strbuf.append("index: " + index);
-        strbuf.append("\t").append(TimeUtil.getTime());
+        //使用pgrep命令查找指定包的PID时，需要输入包名最后的15个字符
+        if (pkgName.length() > 15)
+            pkgName = pkgName.substring(pkgName.length() - 15);
 
-        if (device.equalsIgnoreCase("xiaomi")) {
-            //TODO: 不能取得所有进程信息，待修改
-            ActivityManager am = (ActivityManager) mContext.getSystemService(Context.ACTIVITY_SERVICE);
-            List<ActivityManager.RunningAppProcessInfo> procInfo = am.getRunningAppProcesses();
-            for (ActivityManager.RunningAppProcessInfo tmpInfo : procInfo) {
-                Log.d(TAG, "ProcessList: " + tmpInfo.processName);
-                if (tmpInfo.processName.equalsIgnoreCase("com.tencent.mobileqq")) {
-                    Integer pid = tmpInfo.pid;
-                    info = TestMonitor.getProcInfo(pid.toString(), TestMonitor.psInfoType.ALL);
-                    break;
-                }
-            }
-        } else {
-            info = TestMonitor.getProcInfo(pkgName, TestMonitor.psInfoType.ALL);
+        try {
+            ProcessUtil.execute("pgrep -l " + pkgName + "\n");
+            if (ProcessUtil.firstLine != null) {
+                Matcher m = r.matcher(ProcessUtil.firstLine);
+                if (m.find())
+                    pid = m.group(1);
+                else
+                    Log.e(TAG, "getPID: match failed!");
+            } else
+                Log.e(TAG, "getPID: Nothing received!");
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
         }
 
-        if (info == null) {
-            strbuf.append("\t").append("----------------Error-----------------");
-            Log.e(TAG, "saveProcInfo: getProcessInfo failed!");
-            flag = false;
-        } else {
-            strbuf.append("\t").append(info);
-            Log.d(TAG, "saveProcInfo: getProcessInfo successful!");
-            flag = true;
-        }
-
-        Log.v(TAG, strbuf.toString());
-        TxtUtil.saveMsg("/sdcard/tencent-test/", strbuf.toString(), fileName);
-
-        return flag;
+        return pid;
     }
 
-    public boolean saveMem(String packageName, String fileName, int i) {
-        StringBuffer strbuf = new StringBuffer();
 
-        long availMemory = getAvailMemory(mContext);
-        Log.v(TAG, "getAvailMemory : " + availMemory);
-        String index = String.format("%03d", i);
-        strbuf.append("index:" + index);
-        strbuf.append("\t").append(TimeUtil.getTime());
-        strbuf.append("\t").append(getAvailMemory(mContext));
+
+
+    /**
+     * 5.0系统以上获取运行的进程方法
+     *
+     * @param context
+     * @param version
+     * @return
+     */
+    public AppEntity getAndroidProcess(String packageName) {
         ActivityManager am = (ActivityManager) mContext.getSystemService(Context.ACTIVITY_SERVICE);
-        List<ActivityManager.RunningAppProcessInfo> procInfo = am.getRunningAppProcesses();
-        for (ActivityManager.RunningAppProcessInfo runningAppProcessInfo : procInfo) {
-            System.out.println(runningAppProcessInfo.processName + String.format(",pid = %d", runningAppProcessInfo.pid));
-            if (runningAppProcessInfo.processName.indexOf(packageName) != -1) {
-                int pids[] = {runningAppProcessInfo.pid};
-                Debug.MemoryInfo self_mi[] = am.getProcessMemoryInfo(pids);
-
-                strbuf.append("\t").append(runningAppProcessInfo.processName)
-                        .append("\t").append(runningAppProcessInfo.pid)
-                        /*.append("\n dalvikPrivateDirty:").append(self_mi[0].dalvikPrivateDirty)*/
-                        .append("\t dalvikPss:").append(self_mi[0].dalvikPss)
-                        /*.append("\n dalvikSharedDirty:").append(self_mi[0].dalvikSharedDirty)
-                        .append("\n nativePrivateDirty:").append(self_mi[0].nativePrivateDirty)
-                        .append("\t nativePss:").append(self_mi[0].nativePss)
-                        .append("\n nativeSharedDirty:").append(self_mi[0].nativeSharedDirty)
-                        .append("\n otherPrivateDirty:").append(self_mi[0].otherPrivateDirty)
-                        .append("\n otherPss:").append(self_mi[0].otherPss)
-                        .append("\n otherSharedDirty:").append(self_mi[0].otherSharedDirty)
-                        .append("\n TotalPrivateDirty:").append(self_mi[0].getTotalPrivateDirty())*/
-                        .append("\t").append(self_mi[0].getTotalPss());
-                        /*.append("\n TotalSharedDirty:").append(self_mi[0].getTotalSharedDirty());*/
-
-
-            }
-
-            Log.v(TAG, strbuf.toString());
-
-            TxtUtil.saveMsg("/sdcard/tencent-test/", strbuf.toString(), fileName);
-            return true;
-
+        List<AndroidAppProcess> listInfo = ProcessManager.getRunningAppProcesses();
+        if (listInfo.isEmpty() || listInfo.size() == 0) {
+            return null;
         }
+        for (AndroidAppProcess info : listInfo) {
+            ApplicationInfo app = getApplicationInfo(info.name);
+            // 过滤自己当前的应用
+            if (app == null || mContext.getPackageName().equals(app.packageName)) {
+                continue;
+            }
+            // 过滤系统的应用
+            if ((app.flags & app.FLAG_SYSTEM) > 0) {
+                continue;
+            }
+            if (app.packageName.equals(packageName)) {
+                AppEntity ent = new AppEntity();
+//            ent.setAppIcon(app.loadIcon(pm));//应用的图标
+//            ent.setAppName(app.loadLabel(pm).toString());//应用的名称
+//            ent.setPackageName(app.packageName);//应用的包名
+                // 计算应用所占内存大小
+                int[] myMempid = new int[]{info.pid};
+                Debug.MemoryInfo[] memoryInfo = am.getProcessMemoryInfo(myMempid);
+                double memSize = memoryInfo[0].dalvikPrivateDirty / 1024.0;
+//                int temp = (int) (memSize * 100);
 
-        return false;
+                ent.setMemorySize(memSize);//应用所占内存的大小
+                ent.setPid(info.pid);
+
+                return ent;
+            }
+        }
+        return null;
     }
 
+    /**
+     * 通过包名返回一个应用的Application对象
+     *
+     * @param name
+     * @return ApplicationInfo
+     */
+    private ApplicationInfo getApplicationInfo(String pkgName) {
+        List<ApplicationInfo> appList;
+        // 通过包管理器，检索所有的应用程序
+        PackageManager pm = mContext.getPackageManager();
+        appList = pm
+                .getInstalledApplications(PackageManager.GET_UNINSTALLED_PACKAGES);
+        if (pkgName == null) {
+            return null;
+        }
+        for (ApplicationInfo appinfo : appList) {
+            if (pkgName.equals(appinfo.processName)) {
+                return appinfo;
+            }
+        }
+        return null;
+    }
 
     /**
      * 递归删除文件夹和其中的文件
