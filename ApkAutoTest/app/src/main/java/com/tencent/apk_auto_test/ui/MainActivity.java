@@ -257,8 +257,8 @@ public class MainActivity extends Activity implements OnClickListener {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_startRun:
-                TestManager manager = new TestManager(mContext);
 
+                TestManager manager = new TestManager(mContext);
                 if (mIsCheckOk && manager.checkEnvironment()) {
                     //还原一些变量
                     for (int i = 0; i < StaticData.runList.size(); i++) {
@@ -289,6 +289,20 @@ public class MainActivity extends Activity implements OnClickListener {
             runnerIndex = index;
             //重新从xml拉取用例的顺序，并更新 run adapter
             mBlackBox.changeSerial2Array(testCase);
+            String isAB=mSpnTestOrder.getSelectedItem().toString();
+            if(isAB.equals("厘米秀A-B机测试")){
+                AlertDialog.Builder builder=new AlertDialog.Builder(MainActivity.this);
+                builder.setItems(new String[]{"1. A、B机同时启动","2. A、B机用例执行顺序相同"
+                        ,"3. A机为房主，请登录帐号：1077000139","4. B机为普通玩家，请登录帐号：1050001189"},null);
+                builder.setTitle("执行A-B机测试请确保：");
+                builder.setPositiveButton("确认", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                });
+                builder.create().show();
+            }
         }
 
         @Override

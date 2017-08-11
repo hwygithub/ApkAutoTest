@@ -1,12 +1,14 @@
 package com.tencent.apk_auto_test.task;
 
 import android.util.Log;
+import android.view.KeyEvent;
 
 import com.tencent.apk_auto_test.core.TestTask;
 import com.tencent.apk_auto_test.data.Global;
 import com.tencent.apk_auto_test.data.StaticData;
 
 import java.io.File;
+import java.util.Random;
 
 /**
  * 厘米秀基本功能回归测试
@@ -312,12 +314,12 @@ public class CmShowBasicTask extends TestTask {
             //进入厘米FLY游戏面板详情页
             _OpenGameTab("cmFly");
             //点击开始游戏
-            mNodeBox.clickOnResourceId("btn_start_game_single", 8000, 0);
+            mNodeBox.clickOnResourceId("btn_start_game_single", 10000, 0);
             //如果进入新手引导则返回
             if (mNodeBox.isNodeExist("text", "新手引导")) {
                 mNodeBox.clickOnResourceId("ivTitleBtnLeft", 2000, 0);
                 //点击开始游戏
-                mNodeBox.clickOnResourceId("btn_start_game_single", 8000, 0);
+                mNodeBox.clickOnResourceId("btn_start_game_single", 10000, 0);
             }
         }
     }
@@ -328,12 +330,12 @@ public class CmShowBasicTask extends TestTask {
             //进入厘米大乱斗游戏面板详情页
             _OpenGameTab("cmLuandou");
             //点击开始游戏
-            mNodeBox.clickOnResourceId("btn_start_game_single", 8000, 0);
+            mNodeBox.clickOnResourceId("btn_start_game_single", 10000, 0);
             //如果进入新手引导则返回
             if (mNodeBox.isNodeExist("text", "新手引导")) {
                 mNodeBox.clickOnResourceId("ivTitleBtnLeft", 1000, 0);
                 //点击开始游戏
-                mNodeBox.clickOnResourceId("btn_start_game_single", 8000, 0);
+                mNodeBox.clickOnResourceId("btn_start_game_single", 10000, 0);
             }
         }
     }
@@ -346,7 +348,7 @@ public class CmShowBasicTask extends TestTask {
             //点击挑战纪录按钮
             mNodeBox.clickOnResourceId("btn_start_game_single", 4000, 0);
             //如果进入新手引导则返回
-            if (mNodeBox.isNodeExist("text", "厘米FLY新手引导")) {
+            if (mNodeBox.isNodeExist("text", "新手引导")) {
                 mNodeBox.clickOnResourceId("ivTitleBtnLeft", 1000, 0);
                 continue;
             }
@@ -508,6 +510,7 @@ public class CmShowBasicTask extends TestTask {
         for (int i = 0; i < caseTime; i++) {
             //进入厘米大乱斗游戏面板详情页
             _OpenGameTab("cmLuandou");
+
             //点击开始游戏
             mNodeBox.clickOnResourceId("btn_start_game_single", 4000, 0);
             //如果进入新手引导页面则退出重来
@@ -551,8 +554,11 @@ public class CmShowBasicTask extends TestTask {
             //［_OpenC2CActionTab］进入测试号AIO打开面板
             _OpenC2CActionTab();
             //进入表情面板
-            mNodeBox.clickOnResourceId("qq_aio_panel_emotion", 2000, 0);
-            mNodeBox.clickOnResourceId("qq_aio_panel_emotion", 2000, 0);
+            mNodeBox.clickOnResourceId("qq_aio_panel_emotion", 5000, 0);
+            mBox.sendKey(KeyEvent.KEYCODE_BACK, 2000);
+            mBox.sendKey(KeyEvent.KEYCODE_BACK, 2000);
+            //［_OpenC2CActionTab］进入测试号AIO打开面板
+            _OpenC2CActionTab();
             mNodeBox.clickOnResourceId("qq_aio_panel_emotion", 2000, 0);
             //点击我来试试
             mImageBox.clickOnImage("icon_face_guard", 3000);
@@ -632,7 +638,7 @@ public class CmShowBasicTask extends TestTask {
                 // 点击开始游戏
                 mNodeBox.clickOnResourceId("btn_start_game", 10000, 0);
                 // 检查资源文件是否下载成功
-                monitor.checkResExist(cmFlyRes);
+                monitor.checkResExist(cmFlyRes, i);
             } catch (NullPointerException e) {
                 Log.d(TAG, "---------------------CSAT_37: Resources of cmFly not found!");
             }
@@ -683,6 +689,9 @@ public class CmShowBasicTask extends TestTask {
             //点击AIO输入输入框上方的中间部分区域，拉起游戏面板
             mNodeBox.clickOnResourceIdOffset("inputBar", 2000, 0, 1, -100);
             //再次回到游戏面板
+            if (mImageBox.isImageExist("btn_game_tab_gray")) {
+                mImageBox.clickOnImage("btn_game_tab_gray", 1000);
+            }
             mNodeBox.clickOnResourceId("icon_back", 1000, 0);
             //点击厘米大乱斗
             int counter = 0;
@@ -700,5 +709,4 @@ public class CmShowBasicTask extends TestTask {
             monitor.checkImage("btn_game_luandou_exit", testNumber);
         }
     }
-
 }

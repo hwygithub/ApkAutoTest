@@ -31,6 +31,7 @@ import org.opencv.imgproc.Imgproc;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -55,8 +56,7 @@ public class UIImageActionBox extends UIActionBox {
      * >=5.0 以上走新的截图方式
      * <5.0 走老的截图方式
      *
-     * @param context               context
-     * @param imageShareApplication app
+     * @param context context
      */
     public UIImageActionBox(Context context) {
         super(context);
@@ -87,7 +87,7 @@ public class UIImageActionBox extends UIActionBox {
         if (null == p) {
             Log.e(TAG, "get point null");
             TestResultPrinter mPrinter = TestResultPrinter.getInstance();
-            mPrinter.printResult("click image :" + matchImgName, false);
+            mPrinter.printResult("click image:" + matchImgName, false);
             return false;
         }
         //点击匹配区域的中心点
@@ -109,7 +109,7 @@ public class UIImageActionBox extends UIActionBox {
         if (null == p) {
             Log.e(TAG, "get point null");
             TestResultPrinter mPrinter = TestResultPrinter.getInstance();
-            mPrinter.printResult("long click image :" + matchImgName, false);
+            mPrinter.printResult("long click image:" + matchImgName, false);
             return false;
         }
         //点击匹配区域的中心点
@@ -134,7 +134,7 @@ public class UIImageActionBox extends UIActionBox {
         if (null == p) {
             Log.e(TAG, "get point null");
             TestResultPrinter mPrinter = TestResultPrinter.getInstance();
-            mPrinter.printResult("click image :" + matchImgName, false);
+            mPrinter.printResult("click image:" + matchImgName, false);
             return false;
         }
         switch (offsetType) {
@@ -216,6 +216,7 @@ public class UIImageActionBox extends UIActionBox {
         int SIZE_SCALE = 2;
         capImg = zoomImg(capImg, 1.0f / SIZE_SCALE, 1.0f / SIZE_SCALE);
         matchImg = zoomImg(matchImg, 1.0f / SIZE_SCALE, 1.0f / SIZE_SCALE);
+        Log.i(TAG, "[getMatchPoint]zoomImg cost time: " + (System.currentTimeMillis() - startTime));
         //转成mat格式的数据
         Mat img1 = new Mat();
         Utils.bitmapToMat(capImg, img1);
@@ -268,6 +269,7 @@ public class UIImageActionBox extends UIActionBox {
             Image image = mImageReader.acquireLatestImage();
             if (null == image) {
                 Log.e(TAG, "image is null!!!");
+                return null;
             }
             int width = image.getWidth();
             int height = image.getHeight();
@@ -296,7 +298,7 @@ public class UIImageActionBox extends UIActionBox {
                 FileOutputStream out = new FileOutputStream(file);
                 bitmap.compress(Bitmap.CompressFormat.PNG, 100, out);
                 out.flush();
-                out.close();
+                out.close(); 
             } catch (java.io.IOException e) {
                 Log.e(TAG, "file not found!!!");
             }
@@ -340,5 +342,44 @@ public class UIImageActionBox extends UIActionBox {
         return matchImg;
     }
 
+    /**
+     * 存储当前截屏
+     *
+     * @param detail 当前截屏所属的用例
+     */
+    public void saveScreenshot(String detail) {
+        Bitmap img = getScreenPic();
+        String path = detail.replace(" ", "_").replace(":","-").replace(".", "-");
+        File file = new File("/sdcard/tencent-test/FailedScreenshot/" + path + ".png");
+        try {
+            file.createNewFile();
+            FileOutputStream out = new FileOutputStream(file);
+            img.compress(Bitmap.CompressFormat.PNG, 100, out);
+            out.flush();
+            out.close();
+            Log.d(TAG, "saveScreenshot: -----Screenshot saved " + path);
+        } catch (IOException e) {
+            Log.e(TAG, "file not found!!!");
+        }
+    }
+
+    public void clearScreenshot() {
+        try {
+            File file = new File("/sdcard/tencent-test/FailedScreenshot");
+            if (!file.exists())
+                file.mkdirs();
+            if (file.isDirectory()) {
+                File[] childFiles = file.listFiles();
+                if (childFiles != null && childFiles.length != 0) {
+                    for (File tmpFile : childFiles) {
+                        tmpFile.delete();
+                    }
+                }
+            }
+            Log.d(TAG, "clearScreenshot: Screenshot ready!");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
 }

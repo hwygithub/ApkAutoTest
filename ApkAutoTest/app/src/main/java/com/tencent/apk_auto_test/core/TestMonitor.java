@@ -41,15 +41,15 @@ public class TestMonitor {
     /**
      * 检查node是否存在
      *
-     * @param nodeType 参数类型
+     * @param nodeType 参数类型 text;id
      */
     public boolean checkNode(String nodeType, String arg, int testNumber) {
         if (mNodeBox.isNodeExist(nodeType, arg)) {
-            mPrinter.printResult(StaticData.runList.get(testNumber - 1).runCaseName + " : " + arg, true);
+            mPrinter.printResult(StaticData.runList.get(testNumber - 1).runCaseName + ":" + arg, true);
             Log.d(TAG, nodeType + " node:" + arg + " is exist, pass");
             return true;
         } else {
-            mPrinter.printResult(StaticData.runList.get(testNumber - 1).runCaseName + " : " + arg, false);
+            mPrinter.printResult(StaticData.runList.get(testNumber - 1).runCaseName + ":" + arg, false);
             Log.e(TAG, "--------node:" + arg + " not exist, fail");
         }
         return false;
@@ -62,11 +62,11 @@ public class TestMonitor {
      */
     public boolean checkNodeDisappear(String nodeType, String arg, int testNumber) {
         if (mNodeBox.isNodeExist(nodeType, arg)) {
-            mPrinter.printResult(StaticData.runList.get(testNumber - 1).runCaseName + " : " + arg, false);
+            mPrinter.printResult(StaticData.runList.get(testNumber - 1).runCaseName + ":" + arg, false);
             Log.e(TAG, "--------node:" + arg + " exist, fail");
             return false;
         } else {
-            mPrinter.printResult(StaticData.runList.get(testNumber - 1).runCaseName + " : " + arg, true);
+            mPrinter.printResult(StaticData.runList.get(testNumber - 1).runCaseName + ":" + arg, true);
             Log.d(TAG, nodeType + " node:" + arg + " exists, pass");
         }
         return true;
@@ -81,11 +81,11 @@ public class TestMonitor {
      */
     public boolean checkImage(String imageName, int testNumber) {
         if (mImageBox.isImageExist(imageName)) {
-            mPrinter.printResult(StaticData.runList.get(testNumber - 1).runCaseName + " : " + imageName, true);
+            mPrinter.printResult(StaticData.runList.get(testNumber - 1).runCaseName + ":" + imageName, true);
             Log.d(TAG, " imageName: " + imageName + " exists, pass");
             return true;
         } else {
-            mPrinter.printResult(StaticData.runList.get(testNumber - 1).runCaseName + " : " + imageName, false);
+            mPrinter.printResult(StaticData.runList.get(testNumber - 1).runCaseName + ":" + imageName, false);
             Log.e(TAG, "--------imageName: " + imageName + " not exist, fail");
         }
         return false;
@@ -99,11 +99,11 @@ public class TestMonitor {
      */
     public boolean checkImageDisappear(String imageName, int testNumber) {
         if (mImageBox.isImageExist(imageName)) {
-            mPrinter.printResult(StaticData.runList.get(testNumber - 1).runCaseName + " : " + imageName, false);
+            mPrinter.printResult(StaticData.runList.get(testNumber - 1).runCaseName + ":" + imageName, false);
             Log.e(TAG, "--------imageName: " + imageName + " exists, fail");
             return false;
         } else {
-            mPrinter.printResult(StaticData.runList.get(testNumber - 1).runCaseName + " : " + imageName, true);
+            mPrinter.printResult(StaticData.runList.get(testNumber - 1).runCaseName + ":" + imageName, true);
             Log.d(TAG, " imageName: " + imageName + " not exists, pass");
         }
         return true;
@@ -114,11 +114,11 @@ public class TestMonitor {
      *
      * @return
      */
-    public boolean checkAnimationPlay() {
+    public boolean checkAnimationPlay(int testNumber) {
         //检查是否有黑块的情况
         String imageName = "error_opengl";
         if (mImageBox.isImageExist(imageName)) {
-            mPrinter.printResult("error_opengl", false);
+            mPrinter.printResult(StaticData.runList.get(testNumber - 1).runCaseName + ":error_opengl", false);
             Log.d(TAG, " imageName: " + imageName + " exists, pass");
             return false;
         } else {
@@ -146,8 +146,21 @@ public class TestMonitor {
         Log.v(TAG, "getAvailMemory : " + availMemory);
 
         AppEntity appEntity = mBlackBox.getAndroidProcess(pkgName);
-        strbuf.append("\tAppMemory:").append(appEntity.getMemorySize());
-        Log.v(TAG, "AppMemory : " + new DecimalFormat("0.00").format(appEntity.getMemorySize()));
+        if (null == appEntity) {
+            if (0 == pid) {
+                Log.e(TAG, "checkCrash: appEntity is null.");
+                return false;
+            } else {
+                strbuf.append("\t").append("-----Error-----PID:" + pid + "->" + 0 + "-----maybe crashed!-----");
+                Log.e(TAG, "checkCrash: " + pkgName + " may be crashed!");
+                TxtUtil.saveMsg("/sdcard/tencent-test/", strbuf.toString(), fileName);
+                return false;
+            }
+
+        }
+        String appMemory = new DecimalFormat("0.00").format(appEntity.getMemorySize());
+        strbuf.append("\tAppMemory:").append(appMemory);
+        Log.v(TAG, "AppMemory : " + appMemory);
 
         int newPid = appEntity.getPid();
         Log.v(TAG, "newPid : " + newPid);
@@ -174,17 +187,17 @@ public class TestMonitor {
      *
      * @param file 目标资源文件路径
      */
-    public boolean checkResExist(File file) {
+    public boolean checkResExist(File file, int testNumber) {
         if (file.isDirectory()) {
             String[] files = file.list();
             if (files.length > 0) {
                 Log.d(TAG, "Resource " + file.getPath() + "exists! PASS!");
-                mPrinter.printResult("Resource " + file.getPath() + "exists!", true);
+                mPrinter.printResult(StaticData.runList.get(testNumber - 1).runCaseName + ":Resource " + file.getPath() + " exists!", true);
                 return true;
             }
         }
         Log.d(TAG, "Resource " + file.getPath() + "NOT exist! FAILED!");
-        mPrinter.printResult("Resource " + file.getPath() + "NOT exists!", false);
+        mPrinter.printResult(StaticData.runList.get(testNumber - 1).runCaseName + ":Resource " + file.getPath() + " NOT exists!", false);
         return false;
     }
 }

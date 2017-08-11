@@ -3,7 +3,9 @@ package com.tencent.apk_auto_test.task;
 import android.view.KeyEvent;
 
 import com.tencent.apk_auto_test.core.TestTask;
+import com.tencent.apk_auto_test.data.Global;
 import com.tencent.apk_auto_test.data.StaticData;
+
 
 /**
  * 厘米秀内存测试
@@ -62,7 +64,7 @@ public class CmShowMemTask extends TestTask {
                 mNodeBox.clickOnResourceIdOffset("inputBar", 2000, 0, 1, -100);
             }
 
-            monitor.checkAnimationPlay();
+            monitor.checkAnimationPlay(i);
 
             mBlackBox.inputText("群单人交叉发送:" + i, 1000);
             mNodeBox.clickOnResourceId("avatar_item_imageview", 500, 1);
@@ -135,7 +137,9 @@ public class CmShowMemTask extends TestTask {
             if (!mNodeBox.clickOnResourceId("avatar_item_imageview", 2000, 0)) {
                 mNodeBox.clickOnResourceIdOffset("inputBar", 2000, 0, 1, -100);
             }
-            mNodeBox.clickOnTextContain("大群主", 1000);
+            if (mNodeBox.isNodeExist("text", "大群主")) {
+                mNodeBox.clickOnTextContain("大群主", 1000);
+            }
             mBlackBox.inputText("弹幕发送:" + i, 2000);
 
             //每轮查询可用内存和进程内存情况,并保存到终端存储
@@ -146,8 +150,10 @@ public class CmShowMemTask extends TestTask {
     // 群和C2C切换发送
     public void CSMT_5(final int caseTime) {
         for (int i = 0; i < caseTime; i++) {
-            //点击搜索栏
-            mNodeBox.clickOnText("搜索", 1000);
+            if (mNodeBox.isNodeEqual("text", "搜索")) {
+                //点击搜索栏
+                mNodeBox.clickOnText("搜索", 1000);
+            }
             //输入群，点击进入
             mBlackBox.inputText("546479585", 3000);
             //点击测试群
@@ -305,7 +311,13 @@ public class CmShowMemTask extends TestTask {
         //［_OpenC2CActionTab］进入测试号AIO打开面板
         _OpenC2CActionTab();
         //进入表情面板
+        mNodeBox.clickOnResourceId("qq_aio_panel_emotion", 5000, 0);
+        //点击我来试试
+        mImageBox.clickOnImage("icon_vip_guard", 3000);
         mNodeBox.clickOnResourceId("qq_aio_panel_emotion", 2000, 0);
+        mNodeBox.clickOnResourceId("qq_aio_panel_emotion", 2000, 0);
+        //点击我来试试
+        mImageBox.clickOnImage("icon_face_guard", 3000);
 
         for (int i = 0; i < caseTime; i++) {
             //循环点击小白脸动作
@@ -346,24 +358,31 @@ public class CmShowMemTask extends TestTask {
 
     }
 
-    // 电商彩蛋数据验证临时用例
+    // 群发送小白脸
     public void CSMT_14(final int caseTime) {
         //进入群AIO
         _OpenActionTab();
+        //进入表情面板
+        mNodeBox.clickOnResourceId("qq_aio_panel_emotion", 5000, 0);
+        mBox.sendKey(KeyEvent.KEYCODE_BACK, 2000);
+        mBox.sendKey(KeyEvent.KEYCODE_BACK, 2000);
+        //进入群AIO
+        _OpenActionTab();
+        mNodeBox.clickOnResourceId("qq_aio_panel_emotion", 2000, 0);
+        //点击我来试试
+        mImageBox.clickOnImage("icon_face_guard", 3000);
 
         for (int i = 0; i < caseTime; i++) {
-            //输入框
-            mNodeBox.clickOnResourceId("inputBar", 3500, 0);
-            //随机输入彩蛋文字
-            String[] eggsString = {"购物/下单/付款/花钱长草/种草/拔草剁手", "6.18/划算/京东/三免一/海淘/优惠、降价、低价、特价、打折、秒杀、抢购、减价、爆款、囤货"
-                    , "领券/便宜/福利/随便花/有钱、买买买、想买", "吃土/买不起/好穷/土豪/省钱"};
-            int index = (int) (Math.random() * eggsString.length);
-            if (index == eggsString.length)
-                index = 0;
-            String eggs = eggsString[index];
-            mBlackBox.inputText(eggs, 1000);
-            mNodeBox.clickOnResourceId("fun_btn", 7000, 0);
+            //循环点击小白脸动作
+            mImageBox.clickOnImage("icon_white_face_#1", 50);
+            mImageBox.clickOnImage("icon_white_face_#2", 50);
+            mImageBox.clickOnImage("icon_white_face_#3", 50);
+            mImageBox.clickOnImage("icon_white_face_#4", 50);
+            mBlackBox.inputText("循环发送小白脸：" + i, 50);
+            //发送
+            mNodeBox.clickOnResourceId("fun_btn", 500, 0);
+            //每轮查询可用内存和进程内存情况,并保存到终端存储
+            monitor.checkCrash("com.tencent.mobileqq", pid, mRunFileName, i);
         }
-
     }
 }

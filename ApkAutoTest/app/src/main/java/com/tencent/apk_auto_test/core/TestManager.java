@@ -10,6 +10,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
 import com.tencent.apk_auto_test.ext.BlackBox;
+import com.tencent.apk_auto_test.task.CmShowABTask;
 import com.tencent.apk_auto_test.task.CmShowBasicTask;
 import com.tencent.apk_auto_test.task.CmShowMemTask;
 import com.tencent.apk_auto_test.util.ProcessUtil;
@@ -103,9 +104,11 @@ public class TestManager {
             case 1:
                 mContext.startService(new Intent(mContext, CmShowMemTask.class));
                 break;
+            case 2:
+                mContext.startService(new Intent(mContext, CmShowABTask.class));
+                break;
         }
         Toast.makeText(mContext, "开始测试", Toast.LENGTH_LONG).show();
-
     }
 
 }

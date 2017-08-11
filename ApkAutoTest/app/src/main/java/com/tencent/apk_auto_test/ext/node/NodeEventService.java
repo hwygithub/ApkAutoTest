@@ -15,12 +15,13 @@ import com.tencent.apk_auto_test.data.StaticData;
  */
 public class NodeEventService extends AccessibilityService {
 
-    private static final String TAG = "AccessibilityService";
+    private static final String TAG = "NodeEventService";
 
     public void onAccessibilityEvent(AccessibilityEvent event) {
     }
 
     public void onInterrupt() {
+        Log.v(TAG, TAG + " is onInterrupt.");
     }
 
     /**
@@ -55,6 +56,5 @@ public class NodeEventService extends AccessibilityService {
     public AccessibilityNodeInfo getRootInActiveWindow() {
         return super.getRootInActiveWindow();
     }
-
 
 }

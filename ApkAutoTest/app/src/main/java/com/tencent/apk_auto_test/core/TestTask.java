@@ -25,6 +25,7 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Random;
 
 /**
  * Created by veehou on 2017/4/16.23:49
@@ -38,7 +39,7 @@ public abstract class TestTask extends Service {
     private TestTask mTestTask;
 
     public int testNumber = 0;
-    public int pid;
+    public int pid = 0;
 
     public UIActionBox mBox;
     public UINodeActionBox mNodeBox;
@@ -114,6 +115,8 @@ public abstract class TestTask extends Service {
         mTips = new TestTips(mContext);
         mTestTask = this;
         monitor = new TestMonitor(mContext, getTaskSimpleName(), mNodeBox, mImageBox, mBlackBox);
+        TestResultPrinter mPrinter = TestResultPrinter.getInstance();
+        mPrinter.setUIImageActionBox(mImageBox);
 
         int length = 0;
         for (int i = 0; i < StaticData.chooseArray.length; i++) {
@@ -130,6 +133,8 @@ public abstract class TestTask extends Service {
 
         mBlackBox.initInputMethod();
         mBlackBox.delFolder(new File("/sdcard/tencent-test"));
+        //清空原有的截图记录
+        mImageBox.clearScreenshot();
 
         try {
             mBlackBox.copyAssetsFile("dress-test/cmshow_me_face.png", "sdcard/tencent/MobileQQ/.apollo/dress/3107/dress.png");
@@ -324,4 +329,5 @@ public abstract class TestTask extends Service {
         //点击换装入口
         mNodeBox.clickOnResourceId("btn_more_apollo", 8000, 0);
     }
+
 }

@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Debug;
 import android.os.RemoteException;
 import android.provider.Settings;
@@ -22,8 +23,6 @@ import com.tencent.apk_auto_test.ext.input.InputService;
 import com.tencent.apk_auto_test.ext.temp.AppEntity;
 import com.tencent.apk_auto_test.util.ParserUtil;
 import com.tencent.apk_auto_test.util.ProcessUtil;
-import com.tencent.apk_auto_test.util.TimeUtil;
-import com.tencent.apk_auto_test.util.TxtUtil;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -142,7 +141,7 @@ public class BlackBox {
         am.getMemoryInfo(mi);
         // mi.availMem; 当前系统的可用内存
         // return Formatter.formatFileSize(context, mi.availMem);// 将获取的内存大小规格化
-        return mi.availMem / 1024;
+        return mi.availMem / 1024 / 1024;
     }
 
     // To check if service is enabled
@@ -242,46 +241,63 @@ public class BlackBox {
     }
 
 
-
-
     /**
      * 5.0系统以上获取运行的进程方法
      *
-     * @param context
-     * @param version
+     * @param packageName 目标包名
      * @return
      */
     public AppEntity getAndroidProcess(String packageName) {
         ActivityManager am = (ActivityManager) mContext.getSystemService(Context.ACTIVITY_SERVICE);
-        List<AndroidAppProcess> listInfo = ProcessManager.getRunningAppProcesses();
-        if (listInfo.isEmpty() || listInfo.size() == 0) {
-            return null;
-        }
-        for (AndroidAppProcess info : listInfo) {
-            ApplicationInfo app = getApplicationInfo(info.name);
-            // 过滤自己当前的应用
-            if (app == null || mContext.getPackageName().equals(app.packageName)) {
-                continue;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            List<AndroidAppProcess> listInfo = ProcessManager.getRunningAppProcesses();
+            if (listInfo.isEmpty() || listInfo.size() == 0) {
+                return null;
             }
-            // 过滤系统的应用
-            if ((app.flags & app.FLAG_SYSTEM) > 0) {
-                continue;
+            for (AndroidAppProcess info : listInfo) {
+                ApplicationInfo app = getApplicationInfo(info.name);
+                // 过滤自己当前的应用
+                if (app == null || mContext.getPackageName().equals(app.packageName)) {
+                    continue;
+                }
+                // 过滤系统的应用
+                if ((app.flags & app.FLAG_SYSTEM) > 0) {
+                    continue;
+                }
+                if (app.packageName.equals(packageName)) {
+                    AppEntity ent = new AppEntity();
+                    // 计算应用所占内存大小
+                    int[] myMempid = new int[]{info.pid};
+                    Debug.MemoryInfo[] memoryInfo = am.getProcessMemoryInfo(myMempid);
+                    double memSize = memoryInfo[0].dalvikPrivateDirty / 1024.0;
+
+                    ent.setMemorySize(memSize);//应用所占内存的大小
+                    ent.setPid(info.pid);
+
+                    return ent;
+                }
             }
-            if (app.packageName.equals(packageName)) {
-                AppEntity ent = new AppEntity();
-//            ent.setAppIcon(app.loadIcon(pm));//应用的图标
-//            ent.setAppName(app.loadLabel(pm).toString());//应用的名称
-//            ent.setPackageName(app.packageName);//应用的包名
-                // 计算应用所占内存大小
-                int[] myMempid = new int[]{info.pid};
-                Debug.MemoryInfo[] memoryInfo = am.getProcessMemoryInfo(myMempid);
-                double memSize = memoryInfo[0].dalvikPrivateDirty / 1024.0;
-//                int temp = (int) (memSize * 100);
+        } else {
+            List<ActivityManager.RunningAppProcessInfo> appProcesses = am.getRunningAppProcesses();
+            for (ActivityManager.RunningAppProcessInfo runprocessInfo : appProcesses) {
+                if (runprocessInfo.processName.equals(packageName)) {
+                    AppEntity ent = new AppEntity();
 
-                ent.setMemorySize(memSize);//应用所占内存的大小
-                ent.setPid(info.pid);
+                    //获取到当前进程的pid      // 用户ID 类似于Linux的权限不同，ID也就不同 比如 root等
+                    int pid = runprocessInfo.pid;
+                    int[] myMempid = new int[]{pid};
+                    //获取到内存的基本信息
+                    Debug.MemoryInfo[] memoryInfo = am.getProcessMemoryInfo(myMempid);
+                    //Debug.MemoryInfo memoryInfo = activityManager.ge;
+                    //getTotalPrivateDirty()返回的值单位是KB，所以我们要换算成MB，也就是乘以1024
+                    int totalPrivateDirty = memoryInfo[0].dalvikPrivateDirty / 1024;
 
-                return ent;
+                    ent.setMemorySize(totalPrivateDirty);//应用所占内存的大小
+                    ent.setPid(runprocessInfo.pid);
+
+                    return ent;
+                }
+
             }
         }
         return null;
@@ -290,9 +306,10 @@ public class BlackBox {
     /**
      * 通过包名返回一个应用的Application对象
      *
-     * @param name
+     * @param pkgName packageName of APK
      * @return ApplicationInfo
      */
+
     private ApplicationInfo getApplicationInfo(String pkgName) {
         List<ApplicationInfo> appList;
         // 通过包管理器，检索所有的应用程序
@@ -345,6 +362,10 @@ public class BlackBox {
      * 复制asset文件到手机目录
      */
     public void copyAssetsFile(String assetsPath, String copyPath) throws IOException {
+        File file = new File(copyPath);
+        if (!file.exists()) {
+            return;
+        }
         InputStream inputStream = mContext.getAssets().open(assetsPath);
         FileOutputStream fileOutputStream = new FileOutputStream(new File(copyPath));
         byte[] buffer = new byte[1024];

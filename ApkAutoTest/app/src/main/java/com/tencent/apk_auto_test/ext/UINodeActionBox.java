@@ -67,6 +67,7 @@ public class UINodeActionBox extends UIActionBox {
         if (mCurrentMode) {
             TestResultPrinter mPrinter = TestResultPrinter.getInstance();
             mPrinter.printResult("click node:" + node, false);
+
         }
     }
 
@@ -377,6 +378,24 @@ public class UINodeActionBox extends UIActionBox {
             else if (nodeType.equals("id"))
                 title = infos.get(i).getViewIdResourceName() + "";
             if (title.contains(text)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean isNodeEqual(String nodeType, String text) {
+        beforeClick();
+        if (infos == null || infos.size() == 0) {
+            return false;
+        }
+        for (int i = 0; i < infos.size(); i++) {
+            String title = "";
+            if (nodeType.equals("text"))
+                title = infos.get(i).getText() + "";
+            else if (nodeType.equals("id"))
+                title = infos.get(i).getViewIdResourceName() + "";
+            if (title.equals(text)) {
                 return true;
             }
         }

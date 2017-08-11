@@ -4,18 +4,21 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.3.2'
+        classpath 'com.android.tools.build:gradle:2.3.3'
     }
 }
 android {
     compileSdkVersion 22
     buildToolsVersion '25.0.0'
-
     defaultConfig {
-        minSdkVersion 17
-        targetSdkVersion 19
-        versionCode 2480
+        minSdkVersion 21
+        targetSdkVersion 21
+        versionCode 2481
         versionName "2.4.8"
+    }
+    productFlavors {
+    }
+    buildTypes {
     }
 }
 dependencies {
@@ -23,6 +26,6 @@ dependencies {
     provided files('libs/framework_5.1.jar')
     compile files('libs/function.jar')
     compile files('libs/poi-3.8-beta2-20110408.jar')
-    compile files('libs/uiautomator.jar')
+    provided files('libs/uiautomator.jar')
     compile files('libs/app_process_library.jar')
 }
