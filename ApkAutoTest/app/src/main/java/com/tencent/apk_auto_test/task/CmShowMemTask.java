@@ -3,7 +3,6 @@ package com.tencent.apk_auto_test.task;
 import android.view.KeyEvent;
 
 import com.tencent.apk_auto_test.core.TestTask;
-import com.tencent.apk_auto_test.data.Global;
 import com.tencent.apk_auto_test.data.StaticData;
 
 
@@ -64,8 +63,6 @@ public class CmShowMemTask extends TestTask {
                 mNodeBox.clickOnResourceIdOffset("inputBar", 2000, 0, 1, -100);
             }
 
-            monitor.checkAnimationPlay(i);
-
             mBlackBox.inputText("群单人交叉发送:" + i, 1000);
             mNodeBox.clickOnResourceId("avatar_item_imageview", 500, 1);
 
@@ -82,16 +79,16 @@ public class CmShowMemTask extends TestTask {
         //点击发送并播放厘米秀动作，交叉互相打断播放
         for (int i = 0; i < caseTime; i++) {
             //点击tab切换到单人动作
-            mNodeBox.clickOnResourceId("tabView", 2000, 1);
+            mNodeBox.clickOnResourceId("tabView", 500, 1);
             //循环交互点击
             //点击单人tab的动作
-            mNodeBox.clickOnResourceId("avatar_item_imageview", 1000, 0);
+            mNodeBox.clickOnResourceId("avatar_item_imageview", 500, 0);
             //点击双人tab的动作
-            mBlackBox.inputText("单双人动作交叉发送:" + i, 1000);
+            mBlackBox.inputText("单双人动作交叉发送:" + i, 500);
             //点击tab切换到双人动作
-            mNodeBox.clickOnResourceId("tabView", 2000, 2);
-            mNodeBox.clickOnResourceId("avatar_item_imageview", 2000, 0);
-            mNodeBox.clickOnTextContain("大群主", 1000);
+            mNodeBox.clickOnResourceId("tabView", 500, 2);
+            mNodeBox.clickOnResourceId("avatar_item_imageview", 1500, 0);
+            mNodeBox.clickOnResourceId("troop_member_list", 500, 0);
             //每轮查询可用内存和进程内存情况,并保存到终端存储
             monitor.checkCrash("com.tencent.mobileqq", pid, mRunFileName, i);
         }
@@ -113,10 +110,10 @@ public class CmShowMemTask extends TestTask {
             if (!mNodeBox.clickOnResourceId("avatar_item_imageview", 2000, 0)) {
                 mNodeBox.clickOnResourceIdOffset("inputBar", 2000, 0, 1, -100);
             }
-            mNodeBox.clickOnTextContain("大群主", 1000);
+            mNodeBox.clickOnResourceId("troop_member_list", 500, 0);
             mBlackBox.inputText("群双人交叉发送:" + i, 1000);
-            mNodeBox.clickOnResourceId("avatar_item_imageview", 2000, 1);
-            mNodeBox.clickOnTextContain("大群主", 1000);
+            mNodeBox.clickOnResourceId("avatar_item_imageview", 1500, 1);
+            mNodeBox.clickOnResourceId("troop_member_list", 500, 0);
             //每轮查询可用内存和进程内存情况,并保存到终端存储
             monitor.checkCrash("com.tencent.mobileqq", pid, mRunFileName, i);
         }
@@ -128,7 +125,7 @@ public class CmShowMemTask extends TestTask {
         //进入群AIO打开动作面板
         _OpenActionTab();
         //点击tab切换到弹幕动作
-        mNodeBox.clickOnResourceId("tabView", 2000, 3);
+        mNodeBox.clickOnResourceId("tabView", 2000, 4);
         int count = 0;
         for (int i = 0; i < caseTime; i++) {
             //循环交互点击
@@ -137,9 +134,8 @@ public class CmShowMemTask extends TestTask {
             if (!mNodeBox.clickOnResourceId("avatar_item_imageview", 2000, 0)) {
                 mNodeBox.clickOnResourceIdOffset("inputBar", 2000, 0, 1, -100);
             }
-            if (mNodeBox.isNodeExist("text", "大群主")) {
-                mNodeBox.clickOnTextContain("大群主", 1000);
-            }
+            mNodeBox.clickOnResourceId("troop_member_list", 2000, 0);
+
             mBlackBox.inputText("弹幕发送:" + i, 2000);
 
             //每轮查询可用内存和进程内存情况,并保存到终端存储
@@ -198,7 +194,7 @@ public class CmShowMemTask extends TestTask {
         if (!mNodeBox.clickOnResourceId("avatar_item_imageview", 2000, 0)) {
             mNodeBox.clickOnResourceIdOffset("inputBar", 2000, 0, 1, -100);
         }
-        mNodeBox.clickOnTextContain("大群主", 1000);
+        mNodeBox.clickOnResourceId("troop_member_list", 500, 0);
         //点击AIO输入输入框上方的中间部分区域
         mNodeBox.clickOnResourceIdOffset("inputBar", 2000, 0, 1, -100);
 
@@ -385,4 +381,11 @@ public class CmShowMemTask extends TestTask {
             monitor.checkCrash("com.tencent.mobileqq", pid, mRunFileName, i);
         }
     }
+
+    /*// 图片匹配效率比较-for test
+    public void CSMT_15(final int caseTime) {
+        mImageBox.isImageExist("test");
+        mImageBox.isImageExist("test");
+    }*/
+
 }

@@ -59,5 +59,7 @@ public class StaticData {
     public static int testScreenOffTime = 1800;/* TestScreenofftime:30min */
     // //state
     public static boolean isRunningInputService = false;
+    // currentCaseName
+    public static String currentCase;
 
 }

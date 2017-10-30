@@ -19,6 +19,7 @@ import android.util.Log;
 
 import com.tencent.apk_auto_test.core.TestResultPrinter;
 import com.tencent.apk_auto_test.data.Global;
+import com.tencent.apk_auto_test.data.StaticData;
 import com.tencent.apk_auto_test.ext.temp.ImageShareApplication;
 import com.tencent.apk_auto_test.util.ProcessUtil;
 
@@ -48,9 +49,14 @@ public class UIImageActionBox extends UIActionBox {
 
     private ImageShareApplication mImageShareApplication;
     private ImageReader mImageReader;
+    private Image lastImage = null;
 
     private double mX = 1.0;
     private double mY = 1.0;
+
+    public enum Area {
+        full, upper, middle, lower, left, right
+    }
 
     /**
      * >=5.0 以上走新的截图方式
@@ -77,17 +83,22 @@ public class UIImageActionBox extends UIActionBox {
      *
      * @return 是否点击成功
      */
+
     public boolean clickOnImage(String matchImgName, int waitTime) {
+        return this.clickOnImage(matchImgName, waitTime, Area.full);
+    }
+
+    public boolean clickOnImage(String matchImgName, int waitTime, Area area) {
         long start = System.currentTimeMillis();
-        Bitmap capImg = getScreenPic();
+        Bitmap capImg = getScreenPic(area);
         Bitmap matchImg = getMatchPic(matchImgName);
         //匹配图片并返回匹配区域的中心点
-        Point p = getMatchPoint(capImg, matchImg);
+        Point p = getMatchPoint(capImg, matchImg, area);
         Log.i(TAG, "----total cost time: " + (System.currentTimeMillis() - start));
         if (null == p) {
             Log.e(TAG, "get point null");
             TestResultPrinter mPrinter = TestResultPrinter.getInstance();
-            mPrinter.printResult("click image:" + matchImgName, false);
+            mPrinter.printResult(StaticData.currentCase + ":click image:" + matchImgName, false);
             return false;
         }
         //点击匹配区域的中心点
@@ -100,16 +111,20 @@ public class UIImageActionBox extends UIActionBox {
      * @return 是否点击成功
      */
     public boolean clickOnImage(String matchImgName, int waitTime, int clickTime) {
+        return this.clickOnImage(matchImgName, waitTime, clickTime, Area.full);
+    }
+
+    public boolean clickOnImage(String matchImgName, int waitTime, int clickTime, Area area) {
         long start = System.currentTimeMillis();
-        Bitmap capImg = getScreenPic();
+        Bitmap capImg = getScreenPic(area);
         Bitmap matchImg = getMatchPic(matchImgName);
         //匹配图片并返回匹配区域的中心点
-        Point p = getMatchPoint(capImg, matchImg);
+        Point p = getMatchPoint(capImg, matchImg, area);
         Log.i(TAG, "----total cost time: " + (System.currentTimeMillis() - start));
         if (null == p) {
             Log.e(TAG, "get point null");
             TestResultPrinter mPrinter = TestResultPrinter.getInstance();
-            mPrinter.printResult("long click image:" + matchImgName, false);
+            mPrinter.printResult(StaticData.currentCase + ":long click image:" + matchImgName, false);
             return false;
         }
         //点击匹配区域的中心点
@@ -125,16 +140,20 @@ public class UIImageActionBox extends UIActionBox {
      * @return 是否点击成功
      */
     public boolean clickOnImageOffset(String matchImgName, int waitTime, int offsetType, int offset) {
+        return this.clickOnImageOffset(matchImgName, waitTime, offsetType, offset, Area.full);
+    }
+    public boolean clickOnImageOffset(String matchImgName, int waitTime, int offsetType,
+                                      int offset, Area area) {
         long start = System.currentTimeMillis();
-        Bitmap capImg = getScreenPic();
+        Bitmap capImg = getScreenPic(area);
         Bitmap matchImg = getMatchPic(matchImgName);
         //匹配图片并返回匹配区域的中心点
-        Point p = getMatchPoint(capImg, matchImg);
+        Point p = getMatchPoint(capImg, matchImg, area);
         Log.i(TAG, "----total cost time: " + (System.currentTimeMillis() - start));
         if (null == p) {
             Log.e(TAG, "get point null");
             TestResultPrinter mPrinter = TestResultPrinter.getInstance();
-            mPrinter.printResult("click image:" + matchImgName, false);
+            mPrinter.printResult(StaticData.currentCase + ":click image:" + matchImgName, false);
             return false;
         }
         switch (offsetType) {
@@ -154,13 +173,16 @@ public class UIImageActionBox extends UIActionBox {
      * @return 是否存在
      */
     public boolean isImageExist(String matchImgName) {
+        return this.isImageExist(matchImgName, Area.full);
+    }
+    public boolean isImageExist(String matchImgName, Area area) {
         long start = System.currentTimeMillis();
         //截图并读出bitmap格式的数据
-        Bitmap capImg = getScreenPic();
+        Bitmap capImg = getScreenPic(area);
         Bitmap matchImg = getMatchPic(matchImgName);
         //匹配图片并返回匹配区域的中心点
-        Point p = getMatchPoint(capImg, matchImg);
-        Log.i(TAG, "----total cost time: " + (System.currentTimeMillis() - start));
+        Point p = getMatchPoint(capImg, matchImg, area);
+        Log.i(TAG, "[isImageExist]----total cost time: " + (System.currentTimeMillis() - start));
         if (null == p) {
             Log.e(TAG, "get point null");
             return false;
@@ -196,16 +218,38 @@ public class UIImageActionBox extends UIActionBox {
         }
     }
 
-    private Point getMatchPoint(Bitmap capImg, Bitmap matchImg) {
+    private Point getMatchPoint(Bitmap capImg, Bitmap matchImg, Area area) {
+        //缩放倍率
+        int SIZE_SCALE = 2;
+        //部分截图时，还原坐标用的修正值
+        int deltaX, deltaY;
         //输入图片为空判断
         if (null == capImg) {
             Log.e(TAG, "capImg is not found");
             return null;
         }
         if (null == matchImg) {
-            Log.e(TAG, "capImg is not found");
+            Log.e(TAG, "matchImg is not found");
             return null;
         }
+
+        deltaX = matchImg.getWidth() / 2;
+        deltaY = matchImg.getHeight() / 2;
+
+        switch (area) {
+            case lower:
+                deltaY += capImg.getHeight();
+                break;
+            case middle:
+                deltaY += capImg.getHeight() / 2;
+                break;
+            case right:
+                deltaX += capImg.getWidth();
+                break;
+            default:
+                break;
+        }
+
         long startTime = System.currentTimeMillis();
         //根据分辨率与标准1080p高宽ed比率缩放匹配图
         if (mX != 1 | mY != 1) {
@@ -213,10 +257,11 @@ public class UIImageActionBox extends UIActionBox {
             Log.v(TAG, "scale match image,mx=" + mX + "  my=" + mY + "---cost time:" + (System.currentTimeMillis() - startTime));
         }
         //缩放原图和匹配图，提高运行效率
-        int SIZE_SCALE = 2;
         capImg = zoomImg(capImg, 1.0f / SIZE_SCALE, 1.0f / SIZE_SCALE);
         matchImg = zoomImg(matchImg, 1.0f / SIZE_SCALE, 1.0f / SIZE_SCALE);
-        Log.i(TAG, "[getMatchPoint]zoomImg cost time: " + (System.currentTimeMillis() - startTime));
+        Log.i(TAG, "[getMatchPoint]#1 zoomImg cost time: " + (System.currentTimeMillis() - startTime));
+
+        startTime = System.currentTimeMillis();
         //转成mat格式的数据
         Mat img1 = new Mat();
         Utils.bitmapToMat(capImg, img1);
@@ -226,9 +271,15 @@ public class UIImageActionBox extends UIActionBox {
         int result_cols = img1.cols() - img2.cols() + 1;
         int result_rows = img1.rows() - img2.rows() + 1;
         Mat result = new Mat(result_rows, result_cols, CvType.CV_32FC1);
+        Log.i(TAG, "[getMatchPoint]#2 bitmapToMat cost time: " + (System.currentTimeMillis() - startTime));
+
+        startTime = System.currentTimeMillis();
         //进行匹配和标准化
         Imgproc.matchTemplate(img1, img2, result, Imgproc.TM_SQDIFF_NORMED);
-        //Core.normalize(result, result, 0, 100, Core.NORM_MINMAX, -1, new Mat());
+        Log.i(TAG, "[getMatchPoint]#3 match cost time: " + (System.currentTimeMillis() - startTime));
+
+
+        startTime = System.currentTimeMillis();
         //通过函数 minMaxLoc 定位最匹配的位置
         Core.MinMaxLocResult mmr = Core.minMaxLoc(result);
         //匹配的最小数值太大就认为不是该图
@@ -239,15 +290,19 @@ public class UIImageActionBox extends UIActionBox {
             Log.e(TAG, "image match false!!!");
             return null;
         }
+        Log.i(TAG, "[getMatchPoint]#4 find point cost time: " + (System.currentTimeMillis() - startTime));
+
+        startTime = System.currentTimeMillis();
         Point matchLoc;
         //对于方法 SQDIFF 和 SQDIFF_NORMED, 越小的数值代表更高的匹配结果. 而对于其他方法, 数值越大匹配越好
         matchLoc = mmr.minLoc;
         //坐标值还原放大
         Point point = new Point();
-        point.x = matchLoc.x + matchImg.getWidth() * SIZE_SCALE / 2;
-        point.y = matchLoc.y + matchImg.getHeight() * SIZE_SCALE / 2;
-        Log.i(TAG, "[getMatchPoint]match cost time: " + (System.currentTimeMillis() - startTime));
+        point.x = matchLoc.x + deltaX;
+        point.y = matchLoc.y + deltaY;
+        Log.i(TAG, "[getMatchPoint]#5 recovery cost time: " + (System.currentTimeMillis() - startTime));
         Log.i(TAG, "[getMatchPoint]match success , point.x:" + point.x + "\tpoint.y:" + point.y);
+
         return point;
     }
 
@@ -260,15 +315,19 @@ public class UIImageActionBox extends UIActionBox {
         return newBitmap;
     }
 
-    private Bitmap getScreenPic() {
+    private Bitmap getScreenPic(Area area) {
         long startTime = System.currentTimeMillis();
+        int x, y, w, h;
         Bitmap capBmp = null;
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             //5.0以上通过 MediaProjection 投影类获取到屏幕截图
             Image image = mImageReader.acquireLatestImage();
-            if (null == image) {
-                Log.e(TAG, "image is null!!!");
+            if (null == image && null != lastImage) {
+                Log.d(TAG, "image is null, use the last frame...");
+                image = lastImage;
+            } else if (null == image) {
+                Log.e(TAG, "getScreenPic: --------------Cannot get the screenshot!");
                 return null;
             }
             int width = image.getWidth();
@@ -283,11 +342,29 @@ public class UIImageActionBox extends UIActionBox {
                 Log.e(TAG, "bitmap is null!!!");
                 return null;
             }
+            switch (area) {
+                case upper:
+                    x = 0; y = 0; w = width; h = height / 2;
+                    break;
+                case middle:
+                    x = 0; y = height / 4; w = width; h = height / 2;
+                    break;
+                case lower:
+                    x = 0; y = height / 2; w = width; h = height / 2;
+                    break;
+                case left:
+                    x = 0; y = 0; w = width / 2; h = height;
+                    break;
+                case right:
+                    x = width / 2; y = 0; w = width / 2; h = height;
+                    break;
+                default:
+                    x = 0; y = 0; w = width; h = height / 2;
+                    break;
+            }
             bitmap.copyPixelsFromBuffer(byteBuffer);
-            bitmap = Bitmap.createBitmap(bitmap, 0, 0, width, height);
+            bitmap = Bitmap.createBitmap(bitmap, x, y, w, h);
             Log.v(TAG, "[getScreenPic]capture screen image cost time :" + (System.currentTimeMillis() - startTime));
-
-
 
             /*
             startTime = System.currentTimeMillis();
@@ -304,6 +381,7 @@ public class UIImageActionBox extends UIActionBox {
             }
             Log.v(TAG, "[getScreenPic]save bitmap cost time :" + (System.currentTimeMillis() - startTime));
             */
+            lastImage = image;
             image.close();
             capBmp = bitmap;
         } else {
@@ -323,6 +401,7 @@ public class UIImageActionBox extends UIActionBox {
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
+            Log.v(TAG, "[getScreenPic]capture screen image cost time :" + (System.currentTimeMillis() - startTime));
         }
         return capBmp;
     }
@@ -348,16 +427,21 @@ public class UIImageActionBox extends UIActionBox {
      * @param detail 当前截屏所属的用例
      */
     public void saveScreenshot(String detail) {
-        Bitmap img = getScreenPic();
-        String path = detail.replace(" ", "_").replace(":","-").replace(".", "-");
-        File file = new File("/sdcard/tencent-test/FailedScreenshot/" + path + ".png");
+        Bitmap img = getScreenPic(Area.full);
+        if (img == null || img.getHeight() == 0 || img.getWidth() == 0) {
+            Log.e(TAG, "saveScreenshot: -------------image is empty");
+            return;
+        }
+        String path = detail.replace(" ", "_").replace(":", "-").replace(".", "-");
         try {
+            String pathUTF = new String(path.getBytes(), "utf-8");
+            File file = new File("/sdcard/tencent-test/FailedScreenshot/" + pathUTF + ".png");
             file.createNewFile();
             FileOutputStream out = new FileOutputStream(file);
             img.compress(Bitmap.CompressFormat.PNG, 100, out);
             out.flush();
             out.close();
-            Log.d(TAG, "saveScreenshot: -----Screenshot saved " + path);
+            Log.d(TAG, "saveScreenshot: Screenshot saved at" + path);
         } catch (IOException e) {
             Log.e(TAG, "file not found!!!");
         }

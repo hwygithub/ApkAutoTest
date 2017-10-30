@@ -8,7 +8,6 @@ import com.tencent.apk_auto_test.data.Global;
 import com.tencent.apk_auto_test.data.StaticData;
 
 import java.io.File;
-import java.util.Random;
 
 /**
  * 厘米秀基本功能回归测试
@@ -460,7 +459,7 @@ public class CmShowBasicTask extends TestTask {
             //［_OpenC2CActionTab］进入测试号AIO打开面板
             _OpenC2CActionTab();
             //进入弹幕动作面板
-            mNodeBox.clickOnResourceId("tabView", 2000, 3);
+            mNodeBox.clickOnResourceId("tabView", 2000, 4);
             //发送最新的动作
             mNodeBox.clickOnResourceId("avatar_item_imageview", 1000, 0);
             //长按消息列表的动作消息
@@ -468,7 +467,7 @@ public class CmShowBasicTask extends TestTask {
             //点击存动作
             mNodeBox.clickOnText("存动作", 2000);
             //进入收藏面板
-            mNodeBox.clickOnResourceIdOffset("tabView", 2000, 4, 0, -20);
+            mNodeBox.clickOnResourceIdOffset("tabView", 2000, 3, 0, -20);
             //点击最近的动作
             mNodeBox.clickOnResourceId("avatar_item_imageview", 1000, 1);
             // TODO: 2017/3/23  动作成功播放
@@ -482,7 +481,7 @@ public class CmShowBasicTask extends TestTask {
             //［_OpenC2CActionTab］进入测试号AIO打开面板
             _OpenC2CActionTab();
             //进入收藏收集面板
-            mNodeBox.clickOnResourceId("tabView", 2000, 4);
+            mNodeBox.clickOnResourceId("tabView", 2000, 3);
             //点击管理动作按钮
             mNodeBox.clickOnText("管理动作", 5000);
             // TODO: 2017/3/23  检查进入换装页并切换到自定义动作面板

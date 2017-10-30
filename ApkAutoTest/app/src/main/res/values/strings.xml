@@ -12,7 +12,8 @@
 
     <string name="text_default">默认执行顺序</string>
     <string name="text_runlist">执行顺序:</string>
-    <string name="txt_startRun">开始执行</string>
+    <string name="txt_clearAll" >Clear</string>
+    <string name="txt_startRun">Start!</string>
     <string name="txt_running">正在执行</string>
     <string name="btn_back">返回</string>
     <string name="txt_shut_down">关机</string>
@@ -20,7 +21,7 @@
     <string name="txt_finish_event">到达5%电量</string>
     <string name="txt_add">+</string>
     <string name="text_reduce">-</string>
-    <string name="text_del">x</string>
+    <string name="text_del">x</string>C
     <string name="txt_runTime">运行次数：</string>
     <string name="startLevel">初始电量</string>
     <string name="startVoltage">初始电压</string>

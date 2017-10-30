@@ -66,8 +66,7 @@ public class UINodeActionBox extends UIActionBox {
     private void handleClickFalse(String node) {
         if (mCurrentMode) {
             TestResultPrinter mPrinter = TestResultPrinter.getInstance();
-            mPrinter.printResult("click node:" + node, false);
-
+            mPrinter.printResult(StaticData.currentCase + ":click node:" + node, false);
         }
     }
 

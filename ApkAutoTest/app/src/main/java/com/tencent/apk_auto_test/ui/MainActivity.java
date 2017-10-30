@@ -30,6 +30,7 @@ import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.jaredrummler.android.processes.models.Stat;
 import com.tencent.apk_auto_test.R;
 import com.tencent.apk_auto_test.core.TestManager;
 import com.tencent.apk_auto_test.data.ChoosePartAdapter;
@@ -63,6 +64,7 @@ public class MainActivity extends Activity implements OnClickListener {
     private ListView mChooseList;
     private ListView mRunList;
     private Spinner mSpnTestOrder;
+    private Button mBtnClear;
     private Button mBtnStart;
     // data
     private boolean isHelpDialogLocked;
@@ -140,6 +142,8 @@ public class MainActivity extends Activity implements OnClickListener {
     private void setListener() {
         mChooseList = (ListView) findViewById(R.id.chooseList);
         mRunList = (ListView) findViewById(R.id.runList);
+        mBtnClear = (Button) findViewById(R.id.btn_clearAll);
+        mBtnClear.setOnClickListener(this);
         mBtnStart = (Button) findViewById(R.id.btn_startRun);
         mBtnStart.setOnClickListener(this);
 
@@ -256,8 +260,11 @@ public class MainActivity extends Activity implements OnClickListener {
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+            case R.id.btn_clearAll:
+                StaticData.runList.clear();
+                StaticData.runAdapter.notifyDataSetChanged();
+                break;
             case R.id.btn_startRun:
-
                 TestManager manager = new TestManager(mContext);
                 if (mIsCheckOk && manager.checkEnvironment()) {
                     //还原一些变量
@@ -269,7 +276,6 @@ public class MainActivity extends Activity implements OnClickListener {
                     manager.startTest(runnerIndex);
                 } else {
                 }
-
                 break;
         }
     }

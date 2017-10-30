@@ -15,6 +15,13 @@ import com.tencent.apk_auto_test.util.TxtUtil;
 public class TestResultPrinter {
     private static final String TAG = "TestResultPrinter";
     private static TestResultPrinter testResultPrinter = null;
+    /**
+     * screenshotMode:
+     * 0 ----- no limitation
+     * 1 ----- save only 1 screenshot
+     */
+    private int screenshotMode = 0;
+    private boolean stopScreenshot = false;
     private String mResultFileName;
     private UIImageActionBox mUIImageActionBox = null;
 
@@ -36,11 +43,21 @@ public class TestResultPrinter {
         if (tmpBox != null) mUIImageActionBox = tmpBox;
     }
 
+    public void setScreenshotMode(int mode) {
+        if (mode >= 0 && mode <= 1) screenshotMode = mode;
+        else Log.e(TAG, "setScreenshotMode: ----------incorrect mode!");
+    }
+
     public synchronized void printResult(String caseName, boolean isPass) {
         StringBuffer buffer = new StringBuffer();
 
         //fail则存储当前截屏
-        if (!isPass) mUIImageActionBox.saveScreenshot(caseName);
+        if (!isPass && screenshotMode == 0) {
+            mUIImageActionBox.saveScreenshot(caseName);
+        } else if (!stopScreenshot && !isPass && screenshotMode == 1) {
+            mUIImageActionBox.saveScreenshot(caseName);
+            stopScreenshot = true;
+        }
 
         buffer.append(TimeUtil.getCurrentTimeSecond() + " ");
         buffer.append(isPass ? " pass " : " ----------fail---------- ");

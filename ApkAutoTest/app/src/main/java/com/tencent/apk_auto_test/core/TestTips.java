@@ -33,7 +33,6 @@ public class TestTips {
      * 更新tips的内容
      *
      * @param tipsContent 内容
-     * @param context     context
      */
     public void updateTips(String tipsContent) {
         if (null == wm) {

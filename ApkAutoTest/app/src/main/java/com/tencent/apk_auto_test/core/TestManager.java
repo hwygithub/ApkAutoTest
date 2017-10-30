@@ -97,14 +97,18 @@ public class TestManager {
      */
     public void startTest(int runnerIndex) {
         Log.i(TAG, "[startTest]:start " + runnerIndex);
+        TestResultPrinter mPrinter = TestResultPrinter.getInstance();
         switch (runnerIndex) {
             case 0:
+                mPrinter.setScreenshotMode(0);
                 mContext.startService(new Intent(mContext, CmShowBasicTask.class));
                 break;
             case 1:
+                mPrinter.setScreenshotMode(1);
                 mContext.startService(new Intent(mContext, CmShowMemTask.class));
                 break;
             case 2:
+                mPrinter.setScreenshotMode(0);
                 mContext.startService(new Intent(mContext, CmShowABTask.class));
                 break;
         }
