@@ -196,12 +196,11 @@ public class CmShowBasicTask extends TestTask {
             //通过AIO进入换装页
             _AIOOpenChangeClothesWeb();
 
-            mImageBox.clickOnImage("tab_web_clothes_2", 1000);
-            mImageBox.clickOnImage("icon_web_clothes_white", 1000);
-            mImageBox.clickOnImage("btn_web_save_dress", 2000);
+            while (true) {
 
-            mImageBox.clickOnImageOffset("icon_web_clothes_white", 2000, 1, 300);
-            mImageBox.clickOnImage("btn_web_save_dress", 2000);
+                mImageBox.clickOnImage("icon_web_clothes_white", 1000);
+
+            }
 
             // TODO: 2017/3/14 小人更换装扮成功
         }

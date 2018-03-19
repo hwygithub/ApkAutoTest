@@ -1,3 +1,5 @@
 ApkAutoTest/libraries/opencv
 .idea/
+.metadata/
+.recommenders/
 

@@ -29,8 +29,8 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.jaredrummler.android.processes.models.Stat;
 import com.tencent.apk_auto_test.R;
 import com.tencent.apk_auto_test.core.TestManager;
 import com.tencent.apk_auto_test.data.ChoosePartAdapter;
@@ -55,6 +55,7 @@ public class MainActivity extends Activity implements OnClickListener {
     private static final String TAG = "MainActivity";
     private static final int REQUEST_MEDIA_PROJECTION = 0;
     // state
+    private String mGameMode;
     // class
     private Context mContext;
     private BlackBox mBlackBox;
@@ -265,7 +266,7 @@ public class MainActivity extends Activity implements OnClickListener {
                 StaticData.runAdapter.notifyDataSetChanged();
                 break;
             case R.id.btn_startRun:
-                TestManager manager = new TestManager(mContext);
+                TestManager manager = new TestManager(mContext, mGameMode);
                 if (mIsCheckOk && manager.checkEnvironment()) {
                     //还原一些变量
                     for (int i = 0; i < StaticData.runList.size(); i++) {
@@ -295,18 +296,23 @@ public class MainActivity extends Activity implements OnClickListener {
             runnerIndex = index;
             //重新从xml拉取用例的顺序，并更新 run adapter
             mBlackBox.changeSerial2Array(testCase);
-            String isAB=mSpnTestOrder.getSelectedItem().toString();
-            if(isAB.equals("厘米秀A-B机测试")){
-                AlertDialog.Builder builder=new AlertDialog.Builder(MainActivity.this);
-                builder.setItems(new String[]{"1. A、B机同时启动","2. A、B机用例执行顺序相同"
-                        ,"3. A机为房主，请登录帐号：1077000139","4. B机为普通玩家，请登录帐号：1050001189"},null);
-                builder.setTitle("执行A-B机测试请确保：");
-                builder.setPositiveButton("确认", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
+            String isAB = mSpnTestOrder.getSelectedItem().toString();
+            if (isAB.equals("游戏验收测试")) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+                builder.setTitle("选择启动模式");
+                final ChoiceOnClickListener choiceListener = new ChoiceOnClickListener();
+                builder.setSingleChoiceItems(R.array.hobby, 0, choiceListener);
 
-                    }
-                });
+                DialogInterface.OnClickListener btnListener =
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int which) {
+                                int choiceWhich = choiceListener.getWhich();
+                                mGameMode = getResources().getStringArray(R.array.hobby)[choiceWhich];
+                                Toast.makeText(mContext, "choose " + mGameMode, Toast.LENGTH_LONG).show();
+                            }
+                        };
+                builder.setPositiveButton("确定", btnListener);
                 builder.create().show();
             }
         }
@@ -349,6 +355,20 @@ public class MainActivity extends Activity implements OnClickListener {
                             }
                         }).create();
         dlg.show();
+    }
+
+    private class ChoiceOnClickListener implements DialogInterface.OnClickListener {
+
+        private int which = 0;
+
+        @Override
+        public void onClick(DialogInterface dialogInterface, int which) {
+            this.which = which;
+        }
+
+        public int getWhich() {
+            return which;
+        }
     }
 
 }

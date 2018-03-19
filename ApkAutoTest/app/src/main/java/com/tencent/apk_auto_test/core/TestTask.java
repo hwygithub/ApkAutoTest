@@ -1,7 +1,5 @@
 package com.tencent.apk_auto_test.core;
 
-import android.app.Notification;
-import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -18,14 +16,12 @@ import com.tencent.apk_auto_test.ext.UIActionBox;
 import com.tencent.apk_auto_test.ext.UIImageActionBox;
 import com.tencent.apk_auto_test.ext.UINodeActionBox;
 import com.tencent.apk_auto_test.ui.HelpActivity;
-import com.tencent.apk_auto_test.ui.MainActivity;
 import com.tencent.apk_auto_test.util.TimeUtil;
 
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Random;
 
 /**
  * Created by veehou on 2017/4/16.23:49
@@ -48,6 +44,7 @@ public abstract class TestTask extends Service {
     public BlackBox mBlackBox;
 
     public String mRunFileName;
+    public String mGameMode;
 
     @Override
     public IBinder onBind(Intent arg0) {
@@ -83,15 +80,6 @@ public abstract class TestTask extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         // StartForeground
-        Notification notification = new Notification(R.drawable.icon,
-                getText(R.string.app_name), System.currentTimeMillis());
-        Intent notificationIntent = new Intent(this, MainActivity.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0,
-                notificationIntent, 0);
-        notification.setLatestEventInfo(this, getText(R.string.app_name),
-                getText(R.string.txt_running), pendingIntent);
-
-        startForeground(1, notification);
 
         if (null != StaticData.chooseArray) {
             runBeforeTask();
@@ -284,7 +272,7 @@ public abstract class TestTask extends Service {
         //点击测试号
         mNodeBox.clickOnTextContain("我的好友", 2000);
         //点击AIO输入输入框上方的中间部分区域
-        mNodeBox.clickOnResourceIdOffset("inputBar", 1000, 0, 1, -100);
+        mNodeBox.clickOnResourceIdOffset("input", 1000, 0, 1, -200);
     }
 
     //［_OpenGameTab］进入某个游戏的tab，默认为游戏排序界面
@@ -312,6 +300,7 @@ public abstract class TestTask extends Service {
             }
             mImageBox.clickOnImage(logoName, 3000);
         }
+
     }
 
 

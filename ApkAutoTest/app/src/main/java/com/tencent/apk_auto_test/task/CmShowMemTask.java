@@ -329,20 +329,18 @@ public class CmShowMemTask extends TestTask {
 
     // 创建新引擎游戏后退出
     public void CSMT_13(final int caseTime) {
-        //进入咕咚游戏面板详情页
-        _OpenGameTab("gudong");
+        //进入群AIO
+        _OpenActionTab();
 
         for (int i = 0; i < caseTime; i++) {
+            mNodeBox.clickOnResourceId("item1_game_icon", 2000, 0);
             //点击开始游戏
-            mNodeBox.clickOnResourceId("btn_start_game_single", 3500, 0);
+            mNodeBox.clickOnResourceId("btn_start_game", 3500, 0);
             //如果进入新手引导则返回
             if (mNodeBox.isNodeExist("text", "新手引导")) {
                 mNodeBox.clickOnResourceId("ivTitleBtnLeft", 1000, 0);
                 continue;
             }
-
-            //点击开始游戏
-            mImageBox.clickOnImage("btn_game_start", 3000);
             //点击退出
             mImageBox.clickOnImage("btn_game_gudong_exit", 2000);
             //点击AIO输入输入框上方的中间部分区域

@@ -186,7 +186,7 @@ public class UINodeActionBox extends UIActionBox {
         }
         for (int i = 0; i < infos.size(); i++) {
             String idName = infos.get(i).getViewIdResourceName() + "";
-            if (idName.contains(id)) {
+            if (idName.equals(id)) {
                 if (index == j) {
                     Log.i(TAG, "---clickOnResourceIdOffset " + id);
                     return clickOffset(i, offsetType, offset);

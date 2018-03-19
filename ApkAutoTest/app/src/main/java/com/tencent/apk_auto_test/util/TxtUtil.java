@@ -1,18 +1,16 @@
 package com.tencent.apk_auto_test.util;
 
+import android.content.Context;
+import android.os.Environment;
+import android.util.Log;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
 import java.util.ArrayList;
-
-import android.content.Context;
-import android.os.Environment;
-import android.util.Log;
 
 public class TxtUtil {
 
@@ -47,7 +45,7 @@ public class TxtUtil {
             bw.write("\r\n");
             bw.flush();
             bw.close();
-            Log.v(TAG, "file write successed");
+            Log.v(TAG, msg);
         } catch (Exception e) {
             Log.e("m", "file write error");
             e.printStackTrace();

@@ -359,7 +359,7 @@ public class UIImageActionBox extends UIActionBox {
                     x = width / 2; y = 0; w = width / 2; h = height;
                     break;
                 default:
-                    x = 0; y = 0; w = width; h = height / 2;
+                    x = 0; y = 0; w = width; h = height;
                     break;
             }
             bitmap.copyPixelsFromBuffer(byteBuffer);

@@ -50,7 +50,7 @@
 
         <service android:name=".task.CmShowBasicTask"/>
         <service android:name=".task.CmShowMemTask"/>
-        <service android:name=".task.CmShowABTask"/>
+        <service android:name=".task.CmShowGameTask"/>
 
 
         <!--AccessibilityService-->

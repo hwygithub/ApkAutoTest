@@ -10,7 +10,6 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
 import com.tencent.apk_auto_test.ext.BlackBox;
-import com.tencent.apk_auto_test.task.CmShowABTask;
 import com.tencent.apk_auto_test.task.CmShowBasicTask;
 import com.tencent.apk_auto_test.task.CmShowMemTask;
 import com.tencent.apk_auto_test.util.ProcessUtil;
@@ -24,9 +23,11 @@ import java.util.List;
 public class TestManager {
     private static final String TAG = "TestManager";
     private Context mContext;
+    private String gameMode;
 
-    public TestManager(Context context) {
+    public TestManager(Context context, String gameMode) {
         mContext = context;
+        this.gameMode = gameMode;
     }
 
     /**
@@ -106,10 +107,6 @@ public class TestManager {
             case 1:
                 mPrinter.setScreenshotMode(1);
                 mContext.startService(new Intent(mContext, CmShowMemTask.class));
-                break;
-            case 2:
-                mPrinter.setScreenshotMode(0);
-                mContext.startService(new Intent(mContext, CmShowABTask.class));
                 break;
         }
         Toast.makeText(mContext, "开始测试", Toast.LENGTH_LONG).show();
